@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+
+<h1>FAEXXOR Pharmacy Admin Dashboard</h1>
+
+<p>Welcome Admin</p>
+<button onclick="logout()">Logout</button>
+
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA4wFDi07KAqB-mpsptldFVhPK0-RWvD4c",
+  authDomain: "faexxor-pharmacy.firebaseapp.com",
+  projectId: "faexxor-pharmacy",
+  storageBucket: "faexxor-pharmacy.firebasestorage.app",
+  messagingSenderId: "240852328687",
+  appId: "1:240852328687:web:d0602cfd0a4b392e88fb1a"
+};
+
+// Initialize Firebase only once
+firebase.initializeApp(firebaseConfig);
+
+// Check if the admin is logged in
+firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) {
+        window.location.href = "admin-login.html";
+    }
+});
+
+// Logout function
+function logout() {
+    firebase.auth().signOut().then(function() {
+        window.location.href = "admin-login.html";
+    }).catch(function(error) {
+        console.error(error);
+    });
+}
+</script>
+
+<script src="admin-dashboard.js"></script>
+<script type="module">
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.0.0/firebase-auth.js";
+
+const auth = getAuth();
+
+onAuthStateChanged(auth, (user) => {
+    if (!user) {
+        window.location.href = "admin-login.html";
+    }
+});
+</script>
+</body>
+</html>
