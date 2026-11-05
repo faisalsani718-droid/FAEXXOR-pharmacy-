@@ -1,46 +1,106 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Admin Login</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login - FAEXXOR Pharmacy</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center;
+           font-family: system-ui, Arial, sans-serif; background: linear-gradient(135deg, #0b4a9e, #04a0e0); padding: 16px; }
+    .card { background: #fff; width: 100%; max-width: 380px; border-radius: 16px; padding: 28px 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,.25); }
+    h1 { margin: 0 0 4px; font-size: 1.25rem; color: #0b4a9e; }
+    p.sub { margin: 0 0 20px; color: #5b6b7a; font-size: .92rem; }
+    label { display: block; margin: 14px 0 6px; font-size: .9rem; font-weight: 600; color: #1b2733; }
+    input { width: 100%; padding: 12px 14px; border: 1.5px solid #cfd8e3; border-radius: 10px; font-size: 1rem; }
+    input:focus { outline: none; border-color: #0b4a9e; box-shadow: 0 0 0 3px rgba(11,74,158,.15); }
+    button { width: 100%; margin-top: 20px; padding: 13px; border: 0; border-radius: 10px; font-size: 1rem;
+             font-weight: 700; color: #fff; background: #0b4a9e; cursor: pointer; }
+    button:disabled { opacity: .6; cursor: default; }
+    #msg { margin-top: 14px; font-size: .92rem; color: #c0392b; min-height: 1.2em; }
+    a.back { display: block; text-align: center; margin-top: 16px; font-size: .9rem; color: #0b4a9e; text-decoration: none; }
+  </style>
 </head>
 <body>
+  <div class="card">
+    <h1>Admin Login</h1>
+    <p class="sub">FAEXXOR Pharmacy - staff only</p>
 
-<h2>Admin Login</h2>
+    <label for="email">Email</label>
+    <input id="email" type="email" autocomplete="username" placeholder="admin@email.com">
 
-<input type="email" id="email" placeholder="Email">
-<input type="password" id="password" placeholder="Password">
+    <label for="password">Password</label>
+    <input id="password" type="password" autocomplete="current-password" placeholder="Your password">
 
-<button onclick="adminLogin()">Login</button>
+    <button id="loginBtn" type="button" onclick="if (window.__adminLogin) { window.__adminLogin(); } else { alert('The page script did not run. Open this page from http://localhost and check firebase.js is in the same folder.'); }">Login</button>
+    <div id="msg" role="alert"></div>
+    <a class="back" href="index.html">Back to website</a>
+    <div style="text-align:center;margin-top:10px;font-size:.75rem;color:#9aa8b5">Admin login v3</div>
+  </div>
 
-<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
 
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyA4wFDi07KAqB-mpsptldFVhPK0-RWvD4c",
-  authDomain: "faexxor-pharmacy.firebaseapp.com",
-  projectId: "faexxor-pharmacy",
-  storageBucket: "faexxor-pharmacy.firebasestorage.app",
-  messagingSenderId: "240852328687",
-  appId: "1:240852328687:web:d0602cfd0a4b392e88fb1a"
-};
+  (function () {
+  var btn = document.getElementById("loginBtn");
+  var msg = document.getElementById("msg");
+  function say(t) { msg.textContent = t; }
 
-firebase.initializeApp(firebaseConfig);
+  // Show any hidden script error on screen
+  window.onerror = function (m) { say("Script error: " + m); };
 
-function adminLogin() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
+  var auth, fs;
+  try {
+    auth = firebase.auth();
+    fs = firebase.firestore();
+  } catch (e) {
+    say("Firebase did not load. Open this page from http://localhost (press play in Acode) and check that firebase.js is in the same folder.");
+  }
 
-    firebase.auth()
-      .signInWithEmailAndPassword(email, password)
-      .then(() => {
-          window.location.href = "admin-dashboard.html";
-      })
-      .catch(error => {
-          alert(error.message);
-      });
-}
+  async function isAdmin(user) {
+    var snap = await fs.collection("users").doc(user.uid).get();
+    return snap.exists && snap.data().role === "admin";
+  }
+
+  async function login() {
+    if (!auth) { say("Firebase did not load. Check firebase.js and open from http://localhost."); return; }
+    var email = document.getElementById("email").value.trim();
+    var pass = document.getElementById("password").value;
+    if (!email || !pass) { say("Enter your email and password."); return; }
+
+    btn.disabled = true; say("Signing in...");
+    try {
+      var cred = await auth.signInWithEmailAndPassword(email, pass);
+      if (await isAdmin(cred.user)) {
+        location.replace("admin-dashboard.html");
+      } else {
+        await auth.signOut();
+        say("This account is not an admin (role is not 'admin' in the users collection).");
+        btn.disabled = false;
+      }
+    } catch (e) {
+      var wrong = ["auth/wrong-password", "auth/user-not-found", "auth/invalid-credential", "auth/invalid-email"];
+      say(wrong.indexOf(e.code) > -1
+        ? "Wrong email or password. Use the account you registered on your website, not your Firebase/Google account."
+        : "Login failed: " + (e.code || e.message));
+      btn.disabled = false;
+    }
+  }
+
+  window.__adminLogin = login;
+  say("Ready. Enter your email and password.");
+  document.getElementById("password").addEventListener("keydown", function (e) {
+    if (e.key === "Enter") login();
+  });
+    })();
 </script>
-
+  
 </body>
 </html>
+
+

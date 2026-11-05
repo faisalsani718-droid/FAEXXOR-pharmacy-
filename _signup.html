@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Account | FAEXXOR Pharmacy</title>
+  <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+<main class="auth-layout">
+
+  <aside class="auth-brand">
+    <div class="brand">
+      <span class="brand-name">FAEXXOR</span>
+      <span class="brand-sub">Pharmacy</span>
+    </div>
+    <p class="brand-message">Manage your medicines, orders and delivery in one safe place.</p>
+  </aside>
+
+  <section class="auth-panel">
+    <div class="auth-card">
+
+      <div class="brand brand-mobile">
+        <span class="brand-name">FAEXXOR</span>
+        <span class="brand-sub">Pharmacy</span>
+      </div>
+
+      <h1>Create your account</h1>
+      <p class="subtitle">Join FAEXXOR Pharmacy and manage your medicines, orders and delivery information easily.</p>
+
+      <div id="message" class="message" role="alert" aria-live="polite" hidden></div>
+
+      <form id="signupForm" novalidate>
+
+        <div class="field">
+          <label for="fullName">Full Name</label>
+          <input type="text" id="fullName" autocomplete="name" required>
+          <small class="field-error" id="fullNameError"></small>
+        </div>
+
+        <div class="field">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" autocomplete="tel" inputmode="tel" required>
+          <small class="field-error" id="phoneError"></small>
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" autocomplete="email" required>
+          <small class="field-error" id="emailError"></small>
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrap">
+            <input type="password" id="password" autocomplete="new-password" required aria-describedby="requirements">
+            <button type="button" id="togglePassword" class="toggle" aria-label="Show password">Show</button>
+          </div>
+          <div class="strength"><div class="strength-bar" id="strengthBar"></div></div>
+          <div class="strength-text" id="strengthText" aria-live="polite"></div>
+          <ul class="requirements" id="requirements">
+            <li id="reqLength">At least 8 characters</li>
+            <li id="reqNumber">Contains a number</li>
+            <li id="reqUpper">Contains an uppercase letter</li>
+          </ul>
+          <small class="field-error" id="passwordError"></small>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-wrap">
+            <input type="password" id="confirmPassword" autocomplete="new-password" required>
+            <button type="button" id="toggleConfirm" class="toggle" aria-label="Show password">Show</button>
+          </div>
+          <small class="field-error" id="confirmPasswordError"></small>
+        </div>
+
+        <div class="field">
+          <label for="promo">Referral or promo code (optional)</label>
+          <input type="text" id="promo" autocomplete="off">
+        </div>
+
+        <label class="check terms">
+          <input type="checkbox" id="terms">
+          <span>I agree to the <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a></span>
+        </label>
+        <small class="field-error" id="termsError"></small>
+
+        <button type="submit" id="signupBtn" class="btn-primary">Create Account</button>
+      </form>
+
+      <p class="switch">
+        Already have an account?
+        <a href="login.html">Login</a>
+      </p>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

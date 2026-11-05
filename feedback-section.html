@@ -1,0 +1,94 @@
+<!-- ===== DELIVERY FEEDBACK SECTION =====
+  1) Paste this block inside your History panel (the area that opens when you tap the History button).
+  2) Call fxLoadFeedback() when the History button is tapped (see the bottom of this file).
+  Needs: Firebase already loaded on the dashboard page and you logged in as admin. -->
+
+<div id="fxFb" class="fxfb">
+  <h3>Delivery Feedback</h3>
+  <div class="fxfb-top">
+    <div class="fxfb-avg" id="fxFbAvg">-</div>
+    <div>
+      <div class="fxfb-stars" id="fxFbStars"></div>
+      <div class="fxfb-sub" id="fxFbCount">Loading...</div>
+    </div>
+  </div>
+  <div id="fxFbBars"></div>
+  <select id="fxFbFilter" aria-label="Filter by stars">
+    <option value="0">All ratings</option>
+    <option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option>
+    <option value="2">2 stars</option><option value="1">1 star</option>
+  </select>
+  <div id="fxFbList"></div>
+</div>
+
+<style>
+.fxfb{background:#fff;border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.08);color:#1f2937}
+.fxfb h3{margin:0 0 10px}
+.fxfb-top{display:flex;align-items:center;gap:14px}
+.fxfb-avg{font-size:2.6rem;font-weight:700;color:#0878d1}
+.fxfb-stars{color:#f5b301;font-size:1.3rem;letter-spacing:2px}
+.fxfb-sub{font-size:.85rem;color:#55677a}
+.fxfb-bar{display:flex;align-items:center;gap:8px;font-size:.8rem;margin:4px 0}
+.fxfb-bar span.t{flex:1;height:8px;background:#e5eaf0;border-radius:8px;overflow:hidden}
+.fxfb-bar span.t i{display:block;height:100%;background:#f5b301}
+#fxFbFilter{margin:12px 0;padding:8px;border-radius:8px;border:1px solid #cbd5e1}
+.fxfb-item{border-top:1px solid #e5eaf0;padding:10px 0}
+.fxfb-item b{color:#f5b301}
+.fxfb-meta{font-size:.78rem;color:#55677a;margin:2px 0}
+.fxfb-item p{margin:4px 0;word-break:break-word}
+.fxfb-msg{padding:14px 0;color:#55677a;text-align:center}
+</style>
+
+<script>
+(function () {
+  "use strict";
+  var all = [], loaded = false;
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { var d = document.createElement("div"); d.textContent = s == null ? "" : String(s); return d.innerHTML; }
+  function stars(n) { n = Math.max(0, Math.min(5, Math.round(n))); return "\u2605".repeat(n) + "\u2606".repeat(5 - n); }
+  function when(t) { try { return (t && t.toDate ? t.toDate() : new Date(t)).toLocaleString("en-NG", { dateStyle: "medium", timeStyle: "short" }); } catch (e) { return ""; } }
+  function msg(t) { var l = $("fxFbList"); if (l) l.innerHTML = '<div class="fxfb-msg">' + esc(t) + "</div>"; }
+
+  function draw() {
+    try {
+      var n = all.length, sum = 0, c = [0, 0, 0, 0, 0, 0];
+      all.forEach(function (x) { var r = Number(x.rating) || 0; if (r >= 1 && r <= 5) { sum += r; c[r]++; } });
+      var avg = n ? sum / n : 0;
+      $("fxFbAvg").textContent = n ? avg.toFixed(1) : "-";
+      $("fxFbStars").textContent = n ? stars(avg) : "";
+      $("fxFbCount").textContent = n + (n === 1 ? " review" : " reviews");
+      var bars = "";
+      for (var s = 5; s >= 1; s--) bars += '<div class="fxfb-bar"><span>' + s + '\u2605</span><span class="t"><i style="width:' + (n ? Math.round(c[s] / n * 100) : 0) + '%"></i></span><span>' + c[s] + "</span></div>";
+      $("fxFbBars").innerHTML = bars;
+      var f = +$("fxFbFilter").value, list = all.filter(function (x) { return !f || Number(x.rating) === f; });
+      if (!list.length) { msg(n ? "No feedback with this rating." : "No feedback yet."); return; }
+      $("fxFbList").innerHTML = list.map(function (x) {
+        return '<div class="fxfb-item"><b>' + stars(x.rating) + "</b>" +
+          '<div class="fxfb-meta">' + esc(x.name || "Customer") + (x.orderId ? " \u00B7 Order " + esc(x.orderId) : "") + " \u00B7 " + esc(when(x.createdAt)) + "</div>" +
+          "<p>" + esc(x.comment) + "</p></div>";
+      }).join("");
+    } catch (e) { console.error(e); msg("Could not show feedback."); }
+  }
+
+  window.fxLoadFeedback = function (force) {
+    if (!$("fxFb")) return;
+    if (loaded && !force) return;
+    if (typeof firebase === "undefined" || !firebase.firestore) { msg("Firebase is not loaded."); return; }
+    msg("Loading...");
+    try {
+      firebase.firestore().collection("deliveryFeedback").orderBy("createdAt", "desc").limit(200).get().then(function (snap) {
+        all = snap.docs.map(function (d) { var o = d.data(); o.id = d.id; return o; });
+        loaded = true; draw();
+      }).catch(function (e) {
+        console.error(e);
+        msg(e && e.code === "permission-denied" ? "No permission. Log in as admin and check your Firestore rules." : "Could not load feedback. Please try again.");
+      });
+    } catch (e) { console.error(e); msg("Could not load feedback."); }
+  };
+  var f = $("fxFbFilter"); if (f) f.addEventListener("change", draw);
+})();
+
+/* Run it when the History button is tapped. Replace historyBtn with your button's id:
+   document.getElementById("historyBtn").addEventListener("click", function () { fxLoadFeedback(true); });
+   Or, if your button uses onclick="showHistory()", add this line inside showHistory():  fxLoadFeedback(true);  */
+</script>

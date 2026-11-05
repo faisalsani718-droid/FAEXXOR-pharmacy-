@@ -4,9 +4,11 @@
   <script src="script.js"></script>
    <link rel="stylesheet" href="style.css">
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>FAEXXOR Pharmacy</title>
-
+<meta name="theme-color" content="#0878d1">
+<link rel="manifest" href="manifest.json">
+  
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 <style>
@@ -31,7 +33,7 @@ body{
 
 header{
     background:var(--primary);
-    color:white;
+    color:hwb(211 29% 2%);
     padding:15px 8%;
     display:flex;
     justify-content:space-between;
@@ -193,32 +195,29 @@ footer{
 </head>
 
 <body>
-<header>
-    <div class="logo-section">
-        <img src="images/faexxor-logo.png">
-        FAE<span>XXOR</span> Pharmacy
-    </div>
-
-    <div class="menu-icon" onclick="toggleMenu()">☰</div>
-
-    <nav id="navMenu">
-        <a href="#home">Home</a>
-        <a href="#services">Services</a>
-        <a href="#products">Products</a>
-        <a href="#cart">Cart</a>
-        <a href="#search-section">Search Medicines</a>
-        <a href="#prescription">Prescription Upload</a>
-        <a href="#order-summary">Order Summary</a>
-        <a href="#payment">Payment</a>
-        <a href="#contact">Contact</a>
-        <a href="#about">About</a>
-        <a href="#contact">Contact</a>
-        <a href="#history">Order History</a>
-    </nav>
-</header>
+<div class="fxh" role="banner">
+  <a class="fxh-brand" href="#home">
+    <img src="images/faexxor-logo.png" alt="FAEXXOR Pharmacy logo">
+    <span>FAEXXOR <b>Pharmacy</b></span>
+  </a>
+  <button class="fxh-btn" id="fxhBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fxhNav"><span></span><span></span><span></span></button>
+  <div class="fxh-nav" id="fxhNav" role="navigation" aria-label="Main menu">
+    <a href="#home">Home</a>
+    <a href="#services">Services</a>
+    <a href="#products">Products</a>
+    <a href="#search-section">Search Medicines</a>
+   <a href="about.html">About</a> 
+   <a href="contact.html">Contact</a> 
+  <a href="privacy.html">Privacy</a> 
+ <a href="terms.html">Terms</a> 
+ <a href="returns.html">Returns</a>  
+  </div>
+</div>
 
 <section class="hero" id="home">
-    <div>
+      
+     <div>  
+       
     <h1>Welcome to Our Trusted Pharmacy</h1>
     <p>
         Your health is our priority. We are committed to providing genuine,
@@ -245,7 +244,7 @@ footer{
     <h3>Your Trusted Partner in Health and Wellness.</h3>
         <a href="#products" class="shop-now-btn">Shop Now</a>
         <a href="#contact" class="btn">Contact Us</a>
-    </div>
+    </>
 </section>
 
 <section id="services">
@@ -259,15 +258,7 @@ footer{
         
     <h2>Product Categories</h2>
 
-    <div class="category-list">
-        <a href="#pain-relief"><button>Pain Relief</button></a>
-        <a href="#antibiotics"><button>Antibiotics</button></a>
-        <a href="#vitamins"><button>Vitamins</button></a>
-        <a href="#baby-care"><button>Baby Care</button></a>
-        <a href="#first-aid"><button>First Aid</button></a>
-        <a href="#diabetes-care"><button>Diabetes Care</button></a>
-        <a href="#blood-pressure"><button>Blood Pressure</button></a>
-    </div>
+    <div class="cat-tabs" id="catTabs"></div>
 </section>
 
 
@@ -279,1239 +270,398 @@ footer{
     <input type="text" id="searchBox" placeholder="Search medicines..." onkeyup="searchMedicine()">
 </div>
     <h2>Our Products</h2>
-    <div class="category">
-    <h2>Pain Relief</h2>
-    
-    <div class="products-container">
-      
-        <div class="product">
-            <img src="images/paracetamol.jpg" alt="Paracetamol">
-            <h3>Paracetamol Tablet</h3>
-            <p>₦1500</p>
-            <button onclick="addToCart('Paracetamol Tablet',1500)">
-                Add to Cart
-            </button>
-        </div>
-    <div class="product">
-        <img src="images/diclofenac.jpg" alt="Diclofenac">
-        <h3>Diclofenac Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Diclofenac Tablet',2500)">Add to Cart</button>
-    </div>
-  <div class="product 2">
-        <img src="images/ibuprofen.jpg" alt="Ibuprofen">
-        <h3>Ibuprofen Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Ibuprofen Tablet',2000)">Add to Cart</button>
-    </div>
-  <div class="product">
-        <img src="images/naproxen.jpg" alt="Naproxen">
-        <h3>Naproxen Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Naproxen Tablet',3000)">Add to Cart</button>
-       
-    </div>
-    <div class="product">
-    <img src="images/mefenamic-acid.jpg" alt="Mefenamic Acid">
-    <h3>Mefenamic Acid Capsule</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Mefenamic Acid Capsule',3000)">Add to Cart</button>
-</div>
+    <div id="catalogHost"></div>
 
-<div class="product">
-    <img src="images/celecoxib.jpg" alt="Celecoxib">
-    <h3>Celecoxib Capsule</h3>
-    <p>₦3500</p>
-    <button onclick="addToCart('Celecoxib Capsule',3500)">Add to Cart</button>
-</div>
+<script>
+/* ============ FAEXXOR PRICES - EDIT ONLY THE NUMBERS (0) ============
+   One line = one product.   ["Pectol Tablet", 0]   -> price 0
+   Products with sizes:      ["Cipro Tablet", [["Small", 0], ["Big", 0]]]
+   Change the 0 to your price (example 1500). Keep every comma, bracket and quote. */
+var CATALOG = [
+  {id:"tablets-tins", title:"Tablets (tins)", items:[
+    ["Vitamin C Tablet (1 tin)",1500],
+    ["Sodamint Tablet (1 tin)", 0],
+    ["Dexa Tablet (bottle tin)", 0],
+    ["Yeast Tablet (1 tin)", 0],
+    ["Folic Acid Tablet (1 tin)", 0],
+    ["B Complex Tablet (1 tin)", 0],
+    ["Ferrous Tablet (1 tin)", 0],
+    ["Multivitamin Tablet (1 tin)", 0],
+    ["Priton Tablet (1 tin)", 0],
+    ["Aspirin Tablet (1 tin)", 0],
+    ["Vitamin K Tablet (1 tin)", 0],
+    ["Vitamin A Tablet (1 tin)", 0],
+    ["Jolocin Tablet (1 tin)", 0],
+    ["PCM Tablet (1 tin)", 0],
+  ]},
+  {id:"tablets", title:"Tablets", items:[
+    ["Pectol Tablet", 0],
+    ["Glucose Tablet", 0],
+    ["Vitamin C Tablet", 0],
+    ["Cold Time Tablet", [["Big", 0], ["Small", 0]]],
+    ["Cipro Tablet", [["Small", 0], ["Big", 0]]],
+    ["Acyco Plus Tablet", 0],
+    ["Mixagrip Tablet", [["Big", 0], ["Small", 0]]],
+    ["Mebendazole Tablet", 0],
+    ["Albendazole Tablet", 0],
+    ["Ibuprofen 400mg Tablet", 0],
+    ["Lemotil Tablet", 0],
+    ["Metro Tablet", [["Yellow", 0], ["White", 0]]],
+    ["PCM 96 Tablet", [["Emzor", 0], ["Hena", 0]]],
+    ["Canon Xtra Tablet", 0],
+    ["Canon PM Tablet", 0],
+    ["Lisinopril Tablet", 0],
+    ["Baralgin Tablet", 0],
+    ["Babadol Tablet", 0],
+    ["Really Xtra Tablet", 0],
+    ["Chakapain Tablet", 0],
+    ["Actifed Tablet", 0],
+    ["Procold Tablet", 0],
+    ["Franol Tablet", 0],
+    ["Hyoscine Tablet", 0],
+    ["Promethazine Tablet", 0],
+    ["Jolocin Tablet", 0],
+    ["Mixanal Tablet", 0],
+    ["Bisacodyl Tablet", 0],
+    ["Medik 55 Tablet", 0],
+    ["Septrin 480 Tablet", 0],
+    ["Aldoment Tablet", 0],
+    ["Super Appetite Tablet", 0],
+    ["Nifedipine Tablet", 0],
+    ["Varsoprin Tablet", 0],
+    ["Diclo Tablet", [["50mg", 0], ["100mg", 0]]],
+    ["Laris Tablet", 0],
+    ["Quinine Tablet", 0],
+    ["Coartem Tablet", [["By 6", 0], ["By 4", 0]]],
+    ["Chest & Lungs Tablet", 0],
+    ["Prednisolone Tablet", 0],
+    ["Priton Tablet", 0],
+    ["Dexa Tablet", 0],
+    ["Zinc Tablet", 0],
+    ["Ostium Tablet", 0],
+    ["Dolo Meta'B Tablet", 0],
+    ["Tumol Xtra Tablet", 0],
+    ["Vega 100mg Tablet", 0],
+    ["Loratadine Tablet", 0],
+    ["Kacham Tablet", 0],
+    ["Boska Tablet", [["Big", 0], ["Small", 0]]],
+    ["Anacin Tablet", 0],
+    ["Sudrex Tablet", 0],
+    ["Sudrex Xtra Tablet", 0],
+    ["Dicloster Tablet", 0],
+  ]},
+  {id:"capsules", title:"Capsules", items:[
+    ["Omeprazole Capsule", 0],
+    ["Amoxil Capsule", [["250mg", 0], ["500mg", 0]]],
+    ["Doxycycline Capsule", 0],
+    ["Indocine Capsule", 0],
+    ["Ampicillin Capsule", 0],
+    ["Ampiclox Capsule", 0],
+    ["Vicham Ampiclox Capsule", 0],
+    ["Hympashyn Capsule", 0],
+    ["Contact Capsule", 0],
+    ["Cod Liver Oil Capsule", 0],
+    ["Tetracycline 250mg Capsule", 0],
+    ["Multivitamin Capsule", 0],
+    ["Ibomol Capsule", 0],
+    ["Piroxicam Capsule", 0],
+    ["Anti diarrhea Capsule", 0],
+  ]},
+  {id:"syrups", title:"Syrups", items:[
+    ["Cof Off Syrup", [["Child", 0], ["Adult", 0]]],
+    ["CenCold Syrup", 0],
+    ["Totolin Syrup", [["Adult", 0], ["Child", 0]]],
+    ["Vamirex Syrup", 0],
+    ["Komix Syrup", 0],
+    ["Mintacid Syrup", 0],
+    ["Colza Syrup", 0],
+    ["NGC Syrup", [["Child", 0], ["Adult", 0]]],
+    ["Cattfed Syrup", 0],
+    ["PCM Syrup", 0],
+    ["Cof'n'Cold Syrup", 0],
+    ["Anti-diarrhoea Syrup", 0],
+    ["Em-Vit C Syrup", 0],
+    ["Emzolyn Syrup", [["Child", 0], ["Adult", 0]]],
+    ["PCM Drops", 0],
+    ["Gripe Water", 0],
+    ["Multivitamin Syrup", 0],
+    ["Baby Rex Syrup", 0],
+    ["Bonababe Syrup", 0],
+    ["Ibuprofen Syrup", 0],
+    ["Promethazine Syrup", 0],
+    ["Jedi Jedi Syrup (1 roll)", 0],
+    ["Coflin Syrup", [["Adult", 0], ["Child", 0]]],
+    ["Exiplon Syrup", [["Child", 0], ["Adult", 0]]],
+  ]},
+  {id:"suspensions", title:"Suspensions", items:[
+    ["Ampiclox Drops", 0],
+    ["Jawamox Suspension", 0],
+    ["Jawaclox Suspension", 0],
+    ["Emtrin Suspension", 0],
+    ["Asad Suspension", 0],
+    ["Gecrol Suspension", [["100ml", 0], ["200ml", 0]]],
+    ["Gestid Suspension", [["100ml", 0], ["200ml", 0]]],
+    ["Digicid Suspension (200ml)", 0],
+    ["Erythromycin 125mg/50ml Suspension", 0],
+    ["Ampiclox Suspension", 0],
+    ["Amoxil Suspension", 0],
+    ["Ampicillin Suspension", 0],
+    ["Albendazole Suspension", 0],
+    ["Metro Suspension", 0],
+    ["Septrin Suspension", 0],
+  ]},
+  {id:"injections", title:"Injections & Infusions", items:[
+    ["Ceftriaxone 1g Injection", 0],
+    ["Amoxicillin Injection", 0],
+    ["Gentamicin Injection", 0],
+    ["Diclo Injection", 0],
+    ["PCM Injection", 0],
+    ["Cimetidine Injection", 0],
+    ["Crystalline Injection", 0],
+    ["Omeprazole Injection", 0],
+    ["Emal Injection", 0],
+    ["Normal Saline Infusion", 0],
+    ["Metro Infusion", 0],
+    ["Cipro Infusion", 0],
+    ["Tetanus Injection", 0],
+  ]},
+  {id:"supplies", title:"Medical Supplies", items:[
+    ["Giving Set", 0],
+    ["Scalp Vein", 0],
+    ["Syringe", [["2ml", 0], ["5ml", 0]]],
+    ["Xtra Needle", 0],
+    ["Cannula", 0],
+    ["Plaster", 0],
+  ]},
+  {id:"creams", title:"Creams", items:[
+    ["Ytacan Plus Cream", 0],
+    ["Neon Skin Cream", 0],
+    ["Funback A Cream", 0],
+    ["Triback Cream", 0],
+    ["Benzoyl Cream", 0],
+  ]},
+  {id:"ointments", title:"Ointments", items:[
+    ["Zanap Ointment", 0],
+    ["Confo Ointment", 0],
+    ["Nycil Ointment", 0],
+    ["Aboniki Ointment", 0],
+    ["Gardia Ointment", 0],
+    ["Ky jelly Ointment", 0],
+  ]},
+  {id:"drops", title:"Drops", items:[
+    ["Gentamicin Drop", 0],
+    ["Chloramphenicol Drop", 0],
+  ]},
+  {id:"antiseptics", title:"Antiseptics & Liquids", items:[
+    ["Hydrogen Peroxide", 0],
+    ["Spirit", 0],
+    ["Mist Pot Cit", 0],
+    ["Dettol", 0],
+    ["Izal", 0],
+  ]},
+  {id:"consumables", title:"Consumables", items:[
+    ["Cotton Wool", 0],
+    ["Envelope", 0],
+    ["bandage", 0],
+    ["PT Strips", 0],
+    ["Lily Pad", 0],
+    ["Baby Diapers", 0],
+    ["Hand Gloves", 0],
+  ]},
+  {id:"oral", title:"ORS & Powders", items:[
+    ["ORS", 0],
+    ["Kukubima", 0],
+    ["Passion", 0],
+    ["Glucose Powder", 0],
+    ["Andrews", 0],
+  ]},
+];
+</script>
 
-<div class="product">
-    <img src="images/piroxicam.jpg" alt="Piroxicam">
-    <h3>Piroxicam Capsule</h3>
-    <p>₦2800</p>
-    <button onclick="addToCart('Piroxicam Capsule',2800)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/ketoprofen.jpg" alt="Ketoprofen">
-    <h3>Ketoprofen Capsule</h3>
-    <p>₦3200</p>
-    <button onclick="addToCart('Ketoprofen Capsule',3200)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/meloxicam.jpg" alt="Meloxicam">
-    <h3>Meloxicam Tablet</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Meloxicam Tablet',2500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/tramadol.jpg" alt="Tramadol">
-    <h3>Tramadol Capsule</h3>
-    <p>₦4000</p>
-    <button onclick="addToCart('Tramadol Capsule',4000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/codeine.jpg" alt="Codeine">
-    <h3>Codeine Tablet</h3>
-    <p>₦4500</p>
-    <button onclick="addToCart('Codeine Tablet',4500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/aspirin.jpg" alt="Aspirin">
-    <h3>Aspirin Tablet</h3>
-    <p>₦1500</p>
-    <button onclick="addToCart('Aspirin Tablet',1500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/etoricoxib.jpg" alt="Etoricoxib">
-    <h3>Etoricoxib Tablet</h3>
-    <p>₦3800</p>
-    <button onclick="addToCart('Etoricoxib Tablet',3800)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/indomethacin.jpg" alt="Indomethacin">
-    <h3>Indomethacin Capsule</h3>
-    <p>₦2700</p>
-    <button onclick="addToCart('Indomethacin Capsule',2700)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/aceclofenac.jpg" alt="Aceclofenac">
-    <h3>Aceclofenac Tablet</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Aceclofenac Tablet',3000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/acetaminophen.jpg" alt="Acetaminophen">
-    <h3>Acetaminophen Tablet</h3>
-    <p>₦1500</p>
-    <button onclick="addToCart('Acetaminophen Tablet',1500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/diclofenac-potassium.jpg" alt="Diclofenac Potassium">
-    <h3>Diclofenac Potassium Tablet</h3>
-    <p>₦2800</p>
-    <button onclick="addToCart('Diclofenac Potassium Tablet',2800)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/nimesulide.jpg" alt="Nimesulide">
-    <h3>Nimesulide Tablet</h3>
-    <p>₦3200</p>
-    <button onclick="addToCart('Nimesulide Tablet',3200)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/ibuprofen-paracetamol.jpg" alt="Ibuprofen + Paracetamol">
-    <h3>Ibuprofen + Paracetamol Tablet</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Ibuprofen + Paracetamol Tablet',2500)">Add to Cart</button>
-</div>
-    <div class="product">
-        <img src="images/paracetamol.jpg" alt="Paracetamol Tablet">
-        <h3>Paracetamol Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Paracetamol Tablet',1500)">Add to Cart
-        </button>
-    </div>
-
-<h2 class="section-title">Antibiotics</h2>
-<div class="category">
-  <h2>group</h2>
+<div class="pv-ov" id="pvOv"></div>
+<div class="pv" id="pv" role="dialog" aria-modal="true" aria-label="Product details">
+  <button type="button" class="pv-x" id="pvX" aria-label="Close">&#10005;</button>
+  <div class="pv-track" id="pvTrack"></div>
+  <div class="pv-thumbs" id="pvThumbs"></div>
+  <div class="pv-body">
+    <span class="ptag" id="pvTag"></span>
+    <h3 id="pvName"></h3>
+    <div id="pvVarWrap"><div class="pv-label">Choose option</div><div class="pv-vars" id="pvVars"></div></div>
   </div>
-    <div class="product">
-        <img src="images/amoxicillin-capsule.jpg" alt="Amoxicillin Capsule">
-        <h3>Amoxicillin Capsule</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Amoxicillin Capsule',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/amoxicillin-tablet.jpg" alt="Amoxicillin Tablet">
-        <h3>Amoxicillin Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Amoxicillin Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ampiclox.jpg" alt="Ampiclox">
-        <h3>Ampiclox Capsule</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Ampiclox Capsule',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ampicillin.jpg" alt="Ampicillin">
-        <h3>Ampicillin Capsule</h3>
-        <p>₦2800</p>
-        <button onclick="addToCart('Ampicillin Capsule',2800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/azithromycin-tablet.jpg" alt="Azithromycin Tablet">
-        <h3>Azithromycin Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Azithromycin Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/azithromycin-capsule.jpg" alt="Azithromycin Capsule">
-        <h3>Azithromycin Capsule</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Azithromycin Capsule',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ciprofloxacin.jpg" alt="Ciprofloxacin">
-        <h3>Ciprofloxacin Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Ciprofloxacin Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/clarithromycin.jpg" alt="Clarithromycin">
-        <h3>Clarithromycin Tablet</h3>
-        <p>₦6000</p>
-        <button onclick="addToCart('Clarithromycin Tablet',6000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/doxycycline-capsule.jpg" alt="Doxycycline Capsule">
-        <h3>Doxycycline Capsule</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Doxycycline Capsule',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/doxycycline-tablet.jpg" alt="Doxycycline Tablet">
-        <h3>Doxycycline Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Doxycycline Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/erythromycin.jpg" alt="Erythromycin">
-        <h3>Erythromycin Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Erythromycin Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/flucloxacillin.jpg" alt="Flucloxacillin">
-        <h3>Flucloxacillin Capsule</h3>
-        <p>₦2800</p>
-        <button onclick="addToCart('Flucloxacillin Capsule',2800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/levofloxacin.jpg" alt="Levofloxacin">
-        <h3>Levofloxacin Tablet</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Levofloxacin Tablet',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metronidazole.jpg" alt="Metronidazole">
-        <h3>Metronidazole Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Metronidazole Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/nitrofurantoin.jpg" alt="Nitrofurantoin">
-        <h3>Nitrofurantoin Capsule</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Nitrofurantoin Capsule',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ofloxacin.jpg" alt="Ofloxacin">
-        <h3>Ofloxacin Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Ofloxacin Tablet',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/tinidazole.jpg" alt="Tinidazole">
-        <h3>Tinidazole Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Tinidazole Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cefuroxime.jpg" alt="Cefuroxime">
-        <h3>Cefuroxime Tablet</h3>
-        <p>₦5500</p>
-        <button onclick="addToCart('Cefuroxime Tablet',5500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cefixime.jpg" alt="Cefixime">
-        <h3>Cefixime Tablet</h3>
-        <p>₦6000</p>
-        <button onclick="addToCart('Cefixime Tablet',6000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/co-amoxiclav-tablet.jpg" alt="Co-amoxiclav Tablet">
-        <h3>Co-amoxiclav Tablet</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Co-amoxiclav Tablet',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/co-amoxiclav-capsule.jpg" alt="Co-amoxiclav Capsule">
-        <h3>Co-amoxiclav Capsule</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Co-amoxiclav Capsule',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/clindamycin.jpg" alt="Clindamycin">
-        <h3>Clindamycin Capsule</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Clindamycin Capsule',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cloxacillin.jpg" alt="Cloxacillin">
-        <h3>Cloxacillin Capsule</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Cloxacillin Capsule',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cephalexin-capsule.jpg" alt="Cephalexin Capsule">
-        <h3>Cephalexin Capsule</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Cephalexin Capsule',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cephalexin-tablet.jpg" alt="Cephalexin Tablet">
-        <h3>Cephalexin Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Cephalexin Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/sulfamethoxazole-trimethoprim.jpg" alt="Sulfamethoxazole + Trimethoprim">
-        <h3>Sulfamethoxazole + Trimethoprim Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Sulfamethoxazole + Trimethoprim Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/linezolid.jpg" alt="Linezolid">
-        <h3>Linezolid Tablet</h3>
-        <p>₦12000</p>
-        <button onclick="addToCart('Linezolid Tablet',12000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/moxifloxacin.jpg" alt="Moxifloxacin">
-        <h3>Moxifloxacin Tablet</h3>
-        <p>₦7000</p>
-        <button onclick="addToCart('Moxifloxacin Tablet',7000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/rifampicin.jpg" alt="Rifampicin">
-        <h3>Rifampicin Capsule</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Rifampicin Capsule',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cefpodoxime.jpg" alt="Cefpodoxime">
-        <h3>Cefpodoxime Tablet</h3>
-        <p>₦6500</p>
-        <button onclick="addToCart('Cefpodoxime Tablet',6500)">Add to Cart</button>
-    </div>
-    
-<h2 class="section-title">Vitamins</h2>
-         <div class="category">
-            <h2>group</h2>
-     </div>
-
-<div class="product">
-    <img src="images/vitamin-c.jpg" alt="Vitamin C">
-    <h3>Vitamin C Tablet</h3>
-    <p>₦2000</p>
-    <button onclick="addToCart('Vitamin C Tablet',2000)">Add to Cart</button>
+  <div class="pv-foot"><p class="pv-price" id="pvPrice">&#8358;0</p><button type="button" class="pv-add" id="pvAdd">Add to Cart</button></div>
 </div>
 
-<div class="product">
-    <img src="images/vitamin-d3.jpg" alt="Vitamin D3">
-    <h3>Vitamin D3 Capsule</h3>
-    <p>₦3500</p>
-    <button onclick="addToCart('Vitamin D3 Capsule',3500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/vitamin-e.jpg" alt="Vitamin E">
-    <h3>Vitamin E Capsule</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Vitamin E Capsule',3000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/vitamin-b-complex.jpg" alt="Vitamin B Complex">
-    <h3>Vitamin B Complex Tablet</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Vitamin B Complex Tablet',2500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/multivitamin.jpg" alt="Multivitamin">
-    <h3>Multivitamin Tablet</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Multivitamin Tablet',3000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/zinc.jpg" alt="Zinc">
-    <h3>Zinc Tablet</h3>
-    <p>₦2000</p>
-    <button onclick="addToCart('Zinc Tablet',2000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/calcium.jpg" alt="Calcium">
-    <h3>Calcium Tablet</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Calcium Tablet',2500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/iron.jpg" alt="Iron">
-    <h3>Iron Tablet</h3>
-    <p>₦1800</p>
-    <button onclick="addToCart('Iron Tablet',1800)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/folic-acid.jpg" alt="Folic Acid">
-    <h3>Folic Acid Tablet</h3>
-    <p>₦1500</p>
-    <button onclick="addToCart('Folic Acid Tablet',1500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/biotin.jpg" alt="Biotin">
-    <h3>Biotin Tablet</h3>
-    <p>₦3500</p>
-    <button onclick="addToCart('Biotin Tablet',3500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/omega3.jpg" alt="Omega-3">
-    <h3>Omega-3 Capsule</h3>
-    <p>₦5000</p>
-    <button onclick="addToCart('Omega-3 Capsule',5000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/magnesium.jpg" alt="Magnesium">
-    <h3>Magnesium Tablet</h3>
-    <p>₦2800</p>
-    <button onclick="addToCart('Magnesium Tablet',2800)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/vitamin-a.jpg" alt="Vitamin A">
-    <h3>Vitamin A Capsule</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Vitamin A Capsule',2500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/vitamin-k.jpg" alt="Vitamin K">
-    <h3>Vitamin K Tablet</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Vitamin K Tablet',3000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/vitamin-b12.jpg" alt="Vitamin B12">
-    <h3>Vitamin B12 Tablet</h3>
-    <p>₦2500</p>
-    <button onclick="addToCart('Vitamin B12 Tablet',2500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/prenatal-multivitamin.jpg" alt="Prenatal Multivitamin">
-    <h3>Prenatal Multivitamin Tablet</h3>
-    <p>₦4500</p>
-    <button onclick="addToCart('Prenatal Multivitamin Tablet',4500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/calcium-vitamin-d.jpg" alt="Calcium + Vitamin D">
-    <h3>Calcium + Vitamin D Tablet</h3>
-    <p>₦3500</p>
-    <button onclick="addToCart('Calcium + Vitamin D Tablet',3500)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/antioxidant.jpg" alt="Antioxidant">
-    <h3>Antioxidant Capsule</h3>
-    <p>₦4000</p>
-    <button onclick="addToCart('Antioxidant Capsule',4000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/selenium.jpg" alt="Selenium">
-    <h3>Selenium Tablet</h3>
-    <p>₦3000</p>
-    <button onclick="addToCart('Selenium Tablet',3000)">Add to Cart</button>
-</div>
-
-<div class="product">
-    <img src="images/coenzyme-q10.jpg" alt="Coenzyme Q10">
-    <h3>Coenzyme Q10 Capsule</h3>
-    <p>₦6000</p>
-    <button onclick="addToCart('Coenzyme Q10 Capsule',6000)">Add to Cart</button>
-</div>
-<h2 class="section-title">syrups and sus</h2>
-           <div class="category">
-            <h2>group</h2>
-     </div>
-    <div class="product">
-        <img src="images/infant-paracetamol.jpg" alt="Infant Paracetamol">
-        <h3>Infant Paracetamol Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Infant Paracetamol Tablet',1500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-d-baby.jpg" alt="Vitamin D Baby">
-        <h3>Vitamin D Baby Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Vitamin D Baby Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/zinc.jpg" alt="Zinc">
-        <h3>Zinc Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Zinc Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/multivitamin.jpg" alt="Multivitamin">
-        <h3>Multivitamin Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Multivitamin Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/iron-supplement.jpg" alt="Iron Supplement">
-        <h3>Iron Supplement Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Iron Supplement Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/calcium.jpg" alt="Calcium">
-        <h3>Calcium Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Calcium Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/probiotic-capsule.jpg" alt="Probiotic Capsule">
-        <h3>Probiotic Capsule</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Probiotic Capsule',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-c.jpg" alt="Vitamin C">
-        <h3>Vitamin C Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Vitamin C Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/folic-acid.jpg" alt="Folic Acid">
-        <h3>Folic Acid Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Folic Acid Tablet',1500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/omega3.jpg" alt="Omega-3">
-        <h3>Omega-3 Capsule</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Omega-3 Capsule',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/baby-multivitamin.jpg" alt="Baby Multivitamin">
-        <h3>Baby Multivitamin Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Baby Multivitamin Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-a.jpg" alt="Vitamin A">
-        <h3>Vitamin A Capsule</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Vitamin A Capsule',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/magnesium.jpg" alt="Magnesium">
-        <h3>Magnesium Tablet</h3>
-        <p>₦2800</p>
-        <button onclick="addToCart('Magnesium Tablet',2800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/electrolyte.jpg" alt="Electrolyte">
-        <h3>Electrolyte Tablet</h3>
-        <p>₦2200</p>
-        <button onclick="addToCart('Electrolyte Tablet',2200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/zinc-vitamin-c.jpg" alt="Zinc + Vitamin C">
-        <h3>Zinc + Vitamin C Tablet</h3>
-        <p>₦2800</p>
-        <button onclick="addToCart('Zinc + Vitamin C Tablet',2800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-b-complex.jpg" alt="Vitamin B Complex">
-        <h3>Vitamin B Complex Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Vitamin B Complex Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/immune-support.jpg" alt="Immune Support">
-        <h3>Immune Support Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Immune Support Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/calcium-vitamin-d.jpg" alt="Calcium + Vitamin D">
-        <h3>Calcium + Vitamin D Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Calcium + Vitamin D Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/probiotic-tablet.jpg" alt="Probiotic Tablet">
-        <h3>Probiotic Tablet</h3>
-        <p>₦3200</p>
-        <button onclick="addToCart('Probiotic Tablet',3200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/baby-iron.jpg" alt="Baby Iron">
-        <h3>Baby Iron Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Baby Iron Tablet',2500)">Add to Cart</button>
-    </div>
-    
-    <h2 class="section-title">others and creams</h2>
-    <div class="category">
-    <h2>group</h2>
-     </div>
-    <div class="product">
-        <img src="images/ibuprofen.jpg" alt="Ibuprofen Tablet">
-        <h3>Ibuprofen Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Ibuprofen Tablet',2000)">Add to Cart</button>
-    </div>
-    <div class="product">
-        <img src="images/paracetamol.jpg" alt="Paracetamol Tablet">
-        <h3>Paracetamol Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Paracetamol Tablet',1500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/aspirin.jpg" alt="Aspirin Tablet">
-        <h3>Aspirin Tablet</h3>
-        <p>₦1800</p>
-        <button onclick="addToCart('Aspirin Tablet',1800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/cetirizine.jpg" alt="Cetirizine Tablet">
-        <h3>Cetirizine Tablet</h3>
-        <p>₦1200</p>
-        <button onclick="addToCart('Cetirizine Tablet',1200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/loratadine.jpg" alt="Loratadine Tablet">
-        <h3>Loratadine Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Loratadine Tablet',1500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/diphenhydramine.jpg" alt="Diphenhydramine Capsule">
-        <h3>Diphenhydramine Capsule</h3>
-        <p>₦1700</p>
-        <button onclick="addToCart('Diphenhydramine Capsule',1700)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-c.jpg" alt="Vitamin C Tablet">
-        <h3>Vitamin C Tablet</h3>
-        <p>₦1000</p>
-        <button onclick="addToCart('Vitamin C Tablet',1000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/zinc.jpg" alt="Zinc Tablet">
-        <h3>Zinc Tablet</h3>
-        <p>₦1200</p>
-        <button onclick="addToCart('Zinc Tablet',1200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ors.jpg" alt="Oral Rehydration Tablet">
-        <h3>Oral Rehydration Tablet</h3>
-        <p>₦800</p>
-        <button onclick="addToCart('Oral Rehydration Tablet',800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/charcoal.jpg" alt="Activated Charcoal Capsule">
-        <h3>Activated Charcoal Capsule</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Activated Charcoal Capsule',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/antacid.jpg" alt="Antacid Tablet">
-        <h3>Antacid Tablet</h3>
-        <p>₦1200</p>
-        <button onclick="addToCart('Antacid Tablet',1200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/loperamide.jpg" alt="Loperamide Capsule">
-        <h3>Loperamide Capsule</h3>
-        <p>₦1800</p>
-        <button onclick="addToCart('Loperamide Capsule',1800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/omeprazole.jpg" alt="Omeprazole Capsule">
-        <h3>Omeprazole Capsule</h3>
-        <p>₦2200</p>
-        <button onclick="addToCart('Omeprazole Capsule',2200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/pantoprazole.jpg" alt="Pantoprazole Tablet">
-        <h3>Pantoprazole Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Pantoprazole Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/probiotic.jpg" alt="Probiotic Capsule">
-        <h3>Probiotic Capsule</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Probiotic Capsule',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/folic-acid.jpg" alt="Folic Acid Tablet">
-        <h3>Folic Acid Tablet</h3>
-        <p>₦1000</p>
-        <button onclick="addToCart('Folic Acid Tablet',1000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/multivitamin.jpg" alt="Multivitamin Tablet">
-        <h3>Multivitamin Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Multivitamin Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/iron.jpg" alt="Iron Tablet">
-        <h3>Iron Tablet</h3>
-        <p>₦1500</p>
-        <button onclick="addToCart('Iron Tablet',1500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/calcium.jpg" alt="Calcium Tablet">
-        <h3>Calcium Tablet</h3>
-        <p>₦1800</p>
-        <button onclick="addToCart('Calcium Tablet',1800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vitamin-d.jpg" alt="Vitamin D Capsule">
-        <h3>Vitamin D Capsule</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Vitamin D Capsule',2000)">Add to Cart</button>
-    </div>
-    
-<h2 class="section-title">Diabetes blood-pressure</h2>
-   <div class="category">
-    <h2>group</h2>
-    </div>
-    <div class="product">
-        <img src="images/metformin.jpg" alt="Metformin">
-        <h3>Metformin Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Metformin Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/glimepiride.jpg" alt="Glimepiride">
-        <h3>Glimepiride Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Glimepiride Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/gliclazide.jpg" alt="Gliclazide">
-        <h3>Gliclazide Tablet</h3>
-        <p>₦3200</p>
-        <button onclick="addToCart('Gliclazide Tablet',3200)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/sitagliptin.jpg" alt="Sitagliptin">
-        <h3>Sitagliptin Tablet</h3>
-        <p>₦6000</p>
-        <button onclick="addToCart('Sitagliptin Tablet',6000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/vildagliptin.jpg" alt="Vildagliptin">
-        <h3>Vildagliptin Tablet</h3>
-        <p>₦5500</p>
-        <button onclick="addToCart('Vildagliptin Tablet',5500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/pioglitazone.jpg" alt="Pioglitazone">
-        <h3>Pioglitazone Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Pioglitazone Tablet',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/empagliflozin.jpg" alt="Empagliflozin">
-        <h3>Empagliflozin Tablet</h3>
-        <p>₦8000</p>
-        <button onclick="addToCart('Empagliflozin Tablet',8000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/dapagliflozin.jpg" alt="Dapagliflozin">
-        <h3>Dapagliflozin Tablet</h3>
-        <p>₦7500</p>
-        <button onclick="addToCart('Dapagliflozin Tablet',7500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/linagliptin.jpg" alt="Linagliptin">
-        <h3>Linagliptin Tablet</h3>
-        <p>₦6500</p>
-        <button onclick="addToCart('Linagliptin Tablet',6500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/acarbose.jpg" alt="Acarbose">
-        <h3>Acarbose Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Acarbose Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metformin-xr.jpg" alt="Metformin XR">
-        <h3>Metformin XR Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Metformin XR Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/repaglinide.jpg" alt="Repaglinide">
-        <h3>Repaglinide Tablet</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Repaglinide Tablet',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/nateglinide.jpg" alt="Nateglinide">
-        <h3>Nateglinide Tablet</h3>
-        <p>₦5000</p>
-        <button onclick="addToCart('Nateglinide Tablet',5000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/teneligliptin.jpg" alt="Teneligliptin">
-        <h3>Teneligliptin Tablet</h3>
-        <p>₦5500</p>
-        <button onclick="addToCart('Teneligliptin Tablet',5500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/alogliptin.jpg" alt="Alogliptin">
-        <h3>Alogliptin Tablet</h3>
-        <p>₦6000</p>
-        <button onclick="addToCart('Alogliptin Tablet',6000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/glibenclamide.jpg" alt="Glibenclamide">
-        <h3>Glibenclamide Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Glibenclamide Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/saxagliptin.jpg" alt="Saxagliptin">
-        <h3>Saxagliptin Tablet</h3>
-        <p>₦6500</p>
-        <button onclick="addToCart('Saxagliptin Tablet',6500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metformin-glimepiride.jpg" alt="Metformin + Glimepiride">
-        <h3>Metformin + Glimepiride Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Metformin + Glimepiride Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metformin-sitagliptin.jpg" alt="Metformin + Sitagliptin">
-        <h3>Metformin + Sitagliptin Tablet</h3>
-        <p>₦7000</p>
-        <button onclick="addToCart('Metformin + Sitagliptin Tablet',7000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metformin-vildagliptin.jpg" alt="Metformin + Vildagliptin">
-        <h3>Metformin + Vildagliptin Tablet</h3>
-        <p>₦6500</p>
-        <button onclick="addToCart('Metformin + Vildagliptin Tablet',6500)">Add to Cart</button>
-    </div>
-<h2 class="section-title">Injection </h2>
-
-<div class="category">
-  <h2>group</h2>
-  </div>
-
-    <div class="product">
-        <img src="images/amlodipine.jpg" alt="Amlodipine">
-        <h3>Amlodipine Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Amlodipine Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/losartan.jpg" alt="Losartan">
-        <h3>Losartan Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Losartan Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/lisinopril.jpg" alt="Lisinopril">
-        <h3>Lisinopril Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Lisinopril Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/enalapril.jpg" alt="Enalapril">
-        <h3>Enalapril Tablet</h3>
-        <p>₦2800</p>
-        <button onclick="addToCart('Enalapril Tablet',2800)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/valsartan.jpg" alt="Valsartan">
-        <h3>Valsartan Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Valsartan Tablet',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/telmisartan.jpg" alt="Telmisartan">
-        <h3>Telmisartan Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Telmisartan Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/candesartan.jpg" alt="Candesartan">
-        <h3>Candesartan Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Candesartan Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/hydrochlorothiazide.jpg" alt="Hydrochlorothiazide">
-        <h3>Hydrochlorothiazide Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Hydrochlorothiazide Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/furosemide.jpg" alt="Furosemide">
-        <h3>Furosemide Tablet</h3>
-        <p>₦2000</p>
-        <button onclick="addToCart('Furosemide Tablet',2000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/bisoprolol.jpg" alt="Bisoprolol">
-        <h3>Bisoprolol Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Bisoprolol Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/atenolol.jpg" alt="Atenolol">
-        <h3>Atenolol Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Atenolol Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/metoprolol.jpg" alt="Metoprolol">
-        <h3>Metoprolol Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Metoprolol Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/nifedipine.jpg" alt="Nifedipine">
-        <h3>Nifedipine Tablet</h3>
-        <p>₦2500</p>
-        <button onclick="addToCart('Nifedipine Tablet',2500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/spironolactone.jpg" alt="Spironolactone">
-        <h3>Spironolactone Tablet</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Spironolactone Tablet',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/carvedilol.jpg" alt="Carvedilol">
-        <h3>Carvedilol Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Carvedilol Tablet',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/diltiazem.jpg" alt="Diltiazem">
-        <h3>Diltiazem Tablet</h3>
-        <p>₦3500</p>
-        <button onclick="addToCart('Diltiazem Tablet',3500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/ramipril.jpg" alt="Ramipril">
-        <h3>Ramipril Capsule</h3>
-        <p>₦3000</p>
-        <button onclick="addToCart('Ramipril Capsule',3000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/olmesartan.jpg" alt="Olmesartan">
-        <h3>Olmesartan Tablet</h3>
-        <p>₦4500</p>
-        <button onclick="addToCart('Olmesartan Tablet',4500)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/perindopril.jpg" alt="Perindopril">
-        <h3>Perindopril Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Perindopril Tablet',4000)">Add to Cart</button>
-    </div>
-
-    <div class="product">
-        <img src="images/amlodipine-valsartan.jpg" alt="Amlodipine + Valsartan">
-        <h3>Amlodipine + Valsartan Tablet</h3>
-        <p>₦5500</p>
-        <button onclick="addToCart('Amlodipine + Valsartan Tablet',5500)">Add to Cart</button>
-        </div>
-        
-    <div class="product">
-        <img src="images/perindopril.jpg" alt="Perindopril">
-        <h3>Perindopril Tablet</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Perindopril Tablet',4000)">Add to Cart</button>
-    </div>
-    
-     <div class="product">
-        <img src="images/Ceftriaxone.jpg" alt="Ceftriaxone">
-        <h3>Ceftriaxone inj</h3>
-        <p>₦4000</p>
-        <button onclick="addToCart('Perindopril Tablet',4000)">Add to Cart</button>
-    </div>
-    </div>
-</section>
-
-<section id="prescription">
-    <h2>Upload Prescription</h2>
-
-    <p>Upload your doctor's prescription.</p>
-
-    <input type="file" accept=".jpg,.jpeg,.png,.pdf">
+<script>
+(function(){
+  var META = {"tablets-tins": {"icon": "fa-pills", "color": "#0077b6", "bg": "#e6f3fb", "tag": "Tablet"}, "tablets": {"icon": "fa-tablets", "color": "#2f6fd6", "bg": "#e9effc", "tag": "Tablet"}, "capsules": {"icon": "fa-capsules", "color": "#8a4fd0", "bg": "#f1eafa", "tag": "Capsule"}, "syrups": {"icon": "fa-bottle-droplet", "color": "#d6456b", "bg": "#fbe9ef", "tag": "Syrup"}, "suspensions": {"icon": "fa-flask", "color": "#e0792b", "bg": "#fdf0e5", "tag": "Suspension"}, "injections": {"icon": "fa-syringe", "color": "#c0392b", "bg": "#fbeae8", "tag": "Injection"}, "supplies": {"icon": "fa-kit-medical", "color": "#1f9d8a", "bg": "#e5f5f2", "tag": "Supply"}, "creams": {"icon": "fa-droplet", "color": "#d8a31a", "bg": "#fbf3dc", "tag": "Cream"}, "ointments": {"icon": "fa-bandage", "color": "#a8372f", "bg": "#f9e9e7", "tag": "Ointment"}, "drops": {"icon": "fa-eye-dropper", "color": "#4a5bd6", "bg": "#eaecfb", "tag": "Drops"}, "antiseptics": {"icon": "fa-pump-soap", "color": "#2e8b57", "bg": "#e6f4ec", "tag": "Liquid"}, "consumables": {"icon": "fa-box-open", "color": "#5b6b7a", "bg": "#edf0f3", "tag": "Consumable"}, "oral": {"icon": "fa-mortar-pestle", "color": "#0a8f4d", "bg": "#e4f5ec", "tag": "Oral"}};
+  var $=function(id){return document.getElementById(id);};
+  var money=function(n){return '\u20A6'+Number(n||0).toLocaleString('en-NG');};
+  var slug=function(s){return String(s).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'');};
+  var esc=function(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  var host=$('catalogHost'), tabs=$('catTabs');
+  if(!host) return;
+  var prods=[];
+
+  /* small styles for stock labels */
+  var sty=document.createElement('style');
+  sty.textContent='.fx-stock{display:inline-block;margin-left:6px;font-size:.72rem;font-weight:700;border-radius:999px;padding:2px 8px;vertical-align:middle}'+
+    '.fx-stock.out{background:#fbe6e8;color:#a12a35}.fx-stock.low{background:#fdf0e5;color:#b25a12}'+
+    '.product.fx-oos .pimg{opacity:.5}.pbtn[disabled],.pv-add[disabled]{opacity:.45;cursor:not-allowed}'+
+    '.fx-note{padding:24px 12px;text-align:center;color:#55677a}';
+  document.head.appendChild(sty);
+
+  function low(){return typeof window.FX_LOW==='number'?window.FX_LOW:5;}
+  function isOut(v){return typeof v.stock==='number'&&v.stock<=0;}
+  function stockNote(v){
+    if(typeof v.stock!=='number') return '';
+    if(v.stock<=0) return ' \u00B7 Out of stock';
+    if(v.stock<=low()) return ' \u00B7 Only '+v.stock+' left';
+    return '';
+  }
+
+  host.addEventListener('error',function(e){
+    var t=e.target; if(!t||t.tagName!=='IMG') return;
+    var a=t.getAttribute('data-alt');
+    if(a){t.removeAttribute('data-alt');t.src=a;} else {t.remove();}
+  },true);
+
+  /* ---------- draw the catalogue (can be called again when Firestore changes) ---------- */
+  function build(CATALOG){
+    prods=[]; window.FX_BYNAME={};
+    var html='', th='';
+    CATALOG.forEach(function(g){
+      var m=META[g.id]||{icon:'fa-pills',color:'#0077b6',bg:'#e6f3fb',tag:''};
+      var st='--g:'+m.color+';--gbg:'+m.bg;
+      th+='<a href="#'+esc(g.id)+'" data-g="'+esc(g.id)+'" style="'+st+'"><span class="ci"><i class="fa-solid '+m.icon+'" aria-hidden="true"></i></span><span class="cl">'+esc(g.title)+'</span></a>';
+      html+='<div class="pgroup" id="'+esc(g.id)+'" style="'+st+'"><span class="gi"><i class="fa-solid '+m.icon+'" aria-hidden="true"></i></span><div><h3 class="gt">'+esc(g.title)+'</h3><small>'+g.items.length+' products</small></div></div>'+
+            '<div class="products-container pgrid" style="'+st+'">';
+      g.items.forEach(function(it){
+        var vars=(typeof it[1]==='number')?[{label:'',price:it[1],id:it[2],stock:it[3],image:it[4],form:it[5]}]:it[1].map(function(x){return {label:x[0],price:x[1],id:x[2],stock:x[3],image:x[4],form:x[5]};});
+        var p={name:it[0],vars:vars,meta:m,tag:vars[0].form||(/Infusion/.test(it[0])?'Infusion':m.tag),idx:prods.length};
+        prods.push(p);
+        vars.forEach(function(v){
+          if(v.id) window.FX_BYNAME[v.label?p.name+' ('+v.label+')':p.name]={id:v.id,stock:v.stock,price:Number(v.price)||0};
+        });
+        var pr=vars.map(function(v){return Number(v.price)||0;}), min=Math.min.apply(null,pr), max=Math.max.apply(null,pr);
+        var multi=vars.length>1;
+        var out=vars.every(isOut);
+        var src=vars[0].image||('images/'+slug(p.name)+'.jpg');
+        var note='';
+        if(out) note='<span class="fx-stock out">Out of stock</span>';
+        else if(!multi&&typeof vars[0].stock==='number'&&vars[0].stock<=low()) note='<span class="fx-stock low">Only '+vars[0].stock+' left</span>';
+        html+='<div class="product'+(out?' fx-oos':'')+'" data-i="'+p.idx+'" tabindex="0">'+
+          '<div class="pimg"><i class="fa-solid '+m.icon+'" aria-hidden="true"></i><img loading="lazy" alt="'+esc(p.name)+'" src="'+esc(src)+'"'+(multi?' data-alt="images/'+slug(p.name+' '+vars[0].label)+'.jpg"':'')+'></div>'+
+          '<div class="pinfo"><h3>'+esc(p.name)+'</h3><span class="ptag">'+esc(p.tag+(multi?' \u00B7 '+vars.length+' options':''))+'</span>'+note+
+          '<div class="prow"><p class="price">'+(multi&&min!==max?'From ':'')+money(min)+'</p>'+
+          '<button type="button" class="pbtn"'+(out?' disabled':'')+' aria-label="'+(out?'Out of stock':(multi?'Choose option':'Add to cart'))+'"><i class="fa-solid '+(multi?'fa-sliders':'fa-cart-plus')+'" aria-hidden="true"></i></button></div></div></div>';
+      });
+      html+='</div>';
+    });
+    host.innerHTML=html||'<p class="fx-note">No medicines are available right now. Please check back soon.</p>';
+    if(tabs) tabs.innerHTML=th;
+    var sb=$('searchBox'); if(sb&&sb.value&&typeof searchMedicine==='function') searchMedicine();
+  }
+  window.fxRenderCatalog=build;
+  window.fxShowNote=function(t){host.innerHTML='<p class="fx-note">'+esc(t)+'</p>';};
+  window.fxShowNote('Loading medicines...');
+
+  if(tabs){
+    tabs.addEventListener('click',function(e){
+      var a=e.target.closest('a'); if(!a) return;
+      [].forEach.call(tabs.children,function(x){x.classList.toggle('on',x===a);});
+    });
+  }
+
+  /* ---------- product sheet (photos + options) ---------- */
+  var pv=$('pv'), ov=$('pvOv'), track=$('pvTrack'), thumbs=$('pvThumbs'), cur=null, vi=0, token=0, cache={};
+  function probe(u){return new Promise(function(r){var i=new Image();i.onload=function(){r(u);};i.onerror=function(){r(null);};i.src=u;});}
+  function stem(path){return String(path).replace(/^images\//,'').replace(/\.[A-Za-z0-9]+$/,'');}
+  function gather(b,first){
+    var key=b+'|'+(first||'');
+    if(!cache[key]){
+      var u=[]; if(first) u.push(first);
+      for(var k=1;k<=5;k++){var s='images/'+b+(k>1?'-'+k:'')+'.jpg'; if(s!==first) u.push(s);}
+      cache[key]=Promise.all(u.map(probe)).then(function(a){return a.filter(Boolean);});
+    }
+    return cache[key];
+  }
+  function fullName(p,v){return v.label?p.name+' ('+v.label+')':p.name;}
+  function syncAdd(){
+    if(!cur) return;
+    var o=isOut(cur.vars[vi]), b=$('pvAdd');
+    b.disabled=o; b.textContent=o?'Out of stock':'Add to Cart';
+  }
+  function flash(btn,txt,back,icon){
+    if(icon){icon.className='fa-solid fa-check';setTimeout(function(){icon.className=back;},1200);return;}
+    btn.textContent=txt;setTimeout(syncAdd,1200);
+  }
+  function render(){
+    var p=cur, v=p.vars[vi], my=++token;
+    pv.style.setProperty('--g',p.meta.color); pv.style.setProperty('--gbg',p.meta.bg);
+    $('pvName').textContent=p.name; $('pvTag').textContent=p.tag+stockNote(v);
+    var vw=$('pvVarWrap');
+    if(p.vars.length>1){
+      vw.style.display='';
+      $('pvVars').innerHTML=p.vars.map(function(x,i){return '<button type="button" class="'+(i===vi?'on':'')+'" data-v="'+i+'">'+esc(x.label)+'<small>'+money(x.price)+'</small>'+(isOut(x)?'<small>Out of stock</small>':'')+'</button>';}).join('');
+    } else vw.style.display='none';
+    $('pvPrice').textContent=money(v.price);
+    syncAdd();
+    track.innerHTML='<div class="pv-slide"><i class="fa-solid '+p.meta.icon+' pv-ph" aria-hidden="true"></i></div>'; thumbs.innerHTML='';
+    var base=v.image?stem(v.image):slug(p.name+(v.label?' '+v.label:''));
+    var baseP=p.vars[0].image?stem(p.vars[0].image):slug(p.name);
+    gather(base,v.image).then(function(a){return (a.length||!v.label)?a:gather(baseP,p.vars[0].image);}).then(function(list){
+      if(my!==token||!list.length) return;
+      track.innerHTML=list.map(function(u){return '<div class="pv-slide"><img src="'+esc(u)+'" alt="'+esc(p.name)+'"></div>';}).join('');
+      track.scrollLeft=0;
+      if(list.length>1) thumbs.innerHTML=list.map(function(u,k){return '<button type="button" data-k="'+k+'" class="'+(k?'':'on')+'"><img src="'+esc(u)+'" alt="Photo '+(k+1)+'"></button>';}).join('');
+    });
+  }
+  function open(p){var id0=p.vars[0]&&p.vars[0].id;if(id0){location.href='medicine.html?id='+encodeURIComponent(id0);return;}cur=p;vi=0;render();pv.classList.add('open');ov.classList.add('open');document.body.style.overflow='hidden';}
+  function close(){pv.classList.remove('open');ov.classList.remove('open');document.body.style.overflow='';}
+  $('pvVars').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;vi=+b.getAttribute('data-v');render();});
+  thumbs.addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;track.scrollTo({left:track.clientWidth*(+b.getAttribute('data-k')),behavior:'smooth'});});
+  track.addEventListener('scroll',function(){var k=Math.round(track.scrollLeft/track.clientWidth);[].forEach.call(thumbs.children,function(t,j){t.classList.toggle('on',j===k);});});
+  $('pvAdd').addEventListener('click',function(){
+    var v=cur.vars[vi]; if(isOut(v)) return;
+    if(addToCart(fullName(cur,v),Number(v.price)||0)!==false) flash(this,'Added \u2713');
+  });
+  $('pvX').addEventListener('click',close); ov.addEventListener('click',close);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});
+
+  host.addEventListener('click',function(e){
+    var c=e.target.closest('.product'); if(!c) return;
+    var p=prods[+c.getAttribute('data-i')]; if(!p) return;
+    var b=e.target.closest('.pbtn');
+    if(b&&!b.disabled&&p.vars.length===1){
+      if(addToCart(fullName(p,p.vars[0]),Number(p.vars[0].price)||0)!==false) flash(b,'',b.firstChild.className,b.firstChild);
+      return;
+    }
+    open(p);
+  });
+  host.addEventListener('keydown',function(e){
+    if(e.key!=='Enter')return; var c=e.target.closest('.product');
+    if(c&&e.target===c&&prods[+c.getAttribute('data-i')]) open(prods[+c.getAttribute('data-i')]);
+  });
+})();
+</script>
 </section>
 <script>
-let totalPrice = 0;
-let totalItems = 0;
 
-function addToCart(name, price, qty) {
-    qty = parseInt(qty) || 1;
 
-    let itemTotal = price * qty;
-
-    let li = document.createElement("li");
-
-    li.innerHTML = `
-        ${name} × ${qty} = ₦${itemTotal}
-        <button onclick="removeItem(this, ${itemTotal}, ${qty})">
-            Remove
-        </button>
-    `;
-
-    document.getElementById("cart").appendChild(li);
-
-    // Update totals
-    totalPrice += itemTotal;
-    totalItems += qty;
-
-    document.getElementById("totalPrice").textContent = totalPrice;
-    document.getElementById("totalItems").textContent = totalItems;
-}
-
-function removeItem(button, amount, qty) {
-    button.parentElement.remove();
-
-    totalPrice -= amount;
-    totalItems -= qty;
-
-    document.getElementById("totalPrice").textContent = totalPrice;
-    document.getElementById("totalItems").textContent = totalItems;
-}
 </script>
-<h3>Total Items: <span id="totalItems">0</span></h3>
-<h3>Total Price: ₦<span id="totalPrice">0</span></h3>
 
-<ul id="cart"></ul>
-<form id="orderForm">
-    <input
-        type="text"
-        id="customerName"
-        name="customerName"
-        placeholder="Your Name"
-        required
-    >
-
-    <input
-        type="tel"
-        id="customerPhone"
-        name="customerPhone"
-        placeholder="Phone Number"
-        required
-    >
-
-    <textarea
-        id="customerOrder"
-        name="customerOrder"
-        placeholder="Order Details"
-        required
-    ></textarea>
-
-    <button type="submit">Place Order</button>
-</form>
 </section>
-<div id="success-message" style="display:none;">
-    <h3>✅ Your order has been received!</h3>
-    <p>Thank you for your order. We will contact you shortly.</p>
+<div id="orderSuccess" class="hidden" role="dialog" aria-live="polite">
+  <h2>✅ Order Placed Successfully!</h2>
+  <p>Your order has been received successfully.</p>
+  <p>Order ID: <strong id="successOrderId"></strong></p>
+  <p>Your order is now available for tracking.</p>
+  <div class="success-actions">
+    <button type="button" onclick="closeSuccess()">Continue Shopping</button>
+    <a id="trackOrderBtn" class="track-order-btn" href="#">📍 Track My Order →</a>
+    <a href="#" id="rateBtn" class="track-order-btn">⭐ Rate Delivery</a>
+  </div>
 </div>
-<div id="orderSuccess" class="hidden">
-    <h2>🎉 Order Successful!</h2>
-    <p>Your order has been received.</p>
-    <p>We will contact you soon for delivery.</p>
-    <button onclick="closeSuccess()">Close</button>
-</div>
-
-<section id="address">
-    <h2>Delivery Address</h2>
-
-    <textarea id="deliveryAddress"
-    placeholder="Enter Delivery Address"></textarea>
-
-    <button onclick="saveAddress()">
-        Save Address
-    </button>
-</section>
-<section id="tracking">
-    <h2>Track Your Order</h2>
-    <input type="text" id="orderId" placeholder="Enter Order ID">
-    <button onclick="trackOrder()">Track</button>
-
-    <p id="trackingResult"></p>
-</section>
-
-<a href="https://wa.me/2349160556050" class="whatsapp-checkout">
-        WhatsApp Checkout
-    </a>
-</div>
-<section id="payment"></section>
-         <div class="payment-box">
-    <h3>Pay with OPay</h3>
-    <p>Account Name: FAYSAL  SANI  </p>
-    <p>OPay Number: 9160556050</p>
-</div>
-<section id="history">
-    <h2>Order History</h2>
-    <div id="historyList"></div>
-</section>
-   <!-- Testimonials Section -->
-<section id="testimonials">
-    <h2 class="section-title">What Our Customers Say</h2>
-
-    <div class="testimonial-container">
-
-        <div class="testimonial">
-            <p>"Fast delivery and genuine medicines. Highly recommended!"</p>
-            <h4>- NAZER M.</h4>
-        </div>
-
-        <div class="testimonial">
-            <p>"Easy ordering process and excellent customer service."</p>
-            <h4>- Abdulmaleek A .</h4>
-        </div>
-
-        <div class="testimonial">
-            <p>"Received my medication on time. Very reliable pharmacy."</p>
-            <h4>- NASIRU M.</h4>
-        </div>
 
    <section id="delivery">
     <h2>Delivery Information</h2>
@@ -1589,69 +739,22 @@ function removeItem(button, amount, qty) {
     </div>
 </section>
 
-<section class="about" id="about">
-    <h2 class="section-title">About FAEXXOR Pharmacy</h2>
 
-    <p style="text-align:center;max-width:900px;margin:auto;">
-        FAEXXOR Pharmacy is committed to providing quality
-        pharmaceutical care, genuine medicines, and trusted
-        healthcare solutions.
-    </p>
-    
-    <p>
-        Looking for a specific medicine? We can help you find it. If a medicine
-        is not currently listed on our website, simply contact us and our team
-        will assist you in sourcing it for you.
-    </p>
-    <h2>Game da FAEXXOR Pharmacy</h2>
+  
+<button class="cart-float" onclick="openCart()" aria-label="Open cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-badge" id="fabBadge">0</span></button>
 
-    <p>
-        Barkan ku da zuwa shafin Pharmacy ɗinmu. Muna samar da ingantattun magunguna da kayan lafiya domin kula da lafiyar ku da ta iyalanku.
-    </p>
+<div class="fx-ov" id="fxOv" onclick="closeCart()"></div>
+<aside class="fx-drawer" id="fxDrawer" aria-label="Shopping cart" aria-hidden="true">
+  <div class="fx-dh"><h2>Your Cart</h2><button class="fx-x" onclick="closeCart()" aria-label="Close cart">✕</button></div>
+  <div class="fx-items" id="fxItems"></div>
+  <div class="fx-df" id="fxDf">
+    <div class="fx-row"><span>Total items</span><span id="fxCount">0</span></div>
+    <div class="fx-row t"><span>Grand total</span><span id="fxTotal">₦0</span></div>
+    <button class="fx-btn o" onclick="goTo('checkout')">View Cart</button>
+    <button class="fx-btn p" onclick="location.href='checkout.html'">Proceed to Checkout</button>
+  </div>
+</aside>
 
-    <p>
-        A Pharmacy ɗinmu, za ku iya samun magunguna daga manyan kamfanon kamar Emzor, Me Cure, Tuyil, Jawa, Krishat da sauran fitattun kamfanonin magunguna.
-    </p>
-
-    <p>
-        Muna ba da sabis na neman magani, tura takardar likita (Prescription Upload), da yin oda cikin sauƙi daga gida. Idan ba ku ga maganin da kuke nema ba, ku tuntube mu kuma za mu taimaka wajen samo muku shi.
-    </p>
-
-    <p>
-        Burinmu shi ne samar muku da ingantattun magunguna, a cikin farashi mai sauƙi, da sabis mai aminci da gaggawa.
-    </p>
-
-    <p>
-        Na gode da ziyarar shafinmu. Lafiyarku ita ce fifikonmu.
- </p>
-</section>
-<section id="register">
-    <h2>Create Account</h2>
-
-    <input type="text" id="regName" placeholder="Full Name">
-    <input type="email" id="regEmail" placeholder="Email">
-    <input type="password" id="regPassword" placeholder="Password">
-
-    <button onclick="registerUser()">Register</button>
-</section>
-<section id="login">
-    <h2>Login</h2>
-
-    <input type="email" id="loginEmail" placeholder="Email">
-    <input type="password" id="loginPassword" placeholder="Password">
-
-    <button onclick="loginUser()">Login</button>
-</section>
-
-<ul id="orderHistory"></ul>
-
-<section class="contact" id="contact">
-    <h2 class="section-title">Contact Us</h2>
-
-    <p><strong>Address:</strong> Adamawa State, Yola South, Nigeria</p>
-    <p><strong>Phone:</strong> 09160556050</p>
-    <p><strong>Email:</strong> faexxorpharm@gmail.com</p>
-</section>
 <!-- Font Awesome Icons -->
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -1669,6 +772,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
         <i class="fab fa-instagram"></i>
     </a>
 
+
+  
     <a href="https://wa.me/2349160556050" target="_blank">
         <i class="fab fa-whatsapp"></i>
     </a>
@@ -1688,18 +793,125 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
          alt="WhatsApp">
 </a>
 
+  
 <script>
-function toggleMenu(){
-    document.getElementById("navMenu").classList.toggle("active");
-}
-</script>
-<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.15.0/firebase-firestore-compat.js"></script>
-<script src="firebase.js"></script>
 
-<script>
-console.log(firebase);
 </script>
-<script src="script.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+  <script src="auth.js"></script>
+<script src="bottom-nav.js"></script>
+<script src="cart-store.js"></script>
+<script>
+/* FAEXXOR: load medicines from Firestore (active products only). Falls back to the old built-in list
+   only if Firestore cannot be reached or has no active products, so the shop is never empty by mistake. */
+(function () {
+  "use strict";
+  if (typeof firebase === "undefined" || !firebase.firestore || typeof window.fxRenderCatalog !== "function") return;
+  var fs = firebase.firestore();
+
+  var TITLES = ["Tablets (tins)","Tablets","Capsules","Syrups","Suspensions","Injections & Infusions","Medical Supplies","Creams","Ointments","Drops","Antiseptics & Liquids","Consumables","ORS & Powders"];
+  var IDS = {"Tablets (tins)":"tablets-tins","Tablets":"tablets","Capsules":"capsules","Syrups":"syrups","Suspensions":"suspensions","Injections & Infusions":"injections","Medical Supplies":"supplies","Creams":"creams","Ointments":"ointments","Drops":"drops","Antiseptics & Liquids":"antiseptics","Consumables":"consumables","ORS & Powders":"oral"};
+  var docs = null, usingFallback = false;
+
+  function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); }
+  function ms(p) { return p.createdAt && p.createdAt.toMillis ? p.createdAt.toMillis() : 0; }
+
+  function toCatalog(list) {
+    list = list.slice().sort(function (a, b) { return ms(a) - ms(b) || String(a.name).localeCompare(String(b.name)); });
+    var groups = {};
+    list.forEach(function (p) {
+      var title = String(p.category || "Other");
+      var g = groups[title] || (groups[title] = { id: IDS[title] || ("cat-" + slug(title)), title: title, items: [], byName: {} });
+      var key = String(p.name).toLowerCase();
+      var it = g.byName[key];
+      if (!it) { it = g.byName[key] = { name: p.name, labelled: false, rows: [] }; g.items.push(it); }
+      if (p.variantLabel) it.labelled = true;
+      it.rows.push([p.variantLabel || "", Number(p.price) || 0, p.id, Number.isInteger(p.stockQuantity) ? p.stockQuantity : 0, p.image || "", p.dosageForm || ""]);
+    });
+    var titles = Object.keys(groups).sort(function (a, b) {
+      var x = TITLES.indexOf(a), y = TITLES.indexOf(b);
+      if (x < 0 && y < 0) return a.localeCompare(b);
+      if (x < 0) return 1;
+      if (y < 0) return -1;
+      return x - y;
+    });
+    return titles.map(function (t) {
+      var g = groups[t];
+      return { id: g.id, title: g.title, items: g.items.map(function (it) {
+        if (it.labelled) return [it.name, it.rows];
+        var r = it.rows[0];
+        return [it.name, r[1], r[2], r[3], r[4], r[5]];
+      }) };
+    });
+  }
+
+  function fallback(why) {
+    if (typeof CATALOG !== "undefined") {
+      console.warn("Showing the built-in medicine list:", why);
+      usingFallback = true;
+      window.FX_LIVE = false;
+      window.FX_BYNAME = {};
+      window.fxRenderCatalog(CATALOG);
+    } else {
+      window.fxShowNote("Medicines could not be loaded. Please check your connection and refresh.");
+    }
+  }
+
+  function paint() {
+    if (docs === null) return;
+    if (!docs.length) { fallback("no active products in Firestore"); return; }
+    usingFallback = false;
+    window.fxRenderCatalog(toCatalog(docs));
+    window.FX_LIVE = true;
+    try { document.dispatchEvent(new Event("fx:catalog")); } catch (e) { console.error(e); }
+  }
+
+  fs.collection("settings").doc("inventory").onSnapshot(function (s) {
+    var n = s.exists ? Number(s.data().lowStockThreshold) : 5;
+    window.FX_LOW = Number.isInteger(n) && n >= 0 ? n : 5;
+    paint();
+  }, function () { /* threshold is optional: default 5 */ });
+
+  var timer = setTimeout(function () { if (docs === null) fallback("Firestore did not answer in time"); }, 8000);
+
+  fs.collection("products").where("active", "==", true).onSnapshot(function (snap) {
+    clearTimeout(timer);
+    docs = snap.docs.map(function (d) { var o = d.data(); o.id = d.id; return o; });
+    paint();
+  }, function (err) {
+    clearTimeout(timer);
+    console.error("Could not load products:", err);
+    fallback(err && err.code);
+  });
+
+  /* Cart guard: only products that came from Firestore are checked; stock and price come from the live data */
+  var baseAdd = window.addToCart;
+  window.addToCart = function (name, price) {
+    var info = window.FX_BYNAME && window.FX_BYNAME[name];
+    if (!info) return baseAdd(name, price);
+    if (typeof info.stock === "number" && info.stock <= 0) { alert(name + " is out of stock."); return false; }
+    var inCart = cartItems.filter(function (i) { return i.name === name; }).length;
+    if (typeof info.stock === "number" && inCart >= info.stock) {
+      alert("Sorry, only " + info.stock + " of " + name + " available.");
+      return false;
+    }
+    cartItems.push({ name: name, price: info.price, productId: info.id });
+    updateCartUI();
+    return true;
+  };
+})();
+</script>
+  <script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("service-worker.js").catch(function (e) {
+      console.warn("Service worker not registered:", e);
+    });
+  });
+}
+  </script>
 </body>
 </html>

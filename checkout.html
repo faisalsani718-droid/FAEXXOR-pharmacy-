@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0878d1">
+  <title>Checkout - FAEXXOR Pharmacy</title>
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: #f3f6fa; color: #1b2733;
+           padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
+    header { background: linear-gradient(90deg, #0b4a9e, #04a0e0); color: #fff; padding: 14px 16px; padding-top: calc(14px + env(safe-area-inset-top, 0px));
+             display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(11,74,158,.25); }
+    header a { color: #0b4a9e; background: #fff; text-decoration: none; font-weight: 700; padding: 9px 14px; border-radius: 10px; font-size: .9rem; white-space: nowrap; }
+    header h1 { margin: 0; font-size: 1.1rem; }
+    main { max-width: 640px; margin: 0 auto; padding: 14px; }
+    .card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
+    .card h2 { margin: 0 0 12px; font-size: 1.05rem; color: #0b4a9e; }
+    .note { color: #55677a; font-size: .88rem; margin: 8px 0 0; line-height: 1.45; }
+    .warn { color: #a12a35; font-size: .86rem; margin: 6px 0 0; font-weight: 600; }
+    .info { background: #fff6dd; color: #7a5a00; border-radius: 10px; padding: 10px 12px; font-size: .88rem; margin-top: 10px; }
+
+    .line { padding: 12px 0; border-bottom: 1px solid #eef2f7; }
+    .line:last-child { border-bottom: 0; }
+    .ltop { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
+    .lname { font-weight: 700; word-break: break-word; }
+    .lprice { color: #55677a; font-size: .88rem; margin-top: 2px; }
+    .lrow { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; gap: 10px; }
+    .stepper { display: flex; align-items: center; gap: 8px; }
+    .stepper button { width: 40px; height: 40px; border: 0; border-radius: 10px; background: #e6eef9; color: #0b4a9e; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
+    .stepper b { min-width: 28px; text-align: center; font-size: 1.05rem; }
+    .ltotal { font-weight: 800; color: #0b4a9e; }
+    .rm { border: 0; background: none; color: #a12a35; font-weight: 700; cursor: pointer; padding: 8px 4px; font-size: .88rem; }
+
+    label.f { display: block; font-weight: 700; font-size: .88rem; margin: 12px 0 5px; color: #33475b; }
+    input[type=text], input[type=tel], textarea { width: 100%; padding: 13px 12px; border: 1px solid #c9d6e6; border-radius: 10px; font-size: 1rem; font-family: inherit; background: #fff; }
+    textarea { min-height: 84px; resize: vertical; }
+    input:focus, textarea:focus { outline: 2px solid #04a0e0; border-color: #04a0e0; }
+    .err { color: #a12a35; font-size: .84rem; margin: 4px 0 0; min-height: 1em; }
+
+    .pay { display: block; margin-bottom: 10px; cursor: pointer; }
+    .pay input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+    .pbox { border: 2px solid #d6e2f0; border-radius: 14px; padding: 13px 14px; display: flex; gap: 12px; align-items: flex-start; background: #fff; }
+    .pay input:focus-visible + .pbox { outline: 3px solid #04a0e0; outline-offset: 2px; }
+    .pay input:checked + .pbox { border-color: #0b4a9e; background: #f1f7ff; }
+    .dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #9db4cf; flex: none; margin-top: 2px; display: grid; place-items: center; }
+    .pay input:checked + .pbox .dot { border-color: #0b4a9e; }
+    .pay input:checked + .pbox .dot::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #0b4a9e; }
+    .ptitle { font-weight: 800; }
+    .pdesc { color: #55677a; font-size: .88rem; margin-top: 3px; line-height: 1.4; }
+    .acct { background: #fff; border: 1px dashed #9db4cf; border-radius: 10px; padding: 10px 12px; margin-top: 10px; font-size: .92rem; }
+    .acct div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; }
+    .acct button { border: 0; background: #0b4a9e; color: #fff; border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer; }
+
+    .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: #fff; border-top: 1px solid #d6e4f3; box-shadow: 0 -4px 18px rgba(11,74,158,.12);
+           padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 12px; }
+    .bar .tot { flex: 1; min-width: 0; }
+    .bar .tot small { display: block; color: #55677a; font-size: .78rem; }
+    .bar .tot b { font-size: 1.2rem; color: #0b4a9e; }
+    .btn { border: 0; border-radius: 12px; background: #0b4a9e; color: #fff; font-weight: 800; font-size: 1rem; padding: 14px 20px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; font-family: inherit; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn.green { background: #1f9d55; }
+    .btn.light { background: #e6eef9; color: #0b4a9e; }
+    .btn.block { display: block; width: 100%; margin-top: 10px; }
+    .done { text-align: center; }
+    .done .big { width: 68px; height: 68px; border-radius: 50%; background: #d6f5e3; color: #137a3d; font-size: 2rem; display: grid; place-items: center; margin: 4px auto 12px; }
+    .done h2 { font-size: 1.3rem; margin: 0 0 4px; }
+    .oid { font-weight: 800; font-size: 1.15rem; color: #0b4a9e; margin: 4px 0 12px; }
+    .steps { text-align: left; background: #f3f8ff; border-radius: 12px; padding: 12px 14px; font-size: .92rem; line-height: 1.5; margin: 12px 0; }
+    .toast { position: fixed; left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 40; max-width: 460px; margin: 0 auto;
+             background: #a12a35; color: #fff; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: .92rem; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="index.html?cart=1">&larr; Cart</a>
+  <h1>Checkout</h1>
+</header>
+
+<main>
+  <!-- nothing to buy -->
+  <section class="card done" id="emptyBox" hidden>
+    <h2>Your cart is empty</h2>
+    <p class="note">Add medicines from the shop, then come back here to check out.</p>
+    <a class="btn block" href="index.html">Browse medicines</a>
+  </section>
+
+  <div id="flow" hidden>
+    <section class="card">
+      <h2>Your items</h2>
+      <div id="lines"></div>
+      <p class="note" id="notice" hidden></p>
+    </section>
+
+    <section class="card" id="loginCard" hidden>
+      <h2>Log in to order</h2>
+      <p class="note">Please sign in so we can send your order to your account and let you track it. Your items stay saved. After logging in, open your cart and tap Proceed to Checkout.</p>
+      <a class="btn block" href="_login.html">Sign In</a>
+      <a class="btn light block" href="_signup.html">Create Account</a>
+    </section>
+
+    <section class="card">
+      <h2>Delivery details</h2>
+      <label class="f" for="cName">Full name</label>
+      <input type="text" id="cName" autocomplete="name" placeholder="Your full name">
+      <p class="err" id="eName"></p>
+      <label class="f" for="cPhone">Phone number</label>
+      <input type="tel" id="cPhone" autocomplete="tel" inputmode="tel" placeholder="e.g. 0801 234 5678">
+      <p class="err" id="ePhone"></p>
+      <label class="f" for="cAddress">Delivery address</label>
+      <textarea id="cAddress" autocomplete="street-address" placeholder="House number, street, area, town"></textarea>
+      <p class="err" id="eAddress"></p>
+      <p class="note">We deliver to Yola, Gombe, Borno, Taraba and nearby locations. The delivery fee depends on your location and we will confirm it with you.</p>
+    </section>
+
+    <section class="card">
+      <h2>Payment method</h2>
+      <label class="pay">
+        <input type="radio" name="pay" value="transfer">
+        <span class="pbox"><span class="dot"></span><span>
+          <span class="ptitle">Bank / OPay transfer</span>
+          <span class="pdesc" style="display:block">Pay by transfer after you place the order, then send us your receipt on WhatsApp.</span>
+        </span></span>
+      </label>
+      <div id="acctBox" class="acct" hidden>
+        <div><span>Bank</span><b id="bBank"></b></div>
+        <div><span>Account name</span><b id="bName"></b></div>
+        <div><span>Account number</span><b id="bNum"></b> <button type="button" id="copyBtn">Copy</button></div>
+      </div>
+
+      <label class="pay" style="margin-top:10px">
+        <input type="radio" name="pay" value="delivery">
+        <span class="pbox"><span class="dot"></span><span>
+          <span class="ptitle">Pay on delivery</span>
+          <span class="pdesc" style="display:block">Pay cash or by POS to the rider when your medicines arrive.</span>
+        </span></span>
+      </label>
+
+      <label class="pay">
+        <input type="radio" name="pay" value="whatsapp">
+        <span class="pbox"><span class="dot"></span><span>
+          <span class="ptitle">WhatsApp confirmation</span>
+          <span class="pdesc" style="display:block">Place the order, then confirm it and arrange payment with our team on WhatsApp.</span>
+        </span></span>
+      </label>
+      <p class="err" id="ePay"></p>
+      <p class="info">Prescription-only medicines need a valid prescription. If your order contains one, our pharmacist will contact you before dispatch.</p>
+    </section>
+  </div>
+
+  <!-- success -->
+  <section class="card done" id="doneBox" hidden>
+    <div class="big">&#10003;</div>
+    <h2>Order received!</h2>
+    <div class="oid" id="doneId"></div>
+    <p class="note" id="doneTotal"></p>
+    <div class="steps" id="doneSteps"></div>
+    <a class="btn green block" id="waBtn" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
+    <a class="btn block" id="trackBtn" href="orders.html">Track my order</a>
+    <a class="btn light block" href="index.html">Continue shopping</a>
+  </section>
+</main>
+
+<div class="bar" id="bar" hidden>
+  <div class="tot"><small>Total (delivery fee extra)</small><b id="barTotal">&#8358;0</b></div>
+  <button type="button" class="btn" id="placeBtn">Place order</button>
+</div>
+<div class="toast" id="toast" role="alert" hidden></div>
+
+<!-- Same Firebase files and order as your other pages. Firebase is initialised once, in firebase.js -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ===== EDIT HERE if your payment details change ===== */
+  var WHATSAPP = "2349160556050";
+  var BANK = { bank: "OPay", name: "FAYSAL SANI", number: "9160556050" };
+  /* ===================================================== */
+
+  var CART_KEY = "fx_cart_v1";      // the cart saved by the shop pages
+  var FORM_KEY = "fx_delivery_v1";  // last delivery details used on this phone
+  var METHODS = { transfer: "Bank Transfer", delivery: "Cash on Delivery", whatsapp: "WhatsApp Confirmation" };
+
+  function $(id) { return document.getElementById(id); }
+  function money(n) { return "\u20A6" + Number(n || 0).toLocaleString("en-NG"); }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  var toastTimer = null;
+  function say(t) {
+    var b = $("toast");
+    b.textContent = t; b.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { b.hidden = true; }, 7000);
+  }
+
+  var db = firebase.firestore();      // uses the Firebase app already created in firebase.js
+  var user = null;                    // signed-in customer (guest sessions do not count)
+  var lines = [];                     // {name, productId, price, qty, live, problem}
+  var checking = false, placing = false, finished = false, lastAttempt = null;
+
+  /* ---------- cart (shared with the shop through localStorage) ---------- */
+  function validUnit(i) {
+    return i && typeof i.name === "string" && i.name.length > 0 && i.name.length <= 200 &&
+      typeof i.price === "number" && isFinite(i.price) && i.price >= 0 && i.price <= 100000000;
+  }
+  function loadCart() {
+    var out = [];
+    try {
+      var o = JSON.parse(localStorage.getItem(CART_KEY) || "null");
+      if (!o || !Array.isArray(o.items)) return out;
+      var byKey = {};
+      o.items.filter(validUnit).slice(0, 300).forEach(function (u) {
+        var pid = typeof u.productId === "string" ? u.productId : "";
+        var k = pid + "|" + u.name;
+        if (byKey[k]) { byKey[k].qty++; return; }
+        byKey[k] = { name: u.name, productId: pid, price: u.price, qty: 1, live: null, problem: "" };
+        out.push(byKey[k]);
+      });
+    } catch (e) { console.error("Could not read saved cart", e); }
+    return out;
+  }
+  function saveCart() {
+    try {
+      var items = [];
+      lines.forEach(function (l) {
+        var nm = l.live ? l.live.name : l.name, pr = l.live ? l.live.price : l.price;
+        for (var i = 0; i < l.qty; i++) {
+          var u = { name: nm, price: pr };
+          if (l.productId) u.productId = l.productId;
+          items.push(u);
+        }
+      });
+      if (items.length) localStorage.setItem(CART_KEY, JSON.stringify({ t: Date.now(), items: items }));
+      else localStorage.removeItem(CART_KEY);
+    } catch (e) { /* storage blocked: the page still works */ }
+  }
+
+  /* ---------- live check of price, stock and availability ---------- */
+  async function refresh() {
+    checking = true; renderBar();
+    var notices = [];
+    await Promise.all(lines.map(async function (l) {
+      l.problem = ""; l.live = null;
+      if (!l.productId) { l.problem = "This item came from an older list. Remove it and add it again from the shop."; return; }
+      try {
+        var s = await db.collection("products").doc(l.productId).get();
+        var d = s.exists ? s.data() : null;
+        if (!d || d.active !== true) { l.problem = "This medicine is no longer available."; return; }
+        l.live = {
+          name: d.name + (d.variantLabel ? " (" + d.variantLabel + ")" : ""),
+          price: Number(d.price) || 0,
+          stock: Number.isInteger(d.stockQuantity) ? d.stockQuantity : 0
+        };
+      } catch (e) {
+        if (e && e.code === "permission-denied") l.problem = "This medicine is no longer available.";
+        else { l.problem = "Could not check this item. Please check your connection."; console.error(e); }
+      }
+    }));
+    lines.forEach(function (l) {
+      if (!l.live) return;
+      if (l.live.price <= 0) l.problem = "Price not set yet. Please ask us on WhatsApp.";
+      else if (l.live.stock <= 0) l.problem = "Out of stock.";
+      else if (l.qty > l.live.stock) {
+        notices.push(l.live.name + ": only " + l.live.stock + " available, so the quantity was reduced.");
+        l.qty = l.live.stock;
+      }
+      if (l.live && l.price !== l.live.price && !l.problem) notices.push(l.live.name + ": price is now " + money(l.live.price) + ".");
+    });
+    var n = $("notice");
+    n.hidden = !notices.length; n.textContent = notices.join(" ");
+    saveCart();
+    checking = false;
+    render();
+  }
+
+  /* ---------- screen ---------- */
+  function unitPrice(l) { return l.live ? l.live.price : l.price; }
+  function totalOf() { return lines.reduce(function (s, l) { return s + unitPrice(l) * l.qty; }, 0); }
+
+  function render() {
+    var box = $("lines");
+    box.innerHTML = "";
+    $("emptyBox").hidden = lines.length > 0 || finished;
+    $("flow").hidden = !lines.length || finished;
+    lines.forEach(function (l, idx) {
+      var row = el("div", "line");
+      var top = el("div", "ltop");
+      var left = el("div");
+      left.appendChild(el("div", "lname", l.live ? l.live.name : l.name));
+      left.appendChild(el("div", "lprice", money(unitPrice(l)) + " each"));
+      top.appendChild(left);
+      var rm = el("button", "rm", "Remove");
+      rm.type = "button";
+      rm.setAttribute("aria-label", "Remove " + l.name);
+      rm.addEventListener("click", function () { lines.splice(idx, 1); saveCart(); render(); });
+      top.appendChild(rm);
+      row.appendChild(top);
+      if (l.problem) row.appendChild(el("p", "warn", l.problem));
+
+      var r = el("div", "lrow");
+      var st = el("div", "stepper");
+      var minus = el("button", null, "\u2212"); minus.type = "button"; minus.setAttribute("aria-label", "Decrease quantity");
+      var plus = el("button", null, "+"); plus.type = "button"; plus.setAttribute("aria-label", "Increase quantity");
+      var q = el("b", null, String(l.qty));
+      minus.addEventListener("click", function () {
+        if (l.qty > 1) { l.qty--; saveCart(); render(); } else { lines.splice(idx, 1); saveCart(); render(); }
+      });
+      plus.addEventListener("click", function () {
+        if (l.live && l.qty >= l.live.stock) { say("Only " + l.live.stock + " available."); return; }
+        if (l.qty >= 50) { say("Maximum 50 of one medicine per order."); return; }
+        l.qty++; saveCart(); render();
+      });
+      st.appendChild(minus); st.appendChild(q); st.appendChild(plus);
+      r.appendChild(st);
+      r.appendChild(el("div", "ltotal", money(unitPrice(l) * l.qty)));
+      row.appendChild(r);
+      box.appendChild(row);
+    });
+    renderBar();
+  }
+
+  function phoneOk(v) {
+    return /^(?:\+?234|0)[789][01]\d{8}$/.test(String(v).replace(/[\s\-()]/g, ""));
+  }
+  function formState() {
+    var name = $("cName").value.trim(), phone = $("cPhone").value.trim(), address = $("cAddress").value.trim();
+    var m = document.querySelector('input[name="pay"]:checked');
+    return {
+      name: name, phone: phone, address: address, method: m ? m.value : "",
+      nameOk: name.length >= 2 && name.length <= 100,
+      phoneOk: phoneOk(phone),
+      addressOk: address.length >= 10 && address.length <= 300
+    };
+  }
+  function renderBar() {
+    var bar = $("bar");
+    bar.hidden = !lines.length || finished;
+    $("loginCard").hidden = !!user || !lines.length || finished;
+    $("barTotal").textContent = money(totalOf());
+    var b = $("placeBtn");
+    if (!user) { b.textContent = "Log in to order"; b.disabled = false; return; }
+    b.textContent = placing ? "Sending..." : (checking ? "Checking..." : "Place order");
+    b.disabled = placing || checking;
+  }
+
+  /* ---------- payment panel ---------- */
+  function showPay() {
+    var m = document.querySelector('input[name="pay"]:checked');
+    $("acctBox").hidden = !(m && m.value === "transfer");
+    $("ePay").textContent = "";
+  }
+
+  /* ---------- placing the order ---------- */
+  function shortId(id) { return "FX-" + String(id).slice(-6).toUpperCase(); }
+
+  async function place() {
+    if (!user) { location.href = "_login.html"; return; }
+    if (placing || checking) return;
+    var f = formState(), bad = false;
+    $("eName").textContent = f.nameOk ? "" : "Please enter your full name."; bad = bad || !f.nameOk;
+    $("ePhone").textContent = f.phoneOk ? "" : "Enter a valid Nigerian phone number, e.g. 08012345678."; bad = bad || !f.phoneOk;
+    $("eAddress").textContent = f.addressOk ? "" : "Please enter your full delivery address."; bad = bad || !f.addressOk;
+    $("ePay").textContent = f.method ? "" : "Please choose a payment method."; bad = bad || !f.method;
+    if (bad) { say("Please complete the highlighted details."); return; }
+
+    placing = true; renderBar();
+    try {
+      await refresh();                       // fresh price and stock check right before ordering
+      if (!lines.length) { placing = false; renderBar(); return; }
+      if (lines.some(function (l) { return l.problem; })) {
+        say("Some items need attention. Please check your list.");
+        placing = false; renderBar(); return;
+      }
+      var items = [];
+      lines.forEach(function (l) {
+        for (var i = 0; i < l.qty; i++) items.push({ name: l.live.name, price: l.live.price, productId: l.productId });
+      });
+      var total = items.reduce(function (s, it) { return s + it.price; }, 0);
+      var method = METHODS[f.method];
+      var sig = JSON.stringify([user.uid, f.name, f.phone, f.address, method, items]);
+      if (!lastAttempt || lastAttempt.sig !== sig) lastAttempt = { sig: sig, ref: db.collection("orders").doc() };
+      var ref = lastAttempt.ref;
+
+      // same order record your dashboard and My Orders page already read
+      var payload = {
+        orderId: ref.id,
+        customerId: user.uid,
+        name: f.name,
+        phone: f.phone,
+        address: f.address,
+        paymentMethod: method,
+        items: items,
+        totalItems: items.length,
+        totalPrice: total,
+        status: "pending",
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      try {
+        await ref.set(payload);
+      } catch (e) {
+        var chk = null;
+        try { chk = await ref.get(); } catch (x) { /* ignore */ }
+        if (!(chk && chk.exists)) throw e;   // not saved: report the error
+      }
+      success(ref.id, f, items, total, method);
+    } catch (e) {
+      console.error("Order failed:", e);
+      say("Order failed: " + ((e && (e.code || e.message)) || "unknown error") + ". Your items are still saved. Please try again.");
+    }
+    placing = false; renderBar();
+  }
+
+  function success(id, f, items, total, method) {
+    finished = true;
+    try {
+      localStorage.setItem(FORM_KEY, JSON.stringify({ name: f.name, phone: f.phone, address: f.address }));
+      localStorage.removeItem(CART_KEY);
+    } catch (e) {}
+    var sid = shortId(id);
+    $("doneId").textContent = "Order " + sid;
+    $("doneTotal").textContent = "Total " + money(total) + " (delivery fee confirmed by our team)";
+    var steps = $("doneSteps");
+    steps.innerHTML = "";
+    var lines2 = f.method === "transfer"
+      ? ["1. Transfer " + money(total) + " to " + BANK.bank + " " + BANK.number + " (" + BANK.name + ").",
+         "2. Use " + sid + " as the payment reference.",
+         "3. Tap \"Send on WhatsApp\" and attach your receipt. We start processing once payment is confirmed."]
+      : f.method === "delivery"
+      ? ["1. Our team will call you to confirm your order and the delivery fee.",
+         "2. Pay the rider in cash or by POS when your medicines arrive.",
+         "3. Tap \"Send on WhatsApp\" if you would like to message us."]
+      : ["1. Tap \"Send on WhatsApp\" to confirm your order with our team.",
+         "2. We will confirm the delivery fee and how you would like to pay.",
+         "3. Your order is processed once we have confirmed with you."];
+    lines2.forEach(function (t) { steps.appendChild(el("div", null, t)); });
+
+    var counts = {}, order = [];
+    items.forEach(function (it) { if (!counts[it.name]) { counts[it.name] = { n: 0, p: it.price }; order.push(it.name); } counts[it.name].n++; });
+    var msg = "FAEXXOR Pharmacy order " + sid + "\n" +
+      "Name: " + f.name + "\nPhone: " + f.phone + "\nAddress: " + f.address + "\n\nItems:\n" +
+      order.map(function (n) { return "- " + n + " x" + counts[n].n + " = " + money(counts[n].p * counts[n].n); }).join("\n") +
+      "\n\nTotal: " + money(total) + "\nPayment: " + method;
+    $("waBtn").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
+    $("trackBtn").href = "orders.html?orderId=" + encodeURIComponent(id);
+    $("doneBox").hidden = false;
+    $("flow").hidden = true; $("emptyBox").hidden = true; $("bar").hidden = true;
+    window.scrollTo(0, 0);
+    lines = [];
+  }
+
+  /* ---------- start ---------- */
+  function start() {
+    $("bBank").textContent = BANK.bank;
+    $("bName").textContent = BANK.name;
+    $("bNum").textContent = BANK.number;
+    $("copyBtn").addEventListener("click", function () {
+      var b = this;
+      function done() { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1500); }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(BANK.number).then(done, function () { window.prompt("Copy this number:", BANK.number); });
+      else window.prompt("Copy this number:", BANK.number);
+    });
+    [].forEach.call(document.querySelectorAll('input[name="pay"]'), function (r) { r.addEventListener("change", showPay); });
+    $("placeBtn").addEventListener("click", place);
+    ["cName", "cPhone", "cAddress"].forEach(function (id) {
+      $(id).addEventListener("input", function () {
+        var f = formState();
+        if (id === "cName" && f.nameOk) $("eName").textContent = "";
+        if (id === "cPhone" && f.phoneOk) $("ePhone").textContent = "";
+        if (id === "cAddress" && f.addressOk) $("eAddress").textContent = "";
+      });
+    });
+
+    // remembered delivery details from the last order on this phone
+    try {
+      var saved = JSON.parse(localStorage.getItem(FORM_KEY) || "null");
+      if (saved) {
+        $("cName").value = String(saved.name || "").slice(0, 100);
+        $("cPhone").value = String(saved.phone || "").slice(0, 30);
+        $("cAddress").value = String(saved.address || "").slice(0, 300);
+      } else {
+        var old = localStorage.getItem("deliveryAddress");
+        if (old) $("cAddress").value = String(old).slice(0, 300);
+      }
+    } catch (e) {}
+
+    lines = loadCart();
+    render();
+    if (lines.length) refresh();
+
+    firebase.auth().onAuthStateChanged(function (u) {
+      user = u && !u.isAnonymous ? u : null;
+      if (user && !$("cName").value && user.displayName) $("cName").value = user.displayName;
+      renderBar();
+    });
+  }
+
+  try { start(); }
+  catch (e) {
+    console.error("Checkout could not start:", e);
+    document.querySelector("main").innerHTML = '<section class="card done"><h2>Checkout is unavailable</h2>' +
+      '<p class="note">Please try again, or use the order form on the main page.</p><a class="btn block" href="index.html#checkout">Go to the order form</a></section>';
+  }
+})();
+</script>
+</body>
+</html>

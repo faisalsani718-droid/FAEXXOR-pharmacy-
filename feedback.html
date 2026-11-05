@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rate Your Delivery | FAEXXOR Pharmacy</title>
+<style>
+*{box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{margin:0;background:#f4f7fa;color:#1f2937}
+.wrap{max-width:480px;margin:0 auto;padding:16px}
+.back{display:inline-block;margin-bottom:12px;color:#0878d1;font-weight:700;text-decoration:none}
+.card{background:#fff;border-radius:14px;padding:22px;box-shadow:0 4px 14px rgba(0,0,0,.08)}
+h1{font-size:1.35rem;margin:0 0 6px}
+p.sub{margin:0 0 16px;color:#55677a;font-size:.92rem}
+label{display:block;font-weight:700;margin:14px 0 6px;font-size:.9rem}
+input,textarea{width:100%;padding:11px;border:1px solid #cbd5e1;border-radius:8px;font-size:1rem}
+textarea{min-height:110px;resize:vertical}
+.stars{display:flex;gap:4px;justify-content:center;margin:6px 0}
+.stars button{background:none;border:0;font-size:2.6rem;line-height:1;cursor:pointer;color:#cbd5e1;padding:2px 4px}
+.stars button.on{color:#f5b301}
+.stars button:focus-visible{outline:3px solid #0878d1;border-radius:6px}
+#word{text-align:center;font-weight:700;min-height:1.4em;color:#0878d1}
+.count{text-align:right;font-size:.78rem;color:#55677a}
+#send{width:100%;margin-top:16px;padding:14px;border:0;border-radius:30px;background:#0878d1;color:#fff;font-size:1rem;font-weight:700;cursor:pointer}
+#send[disabled]{opacity:.5;cursor:not-allowed}
+#err{color:#a12a35;font-weight:700;margin-top:10px;min-height:1.2em;font-size:.9rem}
+.done{text-align:center;padding:20px 6px}
+.done .big{font-size:3rem}
+.done a{display:inline-block;margin-top:14px;padding:12px 24px;border-radius:30px;background:#0878d1;color:#fff;font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to shop</a>
+  <div class="card" id="card">
+    <h1>How was your delivery?</h1>
+    <p class="sub">Your feedback helps us serve you better.</p>
+
+    <div class="stars" id="stars" role="radiogroup" aria-label="Delivery rating from 1 to 5 stars"></div>
+    <div id="word" aria-live="polite"></div>
+
+    <label for="order">Order ID (optional)</label>
+    <input id="order" maxlength="60" autocomplete="off">
+
+    <label for="name">Your name (optional)</label>
+    <input id="name" maxlength="60" autocomplete="name">
+
+    <label for="comment">Your feedback</label>
+    <textarea id="comment" maxlength="1000" placeholder="Was the rider polite? Was your order on time and complete?"></textarea>
+    <div class="count"><span id="n">0</span>/1000</div>
+
+    <div id="err" role="alert"></div>
+    <button id="send" type="button">Send feedback</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  var WORDS = ["", "Very poor", "Poor", "Okay", "Good", "Excellent"];
+  var rating = 0, busy = false;
+
+  var starsBox = $("stars"), html = "";
+  for (var i = 1; i <= 5; i++) html += '<button type="button" role="radio" aria-checked="false" aria-label="' + i + ' star' + (i > 1 ? "s" : "") + '" data-r="' + i + '">\u2605</button>';
+  starsBox.innerHTML = html;
+
+  function paint(n) {
+    [].forEach.call(starsBox.children, function (b, k) {
+      b.classList.toggle("on", k < n);
+      b.setAttribute("aria-checked", String(k + 1 === rating));
+    });
+    $("word").textContent = WORDS[n] || "";
+  }
+  starsBox.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    rating = +b.getAttribute("data-r"); paint(rating); $("err").textContent = "";
+  });
+  starsBox.addEventListener("mouseover", function (e) { var b = e.target.closest("button"); if (b) paint(+b.getAttribute("data-r")); });
+  starsBox.addEventListener("mouseleave", function () { paint(rating); });
+
+  $("comment").addEventListener("input", function () { $("n").textContent = this.value.length; });
+
+  var q = new URLSearchParams(location.search).get("order");
+  if (q) $("order").value = q.slice(0, 60);
+
+  function err(t) { $("err").textContent = t; }
+  function thanks() {
+    $("card").innerHTML = '<div class="done"><div class="big">\u2705</div><h1>Thank you!</h1><p class="sub">We received your feedback.</p><a href="index.html">Continue shopping</a></div>';
+  }
+  function key() { return "fx_fb_" + ($("order").value.trim() || "general"); }
+
+  $("send").addEventListener("click", function () {
+    if (busy) return;
+    var comment = $("comment").value.trim();
+    if (rating < 1 || rating > 5) { err("Please tap a star from 1 to 5."); return; }
+    if (comment.length < 3) { err("Please write a short comment."); return; }
+    try { if ($("order").value.trim() && localStorage.getItem(key())) { err("You already sent feedback for this order. Thank you!"); return; } } catch (e) {}
+    if (typeof firebase === "undefined" || !firebase.firestore) { err("Could not connect. Check your internet and try again."); return; }
+
+    busy = true; $("send").disabled = true; $("send").textContent = "Sending...";
+    var timer = setTimeout(function () { busy = false; $("send").disabled = false; $("send").textContent = "Send feedback"; err("This is taking too long. Please try again."); }, 12000);
+
+    try {
+      firebase.firestore().collection("deliveryFeedback").add({
+        rating: rating,
+        comment: comment.slice(0, 1000),
+        name: $("name").value.trim().slice(0, 60),
+        orderId: $("order").value.trim().slice(0, 60),
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      }).then(function () {
+        clearTimeout(timer);
+        try { localStorage.setItem(key(), "1"); } catch (e) {}
+        thanks();
+      }).catch(function (e) {
+        clearTimeout(timer); console.error(e);
+        busy = false; $("send").disabled = false; $("send").textContent = "Send feedback";
+        err("Could not send. Please try again.");
+      });
+    } catch (e) {
+      clearTimeout(timer); console.error(e);
+      busy = false; $("send").disabled = false; $("send").textContent = "Send feedback";
+      err("Could not send. Please try again.");
+    }
+  });
+})();
+</script>
+</body>
+</html>

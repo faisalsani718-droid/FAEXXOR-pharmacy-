@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Account | FAEXXOR Pharmacy</title>
+<link rel="stylesheet" href="pages.css">
+<style>
+body.dark{background:#111827;color:#e5e7eb}
+body.dark .box{background:#1f2937;box-shadow:none}
+body.dark .lbl,body.dark .sub{color:#cbd5e1}
+.box{background:#fff;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 2px 10px rgba(0,0,0,.07)}
+.top{display:flex;align-items:center;gap:12px;justify-content:space-between}
+.who{display:flex;align-items:center;gap:12px;min-width:0}
+.av{width:52px;height:52px;border-radius:50%;background:#00BFFF;color:#fff;font-size:1.4rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.nm{font-weight:700;word-break:break-word}.sub{font-size:.82rem;color:#64748b;word-break:break-all}
+.sign{border:2px solid #1f2937;background:transparent;color:inherit;border-radius:999px;padding:10px 20px;font-size:1rem;font-weight:700;text-decoration:none}
+.sw{width:58px;height:30px;border-radius:999px;background:#e5e7eb;border:0;position:relative;flex:none;cursor:pointer}
+.sw::after{content:"\2600";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#facc15;font-size:.85rem;line-height:24px;text-align:center;transition:.2s}
+body.dark .sw{background:#374151}body.dark .sw::after{content:"\263E";left:31px;background:#cbd5e1;color:#1f2937}
+.g4,.g4b{display:grid;gap:8px;text-align:center}
+.g4{grid-template-columns:repeat(4,1fr);border-top:1px solid #e5e7eb;margin-top:14px;padding-top:14px}
+.g4b{grid-template-columns:repeat(4,1fr);row-gap:16px}
+.it{background:none;border:0;color:inherit;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.ic{width:46px;height:46px;border-radius:14px;background:#e0f6ff;display:flex;align-items:center;justify-content:center;font-size:1.4rem}
+.lbl{font-size:.74rem;font-weight:700;color:#1f2937}
+</style>
+</head>
+<body>
+<header class="ph"><a href="index.html">FAEXXOR Pharmacy</a></header>
+<main class="pm">
+<div class="box">
+  <div class="top">
+    <div class="who" id="who"></div>
+    <button class="sw" id="sw" type="button" aria-label="Dark mode"></button>
+  </div>
+  <div class="g4">
+    <a class="it" href="orders.html"><span class="ic">&#128230;</span><span class="lbl">My Orders</span></a>
+    <a class="it" href="my-prescriptions.html"><span class="ic">&#128196;</span><span class="lbl">Prescriptions</span></a>
+    <a class="it" href="upload-prescription.html"><span class="ic">&#128247;</span><span class="lbl">Upload Rx</span></a>
+    <a class="it" href="index.html#products"><span class="ic">&#128722;</span><span class="lbl">Shop</span></a>
+  </div>
+</div>
+<div class="box"><div class="g4b">
+  <button class="it" id="share" type="button"><span class="ic">&#128279;</span><span class="lbl">Share</span></button>
+  <a class="it" href="https://wa.me/2349160556050"><span class="ic">&#128172;</span><span class="lbl">WhatsApp</span></a>
+  <a class="it" href="mailto:faexxorpharm@gmail.com?subject=Feedback"><span class="ic">&#9993;</span><span class="lbl">Feedback</span></a>
+  <a class="it" href="contact.html"><span class="ic">&#10067;</span><span class="lbl">Help</span></a>
+  <a class="it" href="about.html"><span class="ic">&#8505;</span><span class="lbl">About</span></a>
+  <a class="it" href="privacy.html"><span class="ic">&#128274;</span><span class="lbl">Privacy</span></a>
+  <a class="it" href="terms.html"><span class="ic">&#128220;</span><span class="lbl">Terms</span></a>
+  <a class="it" href="forgot-password.html"><span class="ic">&#128273;</span><span class="lbl">Password</span></a>
+</div></div>
+<button class="btn red" id="out" type="button" hidden>Log out</button>
+</main>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="bottom-nav.js"></script>
+<script>
+var who=document.getElementById("who"),out=document.getElementById("out");
+function mk(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e;}
+try{if(localStorage.getItem("fx-dark")==="1")document.body.classList.add("dark");}catch(e){}
+document.getElementById("sw").onclick=function(){
+var d=document.body.classList.toggle("dark");try{localStorage.setItem("fx-dark",d?"1":"0");}catch(e){}};
+document.getElementById("share").onclick=function(){
+var u=location.origin+"/index.html";
+if(navigator.share){navigator.share({title:"FAEXXOR Pharmacy",text:"Order medicines from FAEXXOR Pharmacy",url:u}).catch(function(){});}
+else{window.open("https://wa.me/?text="+encodeURIComponent("FAEXXOR Pharmacy: "+u));}};
+firebase.auth().onAuthStateChanged(function(u){
+who.innerHTML="";
+if(!u||u.isAnonymous){var a=mk("a","sign","Sign in");a.href="login.html";who.appendChild(a);out.hidden=true;return;}
+var name=u.displayName||"Welcome";
+var av=mk("div","av",(name[0]||"F").toUpperCase()),box=mk("div"),nm=mk("div","nm",name);
+box.appendChild(nm);box.appendChild(mk("div","sub",u.email||""));who.appendChild(av);who.appendChild(box);out.hidden=false;
+firebase.firestore().collection("users").doc(u.uid).get().then(function(d){
+var n=d.exists&&(d.data().name||d.data().fullName);if(n){nm.textContent=n;av.textContent=n[0].toUpperCase();}}).catch(function(){});
+});
+out.onclick=function(){firebase.auth().signOut().then(function(){location.href="index.html";});};
+</script>
+</body>
+</html>

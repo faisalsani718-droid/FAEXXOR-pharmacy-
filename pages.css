@@ -1,0 +1,19 @@
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+body{background:#f4f9ff;color:#1f2937;line-height:1.6}
+.ph{background:#0b3d91;padding:14px 16px;text-align:center}
+.ph a{color:#fff;font-weight:700;font-size:1.15rem;text-decoration:none}
+.pm{max-width:640px;margin:0 auto;padding:20px 16px 90px}
+.pm h1{color:#0b3d91;font-size:1.4rem;margin-bottom:12px}
+.pm h2{color:#0b3d91;font-size:1.05rem;margin:18px 0 6px}
+.pm p,.pm li{margin-bottom:8px;font-size:.95rem}
+.pm ul{padding-left:20px}
+.card{background:#fff;border-radius:14px;padding:16px;box-shadow:0 2px 10px rgba(0,0,0,.07);margin-bottom:14px}
+input{width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px;font-size:1rem;margin:8px 0}
+.btn{display:block;width:100%;text-align:center;background:#00BFFF;color:#fff;border:0;border-radius:10px;padding:13px;font-size:1rem;font-weight:700;text-decoration:none;margin:10px 0;cursor:pointer}
+.btn.alt{background:#0b3d91}.btn.red{background:#dc2626}
+.msg{font-size:.9rem;margin-top:8px}
+.pf{text-align:center;padding:18px 10px 90px;font-size:.85rem;color:#64748b}
+.pf a{color:#0b3d91;margin:0 8px;text-decoration:none}
+.pimg{width:100%;max-height:300px;object-fit:contain;background:#fff;border-radius:14px}
+.price{font-size:1.3rem;font-weight:700;color:#0b3d91;margin:8px 0}
+.note{background:#fff7e0;border-left:4px solid #f59e0b;padding:10px 12px;border-radius:8px;font-size:.85rem}

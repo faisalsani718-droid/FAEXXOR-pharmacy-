@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>My Prescriptions - FAEXXOR Pharmacy</title>
+<script>document.documentElement.style.visibility = "hidden";</script>
+<link rel="stylesheet" href="style.css">
+<style>
+  .rx-wrap{max-width:560px;margin:0 auto;padding:20px 5% 60px}
+  .rx-wrap h1{color:var(--deep,#0a4a9e);font-size:1.4rem;margin:6px 0 4px}
+  .rx-sub{color:var(--mute,#5b6f8a);font-size:.92rem;margin-bottom:16px}
+  .rx-card{background:#fff;border:1px solid var(--line,#dbe8f6);border-radius:22px;padding:16px 18px;margin-bottom:14px;box-shadow:var(--shadow,0 6px 20px rgba(10,74,158,.12))}
+  .rx-top{display:flex;justify-content:space-between;align-items:center;gap:10px;cursor:pointer}
+  .rx-id{font-weight:800;color:var(--deep,#0a4a9e);font-size:1.05rem}
+  .rx-date{color:var(--mute,#5b6f8a);font-size:.82rem;margin-top:2px}
+  .rx-badge{padding:5px 12px;border-radius:99px;font-size:.78rem;font-weight:700;white-space:nowrap;background:#e6f3ff;color:#0a4a9e}
+  .rx-badge.good{background:#e6f7ee;color:#1b6b3d}
+  .rx-badge.bad{background:#fdeaec;color:#a12a35}
+  .rx-badge.warn{background:#fff4dd;color:#8a5a00}
+  .rx-more{margin-top:14px;border-top:1px solid var(--line,#dbe8f6);padding-top:12px}
+  .rx-more p{margin:6px 0;font-size:.92rem;word-break:break-word}
+  .rx-line{list-style:none;margin:10px 0 0;padding:0 0 0 14px;border-left:3px solid #cfe6fb}
+  .rx-line li{position:relative;margin:0 0 14px;padding-left:12px;font-size:.9rem}
+  .rx-line li:before{content:"";position:absolute;left:-23px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--sky,#38b6ff);border:2px solid #fff}
+  .rx-line li small{display:block;color:var(--mute,#5b6f8a);font-size:.78rem}
+  .rx-btn{display:inline-block;padding:11px 18px;border:0;border-radius:14px;background:linear-gradient(135deg,var(--sky,#38b6ff),var(--deep,#0a4a9e));color:#fff;font-weight:700;font-size:.95rem;cursor:pointer;text-decoration:none;margin:8px 8px 0 0}
+  .rx-btn.alt{background:#e6f3ff;color:var(--deep,#0a4a9e)}
+  .rx-msg{padding:12px 14px;border-radius:12px;margin-bottom:14px;font-size:.93rem}
+  .rx-msg.error{background:#fdeaec;color:#a12a35}
+  .rx-msg.info{background:#e6f3ff;color:var(--deep,#0a4a9e)}
+  #rxImg{max-width:100%;border-radius:12px;margin-top:10px;display:none}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-section">FAEXXOR <span>Pharmacy</span></div>
+  <a class="rx-btn alt" style="margin:0" href="index.html">Home</a>
+</header>
+
+<main class="rx-wrap">
+  <h1>My Prescriptions</h1>
+  <p class="rx-sub">Follow each prescription from submission to delivery. Tap a prescription to see its progress.</p>
+
+  <div id="rxMsg" class="rx-msg" role="alert" aria-live="polite" hidden></div>
+  <div id="rxList"></div>
+
+  <a class="rx-btn" href="upload-prescription.html">Upload new prescription</a>
+</main>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script src="prescription-guard.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var fdb = firebase.firestore();
+  var $ = function (id) { return document.getElementById(id); };
+  var started = false;
+  var openId = null;          // which card is expanded
+  var stopHistory = null;     // unsubscribe for the open card's timeline
+  var lastDocs = [];
+
+  var LABELS = {
+    submitted: "Submitted",
+    reviewing: "Under review",
+    quoted: "Quotation ready - your reply needed",
+    customer_accepted: "You accepted - order confirmed",
+    customer_declined: "You declined the offer",
+    rejected: "Not available",
+    preparing: "Preparing your order",
+    out_for_delivery: "Out for delivery",
+    delivered: "Delivered",
+    cancelled: "Cancelled"
+  };
+  var GOOD = ["customer_accepted", "delivered"];
+  var BAD = ["rejected", "cancelled", "customer_declined"];
+  var WARN = ["quoted"];
+
+  function label(s) { return LABELS[s] || s || "Unknown"; }
+  function badgeClass(s) {
+    return "rx-badge" + (GOOD.indexOf(s) > -1 ? " good" : BAD.indexOf(s) > -1 ? " bad" : WARN.indexOf(s) > -1 ? " warn" : "");
+  }
+  function fmt(ts) {
+    if (!ts || !ts.toDate) return "just now";
+    return ts.toDate().toLocaleString([], { day: "numeric", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
+  function secs(ts) { return ts && ts.seconds ? ts.seconds : Date.now() / 1000; }
+  function showMsg(text, type) {
+    var b = $("rxMsg");
+    b.textContent = text;
+    b.className = "rx-msg " + type;
+    b.hidden = false;
+  }
+  function el(tag, cls, text) {
+    var e = document.createElement(tag);
+    if (cls) e.className = cls;
+    if (text != null) e.textContent = text;
+    return e;
+  }
+  function addLine(parent, name, value) {
+    var p = el("p");
+    p.appendChild(el("strong", null, name + ": "));
+    p.appendChild(document.createTextNode(value));
+    parent.appendChild(p);
+  }
+
+  /* ---------- customer answers the quotation ---------- */
+  function buildReplyPanel(rx, data) {
+    var panel = el("div", "rx-msg info");
+    panel.style.marginTop = "12px";
+    var price = "\u20A6" + Number(data.quotationAmount).toLocaleString();
+    var t = el("p", null, "Your medicines are available. Total price:");
+    t.style.margin = "0";
+    var big = el("div", "rx-id", price);
+    var ask = el("p", null, "Do you want to buy them at this price?");
+
+    var reply = el("input");
+    reply.type = "text";
+    reply.maxLength = 200;
+    reply.placeholder = "Message to the pharmacist (optional)";
+    reply.style.cssText = "width:100%;padding:11px;border:1.5px solid #dbe8f6;border-radius:12px;box-sizing:border-box;font:inherit;margin-bottom:6px";
+
+    var msg = el("p");
+    msg.style.cssText = "font-size:.85rem;margin:8px 0 0;color:#a12a35";
+
+    var yes = el("button", "rx-btn", "ACCEPT & BUY");
+    var no = el("button", "rx-btn alt", "REJECT OFFER");
+    yes.type = "button";
+    no.type = "button";
+
+    async function send(accept) {
+      var text = reply.value.trim().slice(0, 200);
+      var ok = accept
+        ? confirm("Confirm: you want to buy these medicines for " + price + "?")
+        : confirm("Are you sure you want to reject this offer?");
+      if (!ok) return;
+      yes.disabled = true;
+      no.disabled = true;
+      msg.style.color = "#0a4a9e";
+      msg.textContent = "Sending your reply...";
+      try {
+        var ts = firebase.firestore.FieldValue.serverTimestamp();
+        var status = accept ? "customer_accepted" : "customer_declined";
+        var upd = { status: status, updatedAt: ts };
+        if (accept) upd.acceptedAmount = Number(data.quotationAmount);
+        if (text) upd.customerReply = text;
+
+        var ref = fdb.collection("prescriptions").doc(rx);
+        var batch = fdb.batch();
+        batch.update(ref, upd);
+        batch.set(ref.collection("history").doc("response"), {
+          status: status,
+          at: ts,
+          by: "customer",
+          note: text || (accept ? "Customer accepted the price." : "Customer rejected the offer.")
+        });
+        await batch.commit();
+      } catch (e) {
+        console.error("Reply error:", e);
+        yes.disabled = false;
+        no.disabled = false;
+        msg.style.color = "#a12a35";
+        msg.textContent = (e.code === "permission-denied")
+          ? "The pharmacist just changed this quotation. Please refresh and check the new price."
+          : "Could not send your reply. Check your internet and try again.";
+      }
+    }
+    yes.addEventListener("click", function () { send(true); });
+    no.addEventListener("click", function () { send(false); });
+
+    panel.appendChild(t);
+    panel.appendChild(big);
+    panel.appendChild(ask);
+    panel.appendChild(reply);
+    panel.appendChild(yes);
+    panel.appendChild(no);
+    panel.appendChild(msg);
+    return panel;
+  }
+
+  /* ---------- details of one prescription ---------- */
+  function buildDetails(rx, data) {
+    var box = el("div", "rx-more");
+    addLine(box, "Status", label(data.status));
+    addLine(box, "Phone", data.phone || "-");
+    addLine(box, "Delivery address", data.deliveryAddress || "-");
+    if (data.customerNotes) addLine(box, "Your notes", data.customerNotes);
+    if (data.quotationAmount != null && data.quotationAmount !== "") {
+      addLine(box, "Quotation", "\u20A6" + Number(data.quotationAmount).toLocaleString());
+    }
+    if (data.adminNote) addLine(box, "Pharmacist note", data.adminNote);
+    if (data.acceptedAmount != null) {
+      addLine(box, "You agreed to pay", "\u20A6" + Number(data.acceptedAmount).toLocaleString());
+    }
+
+    // Customer must answer the quotation
+    if (data.status === "quoted" && data.quotationAmount != null) {
+      box.appendChild(buildReplyPanel(rx, data));
+    }
+
+    box.appendChild(el("p", null, "")).appendChild(el("strong", null, "Progress"));
+    var ul = el("ul", "rx-line");
+    ul.id = "tl-" + rx;
+    ul.appendChild(el("li", null, "Loading..."));
+    box.appendChild(ul);
+
+    var btn = el("button", "rx-btn alt", "View my prescription photo");
+    btn.type = "button";
+    var img = el("img");
+    img.id = "rxImg";
+    img.alt = "Prescription photo";
+    btn.addEventListener("click", function () { loadImage(rx, btn, img); });
+    box.appendChild(btn);
+    box.appendChild(img);
+    return box;
+  }
+
+  function watchHistory(rx) {
+    if (stopHistory) { stopHistory(); stopHistory = null; }
+    stopHistory = fdb.collection("prescriptions").doc(rx).collection("history")
+      .orderBy("at")
+      .onSnapshot(function (snap) {
+        var ul = $("tl-" + rx);
+        if (!ul) return;
+        ul.innerHTML = "";
+        if (snap.empty) { ul.appendChild(el("li", null, "No updates yet.")); return; }
+        snap.forEach(function (d) {
+          var h = d.data();
+          var li = el("li", null, label(h.status));
+          if (h.note) li.appendChild(el("small", null, h.note));
+          li.appendChild(el("small", null, fmt(h.at)));
+          ul.appendChild(li);
+        });
+      }, function (err) {
+        console.error("History error:", err);
+        var ul = $("tl-" + rx);
+        if (ul) { ul.innerHTML = ""; ul.appendChild(el("li", null, "Could not load progress.")); }
+      });
+  }
+
+  async function loadImage(rx, btn, img) {
+    btn.disabled = true;
+    btn.textContent = "Loading photo...";
+    try {
+      var snap = await fdb.collection("prescriptions").doc(rx).collection("files").doc("main").get();
+      if (!snap.exists) { btn.textContent = "Photo not found"; return; }
+      var f = snap.data();
+      img.src = "data:" + (f.fileType || "image/jpeg") + ";base64," + f.data;
+      img.style.display = "block";
+      btn.textContent = "Photo loaded";
+    } catch (e) {
+      console.error("Photo error:", e);
+      btn.disabled = false;
+      btn.textContent = "Could not load photo. Tap to retry";
+    }
+  }
+
+  /* ---------- list ---------- */
+  function render(docs) {
+    var list = $("rxList");
+    list.innerHTML = "";
+    if (!docs.length) {
+      list.appendChild(el("div", "rx-msg info", "You have not uploaded any prescription yet."));
+      return;
+    }
+    docs.forEach(function (d) {
+      var data = d.data();
+      var id = d.id;
+      var card = el("div", "rx-card");
+
+      var top = el("div", "rx-top");
+      var left = el("div");
+      left.appendChild(el("div", "rx-id", "RX-" + id.slice(-6).toUpperCase()));
+      left.appendChild(el("div", "rx-date", fmt(data.createdAt)));
+      top.appendChild(left);
+      top.appendChild(el("span", badgeClass(data.status), label(data.status)));
+      card.appendChild(top);
+
+      if (openId === id) card.appendChild(buildDetails(id, data));
+
+      top.addEventListener("click", function () {
+        if (stopHistory) { stopHistory(); stopHistory = null; }
+        openId = (openId === id) ? null : id;
+        render(lastDocs);
+        if (openId) watchHistory(openId);
+      });
+      list.appendChild(card);
+    });
+  }
+
+  function start() {
+    if (started) return;
+    started = true;
+    var uid = window.faxCustomer.uid;
+    fdb.collection("prescriptions").where("customerId", "==", uid)
+      .onSnapshot(function (snap) {
+        lastDocs = snap.docs.slice().sort(function (a, b) {
+          return secs(b.data().createdAt) - secs(a.data().createdAt);
+        });
+        $("rxMsg").hidden = true;
+        var keepHistory = openId;
+        render(lastDocs);
+        if (keepHistory && !stopHistory) watchHistory(keepHistory);
+      }, function (err) {
+        console.error("Prescriptions error:", err);
+        showMsg("Could not load your prescriptions. Please check your internet and refresh.", "error");
+      });
+  }
+
+  if (window.faxCustomer) start();
+  else document.addEventListener("fax-customer-ready", start);
+})();
+</script>
+</body>
+</html>
