@@ -160,7 +160,8 @@
   /* ---------- list ---------- */
   function card(d) {
     var o = d.data, st = norm(o.status);
-    var c = el("div", "order-card");
+    var c = document.createElement("div");
+c.className = "order-card";
     c.appendChild(el("h3", "Order " + shortId(d.id)));
     c.appendChild(el("p", "Status: " + (LABEL[st] || st)));
     c.appendChild(el("p", "Customer: " + (o.name || "-")));
