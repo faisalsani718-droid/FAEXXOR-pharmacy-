@@ -723,3 +723,20 @@ html {
 .pv-price{margin:0;font-size:24px;font-weight:800;color:#e5334b}
 .pv-add{flex:1;max-width:240px;height:48px;border:0;border-radius:12px;background:#0077b6;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
 .pv-add:hover{background:#005f92}
+.fx-help{
+  display:flex;align-items:center;gap:12px;
+  margin-top:16px;            /* space between Shop now and How to buy */
+  padding:12px 16px;border-radius:14px;
+  background:#178043;         /* green */
+  border:0;text-decoration:none;
+  color:#fff;
+  font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  font-weight:700;font-size:1.05rem;letter-spacing:.2px;
+  box-shadow:0 4px 12px rgba(23,128,67,.3);
+}
+.fx-help-icon{
+  flex:none;width:44px;height:44px;border-radius:50%;
+  background:#fff;color:#d62839;   /* white circle, red ? */
+  font-size:1.5rem;font-weight:800;display:grid;place-items:center;
+}
+.fx-help-text small{display:block;font-weight:500;font-size:.8rem;color:#fff;opacity:.92}

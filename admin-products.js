@@ -18,7 +18,7 @@
   var DEL = firebase.firestore.FieldValue.delete;
 
   // Same pattern as the Firestore rule (lowercase extensions only)
-  var IMG_RE = /^images\/[A-Za-z0-9._ -]+\.(jpg|jpeg|png|webp)$/;
+  var IMG_RE = /^(images\/[A-Za-z0-9._ -]+\.(jpg|jpeg|png|webp)|https:\/\/res\.cloudinary\.com\/[A-Za-z0-9_-]+\/image\/upload\/[A-Za-z0-9_\-\/.%,]+)$/;
   var OPTIONAL = ["variantLabel", "manufacturer", "strength", "dosageForm", "description",
     "genericName", "packSize", "nafdacNumber", "expiryDate", "directions", "warnings", "storage"];
   var KNOWN_CATS = ["Tablets (tins)", "Tablets", "Capsules", "Syrups", "Suspensions", "Injections & Infusions",
@@ -32,6 +32,12 @@
   var unsubProducts = null, unsubSettings = null, toastTimer = null;
   var ui = {}; // screen elements
   var F = {};  // form inputs
+  var CLOUD_NAME = "s8k7hpiy";
+  var UPLOAD_PRESET = "FX products";
+  var imgMeta = { name: "", publicId: "", fresh: false };
+  var uploading = false;
+  var MAX_EXTRA = 5;
+  var extras = []; // extra photo links for the medicine in the form
 
   /* ---------- helpers ---------- */
   function el(tag, cls, text) {
@@ -124,7 +130,11 @@
       ".fxp-prev{max-width:120px;max-height:120px;border-radius:10px;margin-top:6px;display:none}" +
       ".fxp-formmsg{background:#fbe6e8;color:#a12a35;border-radius:10px;padding:10px 12px;margin:12px 0 0;font-size:.9rem;white-space:pre-line}" +
       ".fxp-toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);max-width:92vw;z-index:3000;padding:12px 16px;border-radius:12px;font-weight:700;font-size:.92rem;box-shadow:0 6px 20px rgba(0,0,0,.25)}" +
-      ".fxp-toast[hidden]{display:none}.fxp-toast.ok{background:#1b6b3d;color:#fff}.fxp-toast.bad{background:#a12a35;color:#fff}";
+      ".fxp-toast[hidden]{display:none}.fxp-toast.ok{background:#1b6b3d;color:#fff}.fxp-toast.bad{background:#a12a35;color:#fff}" +
+      ".fxp-xbox{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}" +
+      ".fxp-xitem{position:relative;width:78px;height:78px}" +
+      ".fxp-xitem img{width:78px;height:78px;object-fit:cover;border-radius:10px;background:#eef2f7}" +
+      ".fxp-xdel{position:absolute;top:-8px;right:-8px;width:28px;height:28px;border-radius:50%;border:0;background:#a12a35;color:#fff;font-weight:800;cursor:pointer;line-height:1}";
     document.head.appendChild(s);
   }
 
@@ -217,14 +227,34 @@
 field(two3, "wholesalePrice", "Supplier price per piece (\u20A6)", "number", { min: "0", step: "any", inputmode: "decimal" });
 field(two3, "wholesaleMinQty", "Supplier minimum qty", "number", { min: "2", step: "1", inputmode: "numeric" });
 sheet.appendChild(two3);
-
-    field(sheet, "image", "Image path * (example: images/paracetamol.jpg)", "text", { maxlength: 150, autocapitalize: "none" });
+        sheet.appendChild(el("label", "fxp-lab", "Photo (tap to choose from your phone)"));
+    ui.file = el("input", "fxp-in");
+    ui.file.type = "file";
+    ui.file.accept = "image/jpeg,image/png,image/webp";
+    ui.file.addEventListener("change", function () { uploadPhoto(ui.file.files[0]); });
+    sheet.appendChild(ui.file);
+    ui.upNote = el("p", "fxp-hint");
+    sheet.appendChild(ui.upNote);
+    field(sheet, "image", "Image link * (filled automatically after upload)", "text", { maxlength: 300, autocapitalize: "none" });
     ui.imgNote = el("p", "fxp-hint");
     sheet.appendChild(ui.imgNote);
     ui.prev = el("img", "fxp-prev");
     ui.prev.alt = "Image preview";
     sheet.appendChild(ui.prev);
     F.image.addEventListener("change", checkImage);
+    F.image.addEventListener("input", function () { imgMeta = { name: "", publicId: "", fresh: false }; });
+
+    sheet.appendChild(el("label", "fxp-lab", "More photos (optional, up to " + MAX_EXTRA + ")"));
+    ui.extraFile = el("input", "fxp-in");
+    ui.extraFile.type = "file";
+    ui.extraFile.multiple = true;
+    ui.extraFile.accept = "image/jpeg,image/png,image/webp";
+    ui.extraFile.addEventListener("change", function () { uploadExtras(ui.extraFile.files); });
+    sheet.appendChild(ui.extraFile);
+    ui.extraNote = el("p", "fxp-hint");
+    sheet.appendChild(ui.extraNote);
+    ui.extraBox = el("div", "fxp-xbox");
+    sheet.appendChild(ui.extraBox);
 
     field(sheet, "manufacturer", "Manufacturer", "text", { maxlength: 100 });
     var two2 = el("div", "fxp-two");
@@ -270,6 +300,83 @@ sheet.appendChild(two3);
 
     host.appendChild(ui.modal);
   }
+  function renderExtras() {
+    if (!ui.extraBox) return;
+    ui.extraBox.innerHTML = "";
+    extras.forEach(function (url, i) {
+      var w = el("div", "fxp-xitem");
+      var im = el("img");
+      im.alt = "";
+      im.src = url;
+      w.appendChild(im);
+      var x = el("button", "fxp-xdel", "\u2715");
+      x.type = "button";
+      x.setAttribute("aria-label", "Remove this photo");
+      x.addEventListener("click", function () { extras.splice(i, 1); renderExtras(); });
+      w.appendChild(x);
+      ui.extraBox.appendChild(w);
+    });
+  }
+
+  async function uploadExtras(fileList) {
+    var files = Array.prototype.slice.call(fileList || []);
+    ui.extraFile.value = "";
+    if (!files.length) return;
+    var room = MAX_EXTRA - extras.length;
+    if (room <= 0) { say("You already have " + MAX_EXTRA + " extra photos. Remove one first.", false); return; }
+    if (files.length > room) { say("Only " + room + " more photo(s) allowed. The rest were skipped.", false); files = files.slice(0, room); }
+    uploading = true;
+    ui.saveBtn.disabled = true;
+    var done = 0, failed = 0;
+    for (var i = 0; i < files.length; i++) {
+      var f = files[i];
+      ui.extraNote.textContent = "Uploading photo " + (i + 1) + " of " + files.length + "...";
+      if (!/^image\/(jpeg|png|webp)$/.test(f.type) || f.size > 10 * 1024 * 1024) { failed++; continue; }
+      try {
+        var fd = new FormData();
+        fd.append("file", f);
+        fd.append("upload_preset", UPLOAD_PRESET);
+        var res = await fetch("https://api.cloudinary.com/v1_1/" + CLOUD_NAME + "/image/upload", { method: "POST", body: fd });
+        var data = await res.json();
+        if (!res.ok) throw new Error((data.error && data.error.message) || "Upload failed");
+        extras.push(data.secure_url);
+        done++;
+        renderExtras();
+      } catch (e) {
+        console.error(e);
+        failed++;
+      }
+    }
+    ui.extraNote.textContent = done + " photo(s) added" + (failed ? ", " + failed + " failed (use JPG, PNG or WEBP under 10 MB)" : "") + ". Now tap Save medicine.";
+    uploading = false;
+    ui.saveBtn.disabled = false;
+  }
+
+    async function uploadPhoto(file) {
+    if (!file) return;
+    if (!/^image\/(jpeg|png|webp)$/.test(file.type)) { say("Choose a JPG, PNG or WEBP photo.", false); return; }
+    if (file.size > 10 * 1024 * 1024) { say("Photo is too big (maximum 10 MB).", false); return; }
+    uploading = true;
+    ui.saveBtn.disabled = true;
+    ui.upNote.textContent = "Uploading photo...";
+    try {
+      var fd = new FormData();
+      fd.append("file", file);
+      fd.append("upload_preset", UPLOAD_PRESET);
+      var res = await fetch("https://api.cloudinary.com/v1_1/" + CLOUD_NAME + "/image/upload", { method: "POST", body: fd });
+      var data = await res.json();
+      if (!res.ok) throw new Error((data.error && data.error.message) || "Upload failed");
+      F.image.value = data.secure_url;
+      imgMeta = { name: file.name.slice(0, 100), publicId: data.public_id, fresh: true };
+      ui.upNote.textContent = "Photo uploaded. Now tap Save medicine.";
+      checkImage();
+    } catch (e) {
+      console.error(e);
+      ui.upNote.textContent = "Upload failed: " + (e.message || e);
+    }
+    uploading = false;
+    ui.saveBtn.disabled = false;
+    }
 
   function checkImage() {
     var path = F.image.value.trim();
@@ -301,6 +408,13 @@ sheet.appendChild(two3);
       .forEach(function (k) { F[k].value = p && typeof p[k] === "string" ? p[k] : (p && typeof p[k] === "number" ? p[k] : ""); });
     F.prescriptionRequired.value = p && typeof p.prescriptionRequired === "boolean" ? String(p.prescriptionRequired) : "";
     F.active.value = p && p.active === false ? "false" : "true";
+        imgMeta = { name: (p && p.imageName) || "", publicId: (p && p.imagePublicId) || "", fresh: false };
+    ui.file.value = "";
+    ui.upNote.textContent = "";
+    extras = (p && Array.isArray(p.extraImages)) ? p.extraImages.filter(function (u) { return typeof u === "string"; }).slice(0, MAX_EXTRA) : [];
+    ui.extraFile.value = "";
+    ui.extraNote.textContent = "";
+    renderExtras();
     ui.modal.hidden = false;
     document.body.style.overflow = "hidden";
     ui.modal.firstChild.scrollTop = 0;
@@ -353,6 +467,10 @@ if (wps !== "" || wqs !== "") {
       errs.push("Image path must look like images/name.jpg (extension in lowercase: jpg, jpeg, png or webp; no other folders).");
     }
 
+    if (extras.length > MAX_EXTRA) errs.push("You can add up to " + MAX_EXTRA + " extra photos.");
+    extras.forEach(function (u) { if (!IMG_RE.test(u)) errs.push("One extra photo link is not valid. Remove it and upload it again."); });
+    d.extraImages = extras.slice(0, MAX_EXTRA);
+
     var caps = { variantLabel: 60, manufacturer: 100, strength: 60, dosageForm: 60, description: 1000,
       genericName: 120, packSize: 60, nafdacNumber: 40, expiryDate: 20, directions: 1000, warnings: 1000, storage: 300 };
     OPTIONAL.forEach(function (k) {
@@ -394,6 +512,9 @@ if (wps !== "" || wqs !== "") {
         upd.wholesalePrice = d.wholesalePrice !== undefined ? d.wholesalePrice : DEL();
 upd.wholesaleMinQty = d.wholesaleMinQty !== undefined ? d.wholesaleMinQty : DEL();
         upd.prescriptionRequired = d.prescriptionRequired !== undefined ? d.prescriptionRequired : DEL();
+        upd.extraImages = d.extraImages.length ? d.extraImages : DEL();
+                if (imgMeta.publicId) { upd.imageName = imgMeta.name; upd.imagePublicId = imgMeta.publicId; if (imgMeta.fresh) upd.imageUploadedAt = TS(); }
+        else { upd.imageName = DEL(); upd.imagePublicId = DEL(); upd.imageUploadedAt = DEL(); }
         await fdb.collection("products").doc(editingId).update(upd);
         say(d.name + " updated.", true);
       } else {
@@ -405,6 +526,8 @@ upd.wholesaleMinQty = d.wholesaleMinQty !== undefined ? d.wholesaleMinQty : DEL(
         OPTIONAL.forEach(function (k) { if (d[k]) doc[k] = d[k]; });
         if (d.wholesalePrice !== undefined) { doc.wholesalePrice = d.wholesalePrice; doc.wholesaleMinQty = d.wholesaleMinQty; }
         if (d.prescriptionRequired !== undefined) doc.prescriptionRequired = d.prescriptionRequired;
+        if (d.extraImages.length) doc.extraImages = d.extraImages;
+                if (imgMeta.publicId) { doc.imageName = imgMeta.name; doc.imagePublicId = imgMeta.publicId; doc.imageUploadedAt = TS(); }
         await fdb.collection("products").add(doc);
         say(d.name + " added.", true);
       }
