@@ -175,8 +175,19 @@
 
     // Customer confirms receipt after the admin marks Delivered
     if (st === "delivered") {
+      var fbId = "FX-" + d.id.slice(-6).toUpperCase();   // same order number the admin sees
       if (o.customerConfirmed) {
         c.appendChild(mk("div", "You confirmed receipt " + when(o.customerConfirmedAt) + ". Thank you!", "msg good"));
+        var rated = false;
+        try { rated = !!localStorage.getItem("fx_fb_" + fbId); } catch (e) {}
+        if (rated) {
+          c.appendChild(mk("div", "Thank you for rating your delivery. \u2605", "msg good"));
+        } else {
+          var rateBtn = mk("a", "\u2605 Rate your delivery", "btn");
+          rateBtn.href = "feedback.html?order=" + encodeURIComponent(fbId);
+          rateBtn.style.cssText = "width:100%;text-align:center;box-sizing:border-box;margin-top:6px;font-size:1rem";
+          c.appendChild(rateBtn);
+        }
       } else {
         var cb = mk("button", "I RECEIVED MY ORDER", "btn");
         cb.type = "button";
@@ -187,6 +198,8 @@
           d.ref.update({
             customerConfirmed: true,
             customerConfirmedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }).then(function () {
+            location.href = "feedback.html?order=" + encodeURIComponent(fbId);   // ask for the stars right away
           }).catch(function () { cb.disabled = false; alert("Could not confirm. Please try again."); });
         };
         c.appendChild(cb);

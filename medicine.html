@@ -31,6 +31,7 @@
   .price-box .tag{background:var(--red);color:#fff;font-weight:700;padding:8px 12px;font-size:15px}
   .price-box .body{padding:12px}
   .price{font-size:30px;font-weight:800}
+  .tier{margin-top:6px;color:#1b6b3d;font-size:15px}
   .gap{height:8px;background:var(--mint);margin-top:12px}
   .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line);font-size:15px}
   .row:last-child{border:0}
@@ -96,6 +97,7 @@
     var list = [];
     if (v.image) list.push(v.image);
     if (Array.isArray(v.images)) v.images.forEach(function(u){ if (list.indexOf(u)<0) list.push(u); });
+    if (Array.isArray(v.extraImages)) v.extraImages.forEach(function(u){ if (list.indexOf(u)<0) list.push(u); });
     if (!list.length) list.push("images/" + slug(v.name + (v.variantLabel ? " " + v.variantLabel : "")) + ".jpg");
     return list;
   }
@@ -124,7 +126,9 @@
         (v.nafdacNo ? '<span class="badge">NAFDAC '+esc(v.nafdacNo)+'</span>' : '') +
         (expired ? '<span class="badge out">Expired</span>' : out ? '<span class="badge out">Out of stock</span>' : lowS ? '<span class="badge low">Only '+stock+' left</span>' : '<span class="badge">In stock</span>') +
       '</div>' + opts + '</section>' +
-      '<div class="price-box"><div class="tag">FAEXXOR price</div><div class="body"><span class="price">'+money(v.price)+'</span></div></div>' +
+      '<div class="price-box"><div class="tag">FAEXXOR price</div><div class="body"><span class="price">'+money(v.price)+'</span>' +
+        (v.wholesalePrice > 0 && v.wholesalePrice <= v.price && v.wholesaleMinQty >= 2 ? '<div class="tier">Buy '+v.wholesaleMinQty+' or more: <b>'+money(v.wholesalePrice)+'</b> each</div>' : '') +
+        '</div></div>' +
       '<div class="gap"></div>' +
       '<section><div class="row"><span>Delivery</span><b>1 - 24 hours after confirmation</b></div>' +
       '<div class="row"><span>Areas</span><b>Yola, Gombe, Borno, Taraba</b></div>' +

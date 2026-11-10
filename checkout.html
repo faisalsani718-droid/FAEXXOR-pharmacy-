@@ -260,6 +260,8 @@
         l.live = {
           name: d.name + (d.variantLabel ? " (" + d.variantLabel + ")" : ""),
           price: Number(d.price) || 0,
+          wholesalePrice: Number(d.wholesalePrice) || 0,
+          wholesaleMinQty: Number.isInteger(d.wholesaleMinQty) ? d.wholesaleMinQty : 0,
           stock: Number.isInteger(d.stockQuantity) ? d.stockQuantity : 0
         };
       } catch (e) {
@@ -285,7 +287,15 @@
   }
 
   /* ---------- screen ---------- */
-  function unitPrice(l) { return l.live ? l.live.price : l.price; }
+  /* supplier price: applies when the quantity reaches the minimum set in the admin */
+  function hasTier(l) {
+    return !!(l.live && l.live.wholesalePrice > 0 && l.live.wholesalePrice <= l.live.price && l.live.wholesaleMinQty >= 2);
+  }
+  function unitPrice(l) {
+    if (!l.live) return l.price;
+    if (hasTier(l) && l.qty >= l.live.wholesaleMinQty) return l.live.wholesalePrice;
+    return l.live.price;
+  }
   function totalOf() { return lines.reduce(function (s, l) { return s + unitPrice(l) * l.qty; }, 0); }
 
   function render() {
@@ -299,6 +309,11 @@
       var left = el("div");
       left.appendChild(el("div", "lname", l.live ? l.live.name : l.name));
       left.appendChild(el("div", "lprice", money(unitPrice(l)) + " each"));
+      if (hasTier(l)) {
+        left.appendChild(el("div", "lprice", l.qty >= l.live.wholesaleMinQty
+          ? "Supplier price applied"
+          : "Buy " + l.live.wholesaleMinQty + " or more: " + money(l.live.wholesalePrice) + " each"));
+      }
       top.appendChild(left);
       var rm = el("button", "rm", "Remove");
       rm.type = "button";
@@ -384,7 +399,7 @@
       }
       var items = [];
       lines.forEach(function (l) {
-        for (var i = 0; i < l.qty; i++) items.push({ name: l.live.name, price: l.live.price, productId: l.productId });
+        for (var i = 0; i < l.qty; i++) items.push({ name: l.live.name, price: unitPrice(l), productId: l.productId });
       });
       var total = items.reduce(function (s, it) { return s + it.price; }, 0);
       var method = METHODS[f.method];
