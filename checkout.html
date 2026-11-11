@@ -112,6 +112,8 @@
       <label class="f" for="cAddress">Delivery address</label>
       <textarea id="cAddress" autocomplete="street-address" placeholder="House number, street, area, town"></textarea>
       <p class="err" id="eAddress"></p>
+      <button type="button" class="btn light block" id="locBtn">📍 Use my current location</button>
+      <p class="note" id="locMsg"></p>
       <p class="note">We deliver to Yola, Gombe, Borno, Taraba and nearby locations. The delivery fee depends on your location and we will confirm it with you.</p>
     </section>
 
@@ -208,6 +210,7 @@
   var user = null;                    // signed-in customer (guest sessions do not count)
   var lines = [];                     // {name, productId, price, qty, live, problem}
   var checking = false, placing = false, finished = false, lastAttempt = null;
+  var geo = null;   // customer's GPS numbers
 
   /* ---------- cart (shared with the shop through localStorage) ---------- */
   function validUnit(i) {
@@ -380,7 +383,7 @@
   function shortId(id) { return "FX-" + String(id).slice(-6).toUpperCase(); }
 
   async function place() {
-    if (!user) { location.href = "_login.html"; return; }
+    if (!user) { location.href = "login.html"; return; }
     if (placing || checking) return;
     var f = formState(), bad = false;
     $("eName").textContent = f.nameOk ? "" : "Please enter your full name."; bad = bad || !f.nameOk;
@@ -421,6 +424,7 @@
         status: "pending",
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
+      if (geo) payload.location = geo;
       try {
         await ref.set(payload);
       } catch (e) {
@@ -494,6 +498,29 @@
         if (id === "cPhone" && f.phoneOk) $("ePhone").textContent = "";
         if (id === "cAddress" && f.addressOk) $("eAddress").textContent = "";
       });
+    });
+
+    $("locBtn").addEventListener("click", function () {
+      var btn = this, msg = $("locMsg");
+      if (!navigator.geolocation) { msg.textContent = "This phone cannot share location. Please type your address."; return; }
+      btn.disabled = true; msg.textContent = "Getting your location...";
+      navigator.geolocation.getCurrentPosition(function (p) {
+        geo = { lat: Number(p.coords.latitude.toFixed(6)), lng: Number(p.coords.longitude.toFixed(6)) };
+        btn.disabled = false;
+        msg.textContent = "Location saved. Add your house number and street so the rider can find you.";
+        fetch("https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=" + geo.lat + "&lon=" + geo.lng)
+          .then(function (r) { return r.json(); })
+          .then(function (d) { if (d && d.display_name && !$("cAddress").value.trim()) $("cAddress").value = String(d.display_name).slice(0, 300); })
+          .catch(function () { /* the numbers are still saved */ });
+      }, function (err) {
+        btn.disabled = false; geo = null;
+        var c = err && err.code;
+        msg.textContent = c === 1 ? "Location is blocked. Allow location for this site in your browser settings, then try again, or type your address."
+          : c === 2 ? "Your phone could not find your location. Turn on the phone's Location (GPS) and try again, or type your address."
+          : c === 3 ? "Finding your location took too long. Try again, or type your address."
+          : "Location did not work. Please type your address.";
+        console.error("Location error:", err);
+      }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
     });
 
     // remembered delivery details from the last order on this phone

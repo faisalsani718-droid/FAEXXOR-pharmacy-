@@ -461,6 +461,13 @@ document.addEventListener("DOMContentLoaded", updateCartUI);
         line(box, "Customer", o.name);
         line(box, "Phone", o.phone);
         line(box, "Delivery Address", o.address || o.deliveryAddress);
+        if (o.location && typeof o.location.lat === "number" && typeof o.location.lng === "number") {
+          var mapLink = document.createElement("a");
+          mapLink.href = "https://www.google.com/maps?q=" + o.location.lat + "," + o.location.lng;
+          mapLink.target = "_blank"; mapLink.rel = "noopener";
+          mapLink.textContent = "\uD83D\uDCCD Open in Google Maps";
+          box.appendChild(mapLink);
+        }
         line(box, "Payment Method", o.paymentMethod);
         line(box, "Payment Status", o.paymentStatus);
         line(box, "Status", String(o.status || "").toUpperCase());
