@@ -73,13 +73,35 @@
     .toast { position: fixed; left: 12px; right: 12px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); max-width: 460px; margin: 0 auto; z-index: 50;
              background: #223; color: #fff; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: .9rem; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
 
+    /* ---------- A4 · one page ---------- */
+    @page { size: A4 portrait; margin: 8mm; }
     @media print {
-      body { background: #fff; padding: 0; }
-      header, .actions, .toast, .back { display: none !important; }
-      main { max-width: none; padding: 0; }
-      #receipt { box-shadow: none; border: 0; border-radius: 0; }
+      html, body { background: #fff; padding: 0; margin: 0; height: auto; }
+      header, .actions, .toast, .back, .state { display: none !important; }
+      main { max-width: none; padding: 0; margin: 0; }
+      #receipt { box-shadow: none; border: 1px solid var(--line); border-radius: 12px; width: 100%; max-height: 280mm; overflow: hidden;
+                 break-inside: avoid; page-break-inside: avoid; page-break-after: avoid; }
+      .rtop { padding: 12px 16px 10px; }
+      .rtop img { height: 56px; }
+      .brand { font-size: 1.35rem; }
+      .rbody { padding: 12px 14px 4px; }
+      .grid, .items, .totals { margin-bottom: 10px; }
+      .kv { padding: 7px 12px; }
+      .thanks { padding: 14px 20px 14px; }
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     }
+
+    /* used only while the PDF is being drawn, so the receipt fills an A4 page nicely */
+    #receipt.a4 { width: 794px; border-radius: 0; box-shadow: none; border: 0; }
+    #receipt.a4 .rtop { padding: 22px 28px 14px; }
+    #receipt.a4 .rtop img { height: 76px; }
+    #receipt.a4 .brand { font-size: 1.7rem; }
+    #receipt.a4 .rbody { padding: 18px 28px 8px; }
+    #receipt.a4 .kv { font-size: 1rem; padding: 9px 14px; }
+    #receipt.a4 .ih, #receipt.a4 .ir { grid-template-columns: 1fr 50px 100px 110px; font-size: .92rem; padding: 10px 14px; }
+    #receipt.a4 .ih { font-size: .8rem; }
+    #receipt.a4 .trow { font-size: 1rem; }
+    #receipt.a4 .thanks { padding: 22px 36px 22px; }
   </style>
 </head>
 <body>
@@ -300,12 +322,26 @@
   }
   function busy(btn, on) { btn.disabled = on; }
 
+  function captureA4() {
+    return needCanvas().then(function () {
+      return window.html2canvas($("receipt"), {
+        scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false, windowWidth: 1000,
+        onclone: function (doc) {
+          var r = doc.getElementById("receipt"); r.classList.add("a4");
+          var m = doc.querySelector("main"); m.style.maxWidth = "none"; m.style.padding = "0";
+        }
+      });
+    });
+  }
   function savePdf() {
     var b = $("pdfBtn"); busy(b, true);
-    Promise.all([capture(), needPdf()]).then(function (r) {
-      var c = r[0], J = window.jspdf.jsPDF, w = 210, h = w * c.height / c.width;
-      var pdf = new J({ unit: "mm", format: [w, h], orientation: "p" });
-      pdf.addImage(c.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, w, h);
+    Promise.all([captureA4(), needPdf()]).then(function (r) {
+      var c = r[0], J = window.jspdf.jsPDF;
+      var PW = 210, PH = 297, M = 8;                       // A4 page and margin, in mm
+      var w = PW - 2 * M, h = w * c.height / c.width;
+      if (h > PH - 2 * M) { h = PH - 2 * M; w = h * c.width / c.height; }   // shrink so it always stays on ONE page
+      var pdf = new J({ unit: "mm", format: "a4", orientation: "p" });
+      pdf.addImage(c.toDataURL("image/jpeg", 0.95), "JPEG", (PW - w) / 2, M, w, h);
       pdf.save(current.file + ".pdf");
     }).catch(function (e) {
       console.error(e);
@@ -351,6 +387,13 @@
   $("pdfBtn").addEventListener("click", savePdf);
   $("imgBtn").addEventListener("click", saveImage);
   $("printBtn").addEventListener("click", function () { window.print(); });
+  // if a long order would run past one A4 page, scale the receipt down to fit
+  window.addEventListener("beforeprint", function () {
+    var r = $("receipt"); r.style.zoom = "";
+    var maxH = 281 * 96 / 25.4, h = r.getBoundingClientRect().height;
+    if (h > maxH) r.style.zoom = String(Math.max(0.5, maxH / h));
+  });
+  window.addEventListener("afterprint", function () { $("receipt").style.zoom = ""; });
   $("shareBtn").addEventListener("click", shareReceipt);
 
   try {
