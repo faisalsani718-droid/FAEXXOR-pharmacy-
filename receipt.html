@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a8fd1">
+  <title>Receipt - FX PHARMARKET</title>
+  <style>
+    * { box-sizing: border-box; }
+    [hidden] { display: none !important; }
+    :root { --sky: #0a8fd1; --sky-dark: #076fa3; --green: #1f9d55; --green-soft: #eafaf0; --green-line: #8fdcae; --ink: #111; --mute: #5b6b7a; --line: #dbe9f3; }
+    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: #eef4f9; color: var(--ink);
+           padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+    header { background: linear-gradient(90deg, #0b4a9e, #0a8fd1); color: #fff; padding: 14px 16px; padding-top: calc(14px + env(safe-area-inset-top, 0px));
+             display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; }
+    header a { color: #0b4a9e; background: #fff; text-decoration: none; font-weight: 700; padding: 9px 14px; border-radius: 10px; font-size: .9rem; white-space: nowrap; }
+    header h1 { margin: 0; font-size: 1.05rem; }
+    main { max-width: 640px; margin: 0 auto; padding: 14px; }
+
+    .state { text-align: center; background: #fff; border-radius: 16px; padding: 34px 16px; color: var(--mute); }
+    .state h2 { color: var(--ink); margin: 0 0 8px; font-size: 1.15rem; }
+    .state a { display: inline-block; margin-top: 12px; background: var(--sky); color: #fff; text-decoration: none; padding: 11px 20px; border-radius: 10px; font-weight: 700; }
+
+    /* ---------- the receipt itself ---------- */
+    #receipt { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 6px 24px rgba(10,143,209,.15); border: 1px solid var(--line); }
+    .rtop { padding: 20px 20px 14px; text-align: center; border-bottom: 4px solid var(--sky); }
+    .rtop img { height: 70px; width: auto; max-width: 70%; display: block; margin: 0 auto 6px; }
+    .brand { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: .06em; color: var(--sky); }
+    .rtitle { margin: 10px 0 0; font-size: .95rem; font-weight: 800; letter-spacing: .12em; color: var(--ink); }
+    .rbody { padding: 16px 14px 6px; }
+    .sec { margin: 0 0 6px; font-size: .78rem; font-weight: 800; letter-spacing: .1em; color: var(--sky); text-transform: uppercase; }
+    .grid { display: grid; gap: 0; margin-bottom: 14px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .kv { display: flex; justify-content: space-between; gap: 14px; padding: 9px 12px; font-size: .92rem; border-bottom: 1px solid var(--line); }
+    .kv:last-child { border-bottom: 0; }
+    .kv span:first-child { color: var(--mute); flex: none; }
+    .kv span:last-child { font-weight: 600; text-align: right; word-break: break-word; }
+
+    .items { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-bottom: 14px; }
+    .ih, .ir { display: grid; grid-template-columns: 1fr 26px 62px 72px; gap: 4px; padding: 9px 10px; font-size: .8rem; align-items: start; }
+    .ih { background: #eaf6fd; color: var(--sky-dark); font-weight: 800; font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; }
+    .ir { border-top: 1px solid var(--line); }
+    .ir .n { font-weight: 600; word-break: break-word; }
+    .ir .r, .ih .r { text-align: right; }
+    .ir .c, .ih .c { text-align: center; }
+
+    .totals { margin-bottom: 14px; }
+    .trow { display: flex; justify-content: space-between; gap: 12px; padding: 6px 2px; font-size: .94rem; }
+    .trow.note span:last-child { color: var(--mute); font-size: .85rem; text-align: right; }
+    .grand { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; padding: 12px 14px; border-radius: 12px; background: var(--sky); color: #fff; font-weight: 800; }
+    .grand span:last-child { font-size: 1.3rem; }
+
+    .chip { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: .78rem; font-weight: 800; letter-spacing: .02em; }
+    .chip.paid { background: #d6f5e3; color: #137a3d; }
+    .chip.wait { background: #fff3cd; color: #8a6200; }
+    .chip.cod  { background: #e3f1fb; color: var(--sky-dark); }
+    .chip.st   { background: #eef2f6; color: #2b3a47; }
+    .chip.bad  { background: #fde0e0; color: #b3261e; }
+    .notice { margin: 0 0 14px; padding: 10px 12px; border-radius: 10px; background: #fff8e1; border-left: 4px solid #f0b429; font-size: .86rem; line-height: 1.45; color: #5b4300; }
+
+    .thanks { margin: 6px 0 0; padding: 22px 20px 20px; background: var(--green-soft); border-top: 3px solid var(--green-line); text-align: center; }
+    .thanks h2 { margin: 0 0 10px; font-size: 1.12rem; line-height: 1.3; color: var(--sky-dark); }
+    .thanks p { margin: 0 0 9px; font-size: .92rem; line-height: 1.5; color: #111; }
+    .thanks .lead { font-weight: 700; color: var(--green); }
+    .thanks .tag { margin-top: 14px; font-weight: 800; letter-spacing: .08em; color: var(--sky-dark); font-size: .9rem; }
+    .thanks .site { margin-top: 10px; font-size: .86rem; color: var(--sky-dark); font-weight: 700; word-break: break-all; }
+
+    /* ---------- buttons ---------- */
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .actions button { border: 0; border-radius: 12px; padding: 14px 10px; font-size: .95rem; font-weight: 800; cursor: pointer; font-family: inherit; background: var(--sky); color: #fff; }
+    .actions button.alt { background: #e3f1fb; color: var(--sky-dark); }
+    .actions button.green { background: var(--green); }
+    .actions button:disabled { opacity: .55; cursor: wait; }
+    .toast { position: fixed; left: 12px; right: 12px; bottom: calc(18px + env(safe-area-inset-bottom, 0px)); max-width: 460px; margin: 0 auto; z-index: 50;
+             background: #223; color: #fff; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: .9rem; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+
+    @media print {
+      body { background: #fff; padding: 0; }
+      header, .actions, .toast, .back { display: none !important; }
+      main { max-width: none; padding: 0; }
+      #receipt { box-shadow: none; border: 0; border-radius: 0; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <a href="orders.html">&larr; My Orders</a>
+  <h1>Receipt</h1>
+</header>
+
+<main>
+  <div class="state" id="state"><h2>Loading your receipt...</h2></div>
+
+  <div id="wrap" hidden>
+    <article id="receipt">
+      <div class="rtop">
+        <img src="images/fx-logo.jpg" alt="FX PHARMARKET logo" crossorigin="anonymous">
+        <p class="brand">FX PHARMARKET</p>
+        <p class="rtitle">CUSTOMER PAYMENT RECEIPT</p>
+      </div>
+
+      <div class="rbody">
+        <p class="sec">Receipt details</p>
+        <div class="grid">
+          <div class="kv"><span>Receipt No.</span><span id="rNo"></span></div>
+          <div class="kv"><span>Order ID</span><span id="rOid"></span></div>
+          <div class="kv"><span>Date &amp; time</span><span id="rDate"></span></div>
+        </div>
+
+        <p class="sec">Customer</p>
+        <div class="grid">
+          <div class="kv"><span>Name</span><span id="rName"></span></div>
+          <div class="kv"><span>Phone</span><span id="rPhone"></span></div>
+          <div class="kv"><span>Delivery address</span><span id="rAddr"></span></div>
+        </div>
+
+        <p class="sec">Medicines</p>
+        <div class="items">
+          <div class="ih"><span>Medicine</span><span class="c">Qty</span><span class="r">Unit</span><span class="r">Total</span></div>
+          <div id="rItems"></div>
+        </div>
+
+        <div class="totals">
+          <div class="trow"><span>Subtotal</span><b id="rSub"></b></div>
+          <div class="trow" id="rFeeRow"><span>Delivery fee</span><b id="rFee"></b></div>
+          <div class="trow" id="rDiscRow" hidden><span>Discount</span><b id="rDisc"></b></div>
+          <div class="grand"><span>GRAND TOTAL</span><span id="rGrand"></span></div>
+          <div class="trow note" id="rFeeNote" hidden><span></span><span>Delivery fee is confirmed separately by our team.</span></div>
+        </div>
+
+        <p class="sec">Payment</p>
+        <div class="grid">
+          <div class="kv"><span>Payment method</span><span id="rMethod"></span></div>
+          <div class="kv"><span>Payment status</span><span id="rPay"></span></div>
+          <div class="kv"><span>Order status</span><span id="rStatus"></span></div>
+        </div>
+        <p class="notice" id="rNotice" hidden></p>
+      </div>
+
+<section class="thanks">
+  <h2>THANK YOU FOR CHOOSING FX PHARMARKET!</h2>
+  <p class="lead">Your trust means everything to us.</p>
+  <p>We appreciate your purchase and are proud to have you as part of the FX community. We look forward to serving you again.</p>
+  <p class="tag">YOUR HEALTH. YOUR CHOICE. YOUR FX.</p>
+  <p class="site">fxpharmarket.com.ng</p>
+</section>
+    </article>
+
+    <div class="actions">
+      <button type="button" id="pdfBtn">&#128196; Download Receipt (PDF)</button>
+      <button type="button" id="imgBtn" class="green">&#128247; Save as Image</button>
+      <button type="button" id="printBtn" class="alt">&#128424; Print Receipt</button>
+      <button type="button" id="shareBtn" class="alt">&#128279; Share Receipt</button>
+    </div>
+  </div>
+</main>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  var WEBSITE = "https://fxpharmarket.com.ng";
+  var STATUS = {
+    pending: "Pending", accepted: "Accepted", packaging: "Packaging",
+    out_for_delivery: "Out for delivery", delivered: "Delivered", rejected: "Rejected"
+  };
+  var ALIAS = {
+    pending: "pending", accept: "accepted", accepted: "accepted",
+    packing: "packaging", packed: "packaging", packaging: "packaging",
+    "out for delivery": "out_for_delivery", out_for_delivery: "out_for_delivery",
+    "on delivery": "out_for_delivery", shipped: "out_for_delivery",
+    delivered: "delivered", reject: "rejected", rejected: "rejected"
+  };
+
+  function $(id) { return document.getElementById(id); }
+  function money(n) { return "\u20A6" + Number(n || 0).toLocaleString("en-NG"); }
+  function norm(s) {
+    if (s === undefined || s === null || String(s).trim() === "") return "pending";
+    var k = String(s).trim().toLowerCase().replace(/[\s-]+/g, " ");
+    return ALIAS[k] || ALIAS[k.replace(/ /g, "_")] || null;
+  }
+  function chip(el, cls, text) { el.innerHTML = ""; var s = document.createElement("span"); s.className = "chip " + cls; s.textContent = text; el.appendChild(s); }
+  var toastTimer = null;
+  function say(t) { var b = $("toast"); b.textContent = t; b.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(function () { b.hidden = true; }, 5000); }
+
+  function showState(title, text, linkText, href) {
+    var s = $("state");
+    s.hidden = false; $("wrap").hidden = true;
+    s.innerHTML = "";
+    var h = document.createElement("h2"); h.textContent = title; s.appendChild(h);
+    if (text) { var p = document.createElement("p"); p.textContent = text; s.appendChild(p); }
+    if (linkText) { var a = document.createElement("a"); a.href = href; a.textContent = linkText; s.appendChild(a); }
+  }
+
+  /* ---------- fill the receipt from the real order ---------- */
+  var current = null;   // { sid, file }
+
+  function fill(id, o) {
+    var sid = "FX-" + String(id).slice(-6).toUpperCase();
+    var d = o.createdAt && o.createdAt.toDate ? o.createdAt.toDate() : null;
+
+    $("rNo").textContent = "RCT-" + String(id).slice(-8).toUpperCase();
+    $("rOid").textContent = sid;
+    $("rDate").textContent = d
+      ? d.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" }) + ", " + d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
+      : "-";
+    $("rName").textContent = o.name || "-";
+    $("rPhone").textContent = o.phone || "-";
+    $("rAddr").textContent = o.address || o.deliveryAddress || "-";
+
+    // the order stores one entry per unit, so group the same medicine and price together
+    var groups = [], map = {};
+    (Array.isArray(o.items) ? o.items : []).forEach(function (it) {
+      var name = it.name || it.medicineName || it.title || it.productName || "Item";
+      var price = Number(it.price) || 0;
+      var q = Number(it.quantity !== undefined ? it.quantity : it.qty);
+      if (!(q >= 1)) q = 1;
+      var k = name + "|" + price;
+      if (!map[k]) { map[k] = { name: name, price: price, qty: 0 }; groups.push(map[k]); }
+      map[k].qty += q;
+    });
+    var box = $("rItems"); box.innerHTML = "";
+    var sub = 0;
+    groups.forEach(function (g) {
+      var line = g.price * g.qty; sub += line;
+      var r = document.createElement("div"); r.className = "ir";
+      [["n", g.name], ["c", String(g.qty)], ["r", money(g.price)], ["r", money(line)]].forEach(function (c) {
+        var s = document.createElement("span"); s.className = c[0]; s.textContent = c[1]; r.appendChild(s);
+      });
+      box.appendChild(r);
+    });
+    if (!groups.length) sub = Number(o.totalPrice) || 0;
+
+    // delivery fee and discount are shown only when they are saved on the order
+    var fee = typeof o.deliveryFee === "number" && o.deliveryFee >= 0 ? o.deliveryFee : null;
+    var disc = typeof o.discount === "number" && o.discount > 0 ? o.discount : 0;
+    $("rSub").textContent = money(sub);
+    $("rFee").textContent = fee === null ? "To be confirmed" : money(fee);
+    $("rDiscRow").hidden = !disc;
+    if (disc) $("rDisc").textContent = "-" + money(disc);
+    $("rGrand").textContent = money(sub + (fee || 0) - disc);
+    $("rFeeNote").hidden = fee !== null;
+
+    // payment: PAID is shown only when the pharmacy has confirmed it
+    var method = o.paymentMethod || "-";
+    $("rMethod").textContent = method;
+    var ps = String(o.paymentStatus || "").toLowerCase();
+    var paid = ps === "paid" || ps === "success" || ps === "successful" || o.paymentConfirmed === true;
+    var cod = /delivery/i.test(method);
+    var notice = $("rNotice");
+    if (paid) {
+      chip($("rPay"), "paid", "\u2713 PAID - Payment successful");
+      notice.hidden = true;
+    } else if (cod) {
+      chip($("rPay"), "cod", "Pay on delivery");
+      notice.hidden = false;
+      notice.textContent = "You will pay the rider when your medicines arrive.";
+    } else {
+      chip($("rPay"), "wait", "Awaiting confirmation");
+      notice.hidden = false;
+      notice.textContent = "This receipt shows your order. Payment will be marked PAID once FX PHARMARKET confirms your transfer.";
+    }
+    var st = norm(o.status);
+    chip($("rStatus"), st === "rejected" ? "bad" : "st", st ? STATUS[st] : String(o.status));
+
+    current = { sid: sid, file: "FX-PHARMARKET-receipt-" + sid };
+    $("state").hidden = true; $("wrap").hidden = false;
+  }
+
+  /* ---------- downloads ---------- */
+  function loadScript(src) {
+    return new Promise(function (ok, bad) {
+      var s = document.createElement("script");
+      s.src = src; s.onload = ok; s.onerror = function () { bad(new Error("Could not load " + src)); };
+      document.head.appendChild(s);
+    });
+  }
+  function needCanvas() {
+    return window.html2canvas ? Promise.resolve() : loadScript("https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js");
+  }
+  function needPdf() {
+    return window.jspdf ? Promise.resolve() : loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  }
+  function capture() {
+    return needCanvas().then(function () {
+      return window.html2canvas($("receipt"), { scale: 3, backgroundColor: "#ffffff", useCORS: true, logging: false });
+    });
+  }
+  function saveBlob(blob, name) {
+    var url = URL.createObjectURL(blob), a = document.createElement("a");
+    a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+  }
+  function busy(btn, on) { btn.disabled = on; }
+
+  function savePdf() {
+    var b = $("pdfBtn"); busy(b, true);
+    Promise.all([capture(), needPdf()]).then(function (r) {
+      var c = r[0], J = window.jspdf.jsPDF, w = 210, h = w * c.height / c.width;
+      var pdf = new J({ unit: "mm", format: [w, h], orientation: "p" });
+      pdf.addImage(c.toDataURL("image/jpeg", 0.95), "JPEG", 0, 0, w, h);
+      pdf.save(current.file + ".pdf");
+    }).catch(function (e) {
+      console.error(e);
+      say("Could not make the PDF. Check your internet, or tap Print and choose Save as PDF.");
+    }).then(function () { busy(b, false); });
+  }
+  function saveImage() {
+    var b = $("imgBtn"); busy(b, true);
+    capture().then(function (c) {
+      c.toBlob(function (blob) {
+        if (blob) saveBlob(blob, current.file + ".png"); else say("Could not save the image. Please try again.");
+        busy(b, false);
+      }, "image/png");
+    }).catch(function (e) {
+      console.error(e); say("Could not save the image. Check your internet and try again."); busy(b, false);
+    });
+  }
+  function shareReceipt() {
+    var b = $("shareBtn"); busy(b, true);
+    var title = "My FX PHARMARKET receipt " + current.sid;
+    capture().then(function (c) {
+      return new Promise(function (ok) { c.toBlob(ok, "image/png"); });
+    }).then(function (blob) {
+      var file = blob ? new File([blob], current.file + ".png", { type: "image/png" }) : null;
+      if (file && navigator.canShare && navigator.canShare({ files: [file] })) {
+        return navigator.share({ files: [file], title: title, text: title + " - " + WEBSITE });
+      }
+      if (navigator.share) return navigator.share({ title: title, text: title + " - " + WEBSITE, url: WEBSITE });
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        return navigator.clipboard.writeText(title + " - " + WEBSITE).then(function () { say("Sharing is not supported here. Details copied. Use Save as Image to send the receipt."); });
+      }
+      say("Sharing is not supported on this device. Use Save as Image instead.");
+    }).catch(function (e) {
+      if (e && e.name === "AbortError") return;   // customer closed the share sheet
+      console.error(e); say("Could not share. Use Save as Image instead.");
+    }).then(function () { busy(b, false); });
+  }
+
+  /* ---------- start ---------- */
+  var orderId = "";
+  try { orderId = new URLSearchParams(location.search).get("id") || ""; } catch (e) {}
+
+  $("pdfBtn").addEventListener("click", savePdf);
+  $("imgBtn").addEventListener("click", saveImage);
+  $("printBtn").addEventListener("click", function () { window.print(); });
+  $("shareBtn").addEventListener("click", shareReceipt);
+
+  try {
+    var db = firebase.firestore();
+    firebase.auth().onAuthStateChanged(function (u) {
+      var user = u && !u.isAnonymous ? u : null;
+      if (!user) { showState("Please log in", "Log in to see your receipt.", "Login", "login.html"); return; }
+      if (!orderId) { showState("Receipt not found", "Open your receipt from the My Orders page.", "My Orders", "orders.html"); return; }
+      db.collection("orders").doc(orderId).get().then(function (snap) {
+        if (!snap.exists) { showState("Receipt not found", "We could not find this order.", "My Orders", "orders.html"); return; }
+        var o = snap.data();
+        // a receipt is shown only to the customer who owns the order
+        if (o.customerId !== user.uid) { showState("No access", "This receipt belongs to another account.", "My Orders", "orders.html"); return; }
+        if (norm(o.status) === "rejected") { showState("No receipt", "This order was not accepted, so there is no receipt.", "My Orders", "orders.html"); return; }
+        fill(snap.id, o);
+      }).catch(function (e) {
+        console.error(e);
+        if (e && e.code === "permission-denied") showState("No access", "You do not have access to this receipt.", "My Orders", "orders.html");
+        else showState("Could not load the receipt", "Please check your connection and try again.", "My Orders", "orders.html");
+      });
+    });
+  } catch (e) {
+    console.error(e);
+    showState("Receipt unavailable", "Please try again.", "My Orders", "orders.html");
+  }
+})();
+</script>
+</body>
+</html>
