@@ -198,11 +198,40 @@ footer{
         font-size:2rem;
     }
 }
+
+#fx-splash {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #061b66;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.5s ease;
+}
+
+.fx-splash-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+#fx-splash.hide {
+    opacity: 0;
+    pointer-events: none;
+}
 </style>
 </head>
 
 <body>
 <a class="hp-skip" href="#main">Skip to main content</a>
+  <div id="fx-splash">
+    <img src="icons/splash-screen.png"
+         alt="FX Pharmacy"
+         class="fx-splash-image">
+  </div>
 
 <!-- ===== A. PREMIUM HEADER (ids fxhBtn / fxhNav kept: script.js controls the menu) ===== -->
 <div class="fxh" role="banner">
@@ -1046,6 +1075,21 @@ if ("serviceWorker" in navigator) {
     });
   });
 }
+  </script>
+  <script>
+window.addEventListener("load", function () {
+    setTimeout(function () {
+        const splash = document.getElementById("fx-splash");
+
+        if (splash) {
+            splash.classList.add("hide");
+
+            setTimeout(function () {
+                splash.remove();
+            }, 500);
+        }
+    }, 1800);
+});
   </script>
 </body>
 </html>
