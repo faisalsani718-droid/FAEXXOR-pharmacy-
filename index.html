@@ -5,7 +5,14 @@
    <link rel="stylesheet" href="style.css">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>FAEXXOR Pharmacy</title>
+<title>FX PHARMARKET | A Higher Standard of Pharmacy Experience</title>
+<meta name="description" content="FX PHARMARKET: shop medicines and healthcare products online, upload prescriptions and track your orders. A higher standard of pharmacy experience.">
+<link rel="canonical" href="https://fxpharmarket.com.ng/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="FX PHARMARKET">
+<meta property="og:title" content="FX PHARMARKET | A Higher Standard of Pharmacy Experience">
+<meta property="og:description" content="Shop healthcare products online with trusted service and order tracking.">
+<meta property="og:url" content="https://fxpharmarket.com.ng/">
 <meta name="theme-color" content="#0878d1">
 <link rel="manifest" href="manifest.json">
   
@@ -195,85 +202,140 @@ footer{
 </head>
 
 <body>
+<a class="hp-skip" href="#main">Skip to main content</a>
+
+<!-- ===== A. PREMIUM HEADER (ids fxhBtn / fxhNav kept: script.js controls the menu) ===== -->
 <div class="fxh" role="banner">
-  <a class="fxh-brand" href="#home">
-    <img src="images/faexxor-logo.png" alt="FAEXXOR Pharmacy logo">
-    <span>FAEXXOR <b>Pharmacy</b></span>
+  <a class="fxh-brand" href="#home" aria-label="FX PHARMARKET home">
+    <img src="images/faexxor-logo.png" alt="FX PHARMARKET logo">
+    <span>FX <b>PHARMARKET</b></span>
   </a>
-  <button class="fxh-btn" id="fxhBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fxhNav"><span></span><span></span><span></span></button>
   <div class="fxh-nav" id="fxhNav" role="navigation" aria-label="Main menu">
     <a href="#home">Home</a>
-    <a href="#services">Services</a>
-    <a href="#products">Products</a>
+    <a href="#discover">Discover</a>
+    <a href="#products">Shop</a>
     <a href="#search-section">Search Medicines</a>
-   <a href="about.html">About</a> 
-   <a href="contact.html">Contact</a> 
-  <a href="privacy.html">Privacy</a> 
- <a href="terms.html">Terms</a> 
- <a href="returns.html">Returns</a>  
+    <a href="orders.html">My Orders</a>
+    <a href="account.html">Account</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact</a>
+    <a href="privacy.html" class="hp-minor">Privacy</a>
+    <a href="terms.html" class="hp-minor">Terms</a>
+    <a href="returns.html" class="hp-minor">Returns</a>
+  </div>
+  <div class="hp-actions">
+    <button class="hp-ico" id="hpSearch" type="button" aria-label="Search medicines"><i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i></button>
+    <button class="hp-ico hp-cartbtn" id="hpCart" type="button" aria-label="Open cart"><i class="fa-solid fa-cart-shopping" aria-hidden="true"></i><span class="hp-count" id="hpCount">0</span></button>
+    <button class="fxh-btn" id="fxhBtn" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="fxhNav"><span></span><span></span><span></span></button>
   </div>
 </div>
 
-<section class="hero" id="home">
-      
-     <div>  
-       
-    <h1>Welcome to Our Trusted Pharmacy</h1>
-    <p>
-        Your health is our priority. We are committed to providing genuine,
-        high-quality medicines and healthcare products at affordable prices.
-        Shop with confidence knowing that every product is sourced from trusted
-        pharmaceutical manufacturers and suppliers.
-    </p>
+<main id="main">
 
-    <p>
-        We stock and source products from leading pharmaceutical companies,
-        including <strong>Emzor</strong>, <strong>Mecure</strong>,
-        <strong>Tuyil</strong>, <strong>Jawa</strong>,
-        <strong>Krishat</strong>, and many other trusted brands.
-    </p>
-
-    <p>
-        ✔ Genuine Medicines<br>
-        ✔ Fast Response & Customer Support<br>
-        ✔ Prescription Assistance<br>
-        ✔ Nationwide Delivery<br>
-        ✔ Trusted Healthcare Products
-    </p>
-
-    <h3>Your Trusted Partner in Health and Wellness.</h3>
-        <a href="#products" class="shop-now-btn">Shop Now</a>
-       
-        <a href="how-to-buy.html" class="fx-help">
-  <span class="fx-help-icon">?</span>
-  <span class="fx-help-text">know How to buy<small>Tap to learn about pieces, packs and rolls</small></span>
-        </a>
-    </>
+<!-- ===== B. PREMIUM HERO ===== -->
+<section class="hp-hero" id="home" aria-labelledby="hpH1">
+  <div class="hp-hero-in">
+    <div class="hp-hero-copy">
+      <span class="hp-eyebrow">FX PHARMARKET</span>
+      <h1 id="hpH1">A Higher Standard of Pharmacy Experience.</h1>
+      <p>Discover a smarter, more convenient way to shop for healthcare products. Experience trusted service, responsible care and a marketplace designed around you.</p>
+      <div class="hp-cta">
+        <a class="hp-btn hp-btn-p" href="#products">Explore Products</a>
+        <a class="hp-btn hp-btn-g" href="#discover">Discover FX</a>
+      </div>
+      <a href="how-to-buy.html" class="fx-help">
+        <span class="fx-help-icon">?</span>
+        <span class="fx-help-text">Know how to buy<small>Tap to learn about pieces, packs and rolls</small></span>
+      </a>
+    </div>
+    <div class="hp-vis" aria-hidden="true">
+      <div class="hp-vis-logo"><img src="images/faexxor-logo.png" alt=""></div>
+      <ul class="hp-vis-list">
+        <li><i class="fa-solid fa-pills"></i> Medicines &amp; healthcare products</li>
+        <li><i class="fa-solid fa-file-prescription"></i> Prescription support</li>
+        <li><i class="fa-solid fa-location-dot"></i> Order tracking</li>
+      </ul>
+    </div>
+  </div>
 </section>
 
-<section id="services">
-    <h2 class="section-title">Our Services</h2>
+<!-- ===== SLIDING ADVERT BANNER (pictures are added, replaced and removed in Admin > Store > Banners) ===== -->
+<section id="fxBanner" aria-label="Offers and adverts"></section>
 
-    <div class="services">
-        <div class="card">
-            <h3>Prescription Medicines</h3>
-            <p>Safe and genuine medications from trusted suppliers.</p>
-        </div>
-        
-    <h2>Product Categories</h2>
+<!-- ===== C. TRUST AND SERVICE HIGHLIGHTS ===== -->
+<section class="hp-sec hp-trust" aria-label="Why shop with us">
+  <div class="hp-wrap hp-grid4">
+    <div class="hp-tcard"><span class="hp-tic"><i class="fa-solid fa-shield-heart" aria-hidden="true"></i></span><h3>Trusted Healthcare Shopping</h3><p>Medicines sourced from approved suppliers.</p></div>
+    <div class="hp-tcard"><span class="hp-tic"><i class="fa-solid fa-headset" aria-hidden="true"></i></span><h3>Customer-Focused Service</h3><p>Help by WhatsApp and email.</p></div>
+    <div class="hp-tcard"><span class="hp-tic"><i class="fa-solid fa-bag-shopping" aria-hidden="true"></i></span><h3>Convenient Ordering</h3><p>Order online and track your order.</p></div>
+    <div class="hp-tcard"><span class="hp-tic"><i class="fa-solid fa-prescription-bottle-medical" aria-hidden="true"></i></span><h3>Responsible Pharmacy Care</h3><p>Prescription-only medicines need a valid prescription.</p></div>
+  </div>
+</section>
 
+<!-- ===== D. SHOP BY CATEGORY (cards are built from your real product categories by the existing catalogue code) ===== -->
+<section class="hp-sec hp-cats" id="categories" aria-labelledby="hpCatH">
+  <div class="hp-wrap">
+    <h2 class="hp-h2" id="hpCatH">Shop by Category</h2>
+    <p class="hp-sub">Tap a category to jump straight to its products.</p>
     <div class="cat-tabs" id="catTabs"></div>
+  </div>
 </section>
 
+<!-- ===== E. FEATURED PRODUCTS (filled from your live Firestore products) ===== -->
+<section class="hp-sec hp-feat" id="featured" aria-labelledby="hpFeatH">
+  <div class="hp-wrap">
+    <h2 class="hp-h2" id="hpFeatH">Featured Products</h2>
+    <p class="hp-sub">Available now from our live catalogue.</p>
+    <div class="hp-fgrid" id="hpFeatured" aria-live="polite">
+      <div class="hp-sk"></div><div class="hp-sk"></div><div class="hp-sk"></div><div class="hp-sk"></div>
+    </div>
+    <p class="hp-more"><a class="hp-btn hp-btn-o" href="#products">View all medicines</a></p>
+  </div>
+</section>
 
-<!-- PRODUCTS -->
-<section id="products">
-  <!-- SEARCH BOX -->
-<section id="search-section"></section>
-<div class="search-container">
-    <input type="text" id="searchBox" placeholder="Search medicines..." onkeyup="searchMedicine()">
-</div>
-    <h2>Our Products</h2>
+<!-- ===== F. DISCOVER FX PHARMARKET ===== -->
+<section class="hp-sec hp-discover" id="discover" aria-labelledby="hpDisH">
+  <div class="hp-wrap hp-split">
+    <div>
+      <span class="hp-eyebrow hp-eyebrow-d">Discover FX</span>
+      <h2 class="hp-h2 hp-left" id="hpDisH">More Than a Pharmacy. A Higher Standard of Care.</h2>
+      <p class="hp-lead">FX PHARMARKET is building a modern healthcare marketplace focused on trust, convenience, responsible service and innovation. Our vision is to connect customers with qualified healthcare sellers through a better digital shopping experience.</p>
+      <p class="hp-lead">We stock products from trusted manufacturers such as Emzor, Mecure, Tuyil, Jawa and Krishat, among others.</p>
+      <a class="hp-btn hp-btn-p" href="about.html">Discover Our Story</a>
+    </div>
+    <div class="hp-dvis" aria-hidden="true"><i class="fa-solid fa-staff-snake"></i></div>
+  </div>
+</section>
+
+<!-- ===== G. WHY CHOOSE FX ===== -->
+<section class="hp-sec hp-why" aria-labelledby="hpWhyH">
+  <div class="hp-wrap">
+    <h2 class="hp-h2" id="hpWhyH">Why Choose FX</h2>
+    <div class="hp-grid4">
+      <div class="hp-wcard"><i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i><h3>Convenience</h3><p>Shop and manage orders online.</p></div>
+      <div class="hp-wcard"><i class="fa-solid fa-tags" aria-hidden="true"></i><h3>Transparency</h3><p>Clear product information and pricing.</p></div>
+      <div class="hp-wcard"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i><h3>Customer Care</h3><p>Support throughout your shopping experience.</p></div>
+      <div class="hp-wcard"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i><h3>Innovation</h3><p>A continuously improving digital healthcare marketplace.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== H. FX CUSTOMER COMMUNITY ===== -->
+<section class="hp-sec hp-comm" aria-labelledby="hpComH">
+  <div class="hp-wrap hp-center">
+    <h2 class="hp-h2 hp-light" id="hpComH">You Belong to the FX Community.</h2>
+    <p class="hp-lead hp-light">Your trust matters to us. Join a growing community that values healthcare knowledge, responsible medicine use and a better pharmacy experience.</p>
+    <a class="hp-btn hp-btn-p" href="signup.html">Create Your FX Account</a>
+  </div>
+</section>
+
+<!-- ===== SHOP: FULL CATALOGUE (all existing ids and scripts kept) ===== -->
+<section id="products" aria-labelledby="hpProdH">
+  <div class="hp-wrap">
+    <h2 class="hp-h2" id="hpProdH">Our Products</h2>
+    <div class="search-container" id="search-section">
+      <input type="text" id="searchBox" placeholder="Search medicines..." aria-label="Search medicines" onkeyup="searchMedicine()">
+    </div>
     <div id="catalogHost"></div>
 
 <script>
@@ -648,12 +710,7 @@ var CATALOG = [
   });
 })();
 </script>
-</section>
-<script>
-
-
-</script>
-
+  </div>
 </section>
 <div id="orderSuccess" class="hidden" role="dialog" aria-live="polite">
   <h2>✅ Order Placed Successfully!</h2>
@@ -667,84 +724,46 @@ var CATALOG = [
   </div>
 </div>
 
-   <section id="delivery">
-    <h2>Delivery Information</h2>
-
-    <div class="delivery-box">
-        <p><strong>Delivery Areas:</strong> Yola, Gombe,Borno,Taraba  and nearby locations.</p>
-
-        <p><strong>Delivery Fee:</strong> Depends on location.</p>
-
-        <p><strong>Delivery Time:</strong> 1 - 24 Hours after order confirmation.</p>
-    </div>
-</section>
- <section id="faq">
-    <h2>Frequently Asked Questions</h2>
-
-    <div class="faq-item">
-        <h3>Do you deliver?</h3>
-        <p>Yes, we deliver to selected locations.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>How do I pay?</h3>
-        <p>You can pay online or by approved payment methods.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Are your medicines genuine?</h3>
-        <p>Yes, all medicines are sourced from approved suppliers.</p>
-    </div>
-
-    <div class="faq-item">
-        <h3>Do I need a prescription?</h3>
-        <p>Prescription-only medicines require a valid prescription.</p>
-    </div>
-</section>
-   
-    <div class="services">
-      
-        <div class="card">
-            <h3>Prescription Drugs</h3>
-            <p>Quality medicines prescribed by healthcare professionals.</p>
-        </div>
-
-        <div class="card">
-            <h3>Over-the-Counter Medicines</h3>
-            <p>Pain relief, cold and flu medicines, vitamins and more.</p>
-        </div>
-
-        <div class="card">
-            <h3>Medical Equipment</h3>
-            <p>Blood pressure monitors, thermometers, glucose meters, etc.</p
-        </div>
-
-        <div class="card">
-            <h3>Health Supplements</h3>
-            <p>Vitamins, minerals, and nutritional supplements.</p>
-        </div>
-
-    </div>
-</section>
-        <div class="card">
-            <h3>Health Consultation</h3>
-            <p>Professional guidance on medicines and wellness.</p>
-        </div>
-
-        <div class="card">
-            <h3>Medical Supplies</h3>
-            <p>Healthcare products and essential medical equipment.</p>
-        </div>
-
-        <div class="card">
-            <h3>Online Orders</h3>
-            <p>Convenient ordering and customer support.</p>
-        </div>
-    </div>
+<section id="delivery" aria-labelledby="hpDelH">
+  <h2 class="hp-h2" id="hpDelH">Delivery Information</h2>
+  <div class="delivery-box">
+    <p><strong>Delivery Areas:</strong> Yola, Gombe, Borno, Taraba and nearby locations.</p>
+    <p><strong>Delivery Fee:</strong> Depends on location.</p>
+    <p><strong>Delivery Time:</strong> 1 - 24 Hours after order confirmation.</p>
+  </div>
 </section>
 
+<section id="faq" aria-labelledby="hpFaqH">
+  <h2 class="hp-h2" id="hpFaqH">Frequently Asked Questions</h2>
+  <div class="faq-item">
+    <h3>Do you deliver?</h3>
+    <p>Yes, we deliver to selected locations.</p>
+  </div>
+  <div class="faq-item">
+    <h3>How do I pay?</h3>
+    <p>You can pay online or by approved payment methods.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Are your medicines genuine?</h3>
+    <p>Yes, all medicines are sourced from approved suppliers.</p>
+  </div>
+  <div class="faq-item">
+    <h3>Do I need a prescription?</h3>
+    <p>Prescription-only medicines require a valid prescription.</p>
+  </div>
+</section>
 
-  
+<!-- ===== J. PREMIUM CALL TO ACTION ===== -->
+<section class="hp-sec hp-final" aria-labelledby="hpFinH">
+  <div class="hp-wrap hp-center">
+    <h2 class="hp-h2 hp-light" id="hpFinH">Your Health. Your Choice. Your FX.</h2>
+    <p class="hp-lead hp-light">Discover a higher standard of pharmacy experience today.</p>
+    <a class="hp-btn hp-btn-p" href="#categories">Start Exploring</a>
+  </div>
+</section>
+
+</main>
+
 <button class="cart-float" onclick="openCart()" aria-label="Open cart"><i class="fa-solid fa-cart-shopping"></i><span class="cart-badge" id="fabBadge">0</span></button>
 
 <div class="fx-ov" id="fxOv" onclick="closeCart()"></div>
@@ -759,53 +778,59 @@ var CATALOG = [
   </div>
 </aside>
 
-<!-- Font Awesome Icons -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-<div class="social-links">
-    <a href="https://x.com/FaisalSani6895" target="_blank">
-        <i class="fab fa-x-twitter"></i>
-    </a>
-
-    <a href="https://www.facebook.com/share/1CdPd8RaTu/" target="_blank">
-        <i class="fab fa-facebook"></i>
-    </a>
-
-    <a href="https://www.instagram.com/drfaexxor988?igsh=MTk1YTVzNjlhMzVseQ==" target="_blank">
-        <i class="fab fa-instagram"></i>
-    </a>
-
-
-  
-    <a href="https://wa.me/2349160556050" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
-</div>
-<footer>
-    <p>© 2026 FAEXXOR Pharmacy. All Rights Reserved.</p>
+<!-- ===== K. PROFESSIONAL FOOTER (only contact details and links that already existed on your site) ===== -->
+<footer class="hp-footer">
+  <div class="hp-wrap hp-fcols">
+    <div class="hp-fbrand">
+      <a class="hp-flogo" href="#home" aria-label="FX PHARMARKET home"><img src="images/faexxor-logo.png" alt="FX PHARMARKET logo"><span>FX <b>PHARMARKET</b></span></a>
+      <p>A Higher Standard of Pharmacy Experience.</p>
+      <div class="social-links hp-social">
+        <a href="https://x.com/FaisalSani6895" target="_blank" rel="noopener" aria-label="FX PHARMARKET on X"><i class="fab fa-x-twitter" aria-hidden="true"></i></a>
+        <a href="https://www.facebook.com/share/1CdPd8RaTu/" target="_blank" rel="noopener" aria-label="FX PHARMARKET on Facebook"><i class="fab fa-facebook" aria-hidden="true"></i></a>
+        <a href="https://www.instagram.com/drfaexxor988?igsh=MTk1YTVzNjlhMzVseQ==" target="_blank" rel="noopener" aria-label="FX PHARMARKET on Instagram"><i class="fab fa-instagram" aria-hidden="true"></i></a>
+        <a href="https://wa.me/2349160556050" target="_blank" rel="noopener" aria-label="Chat on WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i></a>
+      </div>
+    </div>
+    <div class="hp-fcol" role="navigation" aria-label="Company">
+      <h3>Company</h3>
+      <a href="about.html">About FX</a>
+      <a href="contact.html">Customer Support</a>
+      <a href="how-to-buy.html">How to Buy</a>
+      <a href="#delivery">Delivery Information</a>
+    </div>
+    <div class="hp-fcol" role="navigation" aria-label="Policies">
+      <h3>Policies</h3>
+      <a href="terms.html">Terms of Use</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="returns.html">Refund and Delivery Policy</a>
+    </div>
+    <div class="hp-fcol">
+      <h3>Contact</h3>
+      <a href="https://wa.me/2349160556050" target="_blank" rel="noopener">WhatsApp: +234 916 055 6050</a>
+      <a href="mailto:faexxorpharm@gmail.com">faexxorpharm@gmail.com</a>
+    </div>
+  </div>
+  <p class="hp-copy">&copy; 2026 FX PHARMARKET. All rights reserved.</p>
 </footer>
 
-<a href="mailto:faexxorpharm@gmail.com" class="gmail-btn">
+<a href="mailto:faexxorpharm@gmail.com" class="gmail-btn" aria-label="Email us">
     <i class="fa-solid fa-envelope"></i>
 </a>
 
 <a href="https://wa.me/2349160556050"
    class="whatsapp-float"
-   target="_blank">
+   target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
     <img src="https://cdn-icons-png.flaticon.com/512/220/220236.png"
          alt="WhatsApp">
 </a>
 
-  
-<script>
-
-</script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <script src="firebase.js"></script>
   <script src="auth.js"></script>
+<script src="banner.js"></script>
+<script src="payment-alert.js"></script>
 <script src="bottom-nav.js"></script>
 <script src="cart-store.js"></script>
 <script>
@@ -906,6 +931,111 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
     updateCartUI();
     return true;
   };
+})();
+</script>
+<script>
+/* FX PHARMARKET homepage helpers: header search + cart count, and the Featured Products row.
+   It only READS the catalogue that your existing code already draws, and it clicks the real
+   buttons for you, so cart, stock checks and product pages keep working exactly as before. */
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+  /* header cart count mirrors the existing cart badge (updated by updateCartUI) */
+  var fab = $("fabBadge"), cnt = $("hpCount");
+  function syncCount() {
+    if (!fab || !cnt) return;
+    var n = parseInt(fab.textContent, 10) || 0;
+    cnt.textContent = n > 99 ? "99+" : n;
+    cnt.style.display = n ? "grid" : "none";
+  }
+  if (fab && window.MutationObserver) {
+    new MutationObserver(syncCount).observe(fab, { childList: true, characterData: true, subtree: true });
+  }
+  syncCount();
+
+  var hc = $("hpCart");
+  if (hc) hc.addEventListener("click", function () { if (typeof openCart === "function") openCart(); });
+
+  var hs = $("hpSearch");
+  if (hs) hs.addEventListener("click", function () {
+    var box = $("search-section"), input = $("searchBox");
+    if (box) box.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (input) setTimeout(function () { input.focus(); }, 400);
+  });
+
+  /* Featured products */
+  var host = $("catalogHost"), out = $("hpFeatured");
+  if (!host || !out) return;
+  var picked = [], timer = null;
+
+  function build() {
+    var cards = host.querySelectorAll(".product"), withImg = [], noImg = [];
+    for (var i = 0; i < cards.length; i++) {
+      var c = cards[i];
+      if (c.classList.contains("fx-oos")) continue;                       // never feature out-of-stock items
+      var pr = c.querySelector(".price");
+      var ptxt = pr ? pr.textContent.trim() : "";
+      if (!ptxt || /^(From\s*)?\u20A60$/.test(ptxt)) continue;            // skip products with no price yet
+      (c.querySelector(".pimg img") ? withImg : noImg).push(c);
+    }
+    picked = withImg.concat(noImg).slice(0, 8);
+    if (!picked.length) {
+      out.innerHTML = '<p class="hp-note">Products will appear here as soon as the catalogue loads.</p>';
+      return;
+    }
+    out.innerHTML = picked.map(function (c, k) {
+      var img = c.querySelector(".pimg img"), ic = c.querySelector(".pimg i");
+      var name = c.querySelector("h3").textContent;
+      var tag = c.querySelector(".ptag"), low = c.querySelector(".fx-stock");
+      var price = c.querySelector(".price").textContent;
+      var pb = c.querySelector(".pbtn");
+      var multi = !!(pb && /option/i.test(pb.getAttribute("aria-label") || ""));
+      return '<article class="hp-fcard" data-k="' + k + '" tabindex="0">' +
+        '<div class="hp-fimg">' + (ic ? '<i class="' + esc(ic.className) + '" aria-hidden="true"></i>' : '') +
+        (img ? '<img loading="lazy" alt="' + esc(name) + '" src="' + esc(img.getAttribute("src")) + '">' : '') + '</div>' +
+        '<div class="hp-finfo">' + (tag ? '<span class="hp-ftag">' + esc(tag.textContent) + '</span>' : '') +
+        '<h3>' + esc(name) + '</h3>' +
+        (low ? '<span class="hp-flow">' + esc(low.textContent) + '</span>' : '<span class="hp-fin">In stock</span>') +
+        '<p class="hp-fprice">' + esc(price) + '</p>' +
+        '<button type="button" class="hp-fadd">' + (multi ? 'Choose option' : 'Add to Cart') + '</button></div></article>';
+    }).join("");
+  }
+
+  out.addEventListener("error", function (e) {
+    if (e.target && e.target.tagName === "IMG") e.target.remove();
+  }, true);
+
+  function activate(card, wantAdd, btn) {
+    var src = picked[+card.getAttribute("data-k")];
+    if (!src || !document.body.contains(src)) return;
+    var pb = src.querySelector(".pbtn");
+    if (wantAdd && pb && !pb.disabled) {
+      pb.click();                                                          // existing add-to-cart / option sheet
+      if (btn && !/option/i.test(btn.textContent)) {
+        var old = btn.textContent; btn.textContent = "Added \u2713";
+        setTimeout(function () { btn.textContent = old; }, 1200);
+      }
+      return;
+    }
+    src.click();                                                           // existing "open product" behaviour
+  }
+  out.addEventListener("click", function (e) {
+    var card = e.target.closest(".hp-fcard"); if (!card) return;
+    var b = e.target.closest(".hp-fadd");
+    activate(card, !!b, b);
+  });
+  out.addEventListener("keydown", function (e) {
+    if (e.key !== "Enter") return;
+    var card = e.target.closest(".hp-fcard");
+    if (card && e.target === card) activate(card, false);
+  });
+
+  function later() { clearTimeout(timer); timer = setTimeout(build, 60); }
+  if (window.MutationObserver) new MutationObserver(later).observe(host, { childList: true });
+  document.addEventListener("fx:catalog", later);
+  later();
 })();
 </script>
   <script>

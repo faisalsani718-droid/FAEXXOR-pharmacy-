@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#0878d1">
-  <title>Checkout - FAEXXOR Pharmacy</title>
+  <title>Checkout - FX PHARMARKET</title>
   <style>
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
@@ -70,6 +70,9 @@
     .steps { text-align: left; background: #f3f8ff; border-radius: 12px; padding: 12px 14px; font-size: .92rem; line-height: 1.5; margin: 12px 0; }
     .toast { position: fixed; left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 40; max-width: 460px; margin: 0 auto;
              background: #a12a35; color: #fff; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: .92rem; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+
+    .thanks { font-weight: 800; color: #0b4a9e; font-size: 1.02rem; margin: 6px 0 4px; }
+    .btn.small { padding: 10px 16px; font-size: .92rem; border-radius: 10px; }
   </style>
 </head>
 <body>
@@ -122,8 +125,8 @@
       <label class="pay">
         <input type="radio" name="pay" value="transfer">
         <span class="pbox"><span class="dot"></span><span>
-          <span class="ptitle">Bank / OPay transfer</span>
-          <span class="pdesc" style="display:block">Pay by transfer after you place the order, then send us your receipt on WhatsApp.</span>
+          <span class="ptitle">Bank transfer</span>
+          <span class="pdesc" style="display:block">Place the order, transfer the money, then tap &quot;I have sent the money&quot; to see your receipt.</span>
         </span></span>
       </label>
       <div id="acctBox" class="acct" hidden>
@@ -140,13 +143,6 @@
         </span></span>
       </label>
 
-      <label class="pay">
-        <input type="radio" name="pay" value="whatsapp">
-        <span class="pbox"><span class="dot"></span><span>
-          <span class="ptitle">WhatsApp confirmation</span>
-          <span class="pdesc" style="display:block">Place the order, then confirm it and arrange payment with our team on WhatsApp.</span>
-        </span></span>
-      </label>
       <p class="err" id="ePay"></p>
       <p class="info">Prescription-only medicines need a valid prescription. If your order contains one, our pharmacist will contact you before dispatch.</p>
     </section>
@@ -159,6 +155,14 @@
     <div class="oid" id="doneId"></div>
     <p class="note" id="doneTotal"></p>
     <div class="steps" id="doneSteps"></div>
+    <p class="thanks">Thank you for choosing FX PHARMARKET &#128153;</p>
+    <div id="paidBox" hidden>
+      <button type="button" class="btn block" id="paidBtn">I have sent the money</button>
+      <div id="paidDone" hidden>
+        <p class="note">Thank you! We will confirm your payment shortly.</p>
+        <a class="btn light small" id="rcptBtn" href="receipt.html">&#129534; View receipt</a>
+      </div>
+    </div>
     <a class="btn green block" id="waBtn" href="#" target="_blank" rel="noopener">Send on WhatsApp</a>
     <a class="btn block" id="trackBtn" href="orders.html">Track my order</a>
     <a class="btn light block" href="index.html">Continue shopping</a>
@@ -171,7 +175,6 @@
 </div>
 <div class="toast" id="toast" role="alert" hidden></div>
 
-<!-- Same Firebase files and order as your other pages. Firebase is initialised once, in firebase.js -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
@@ -183,12 +186,12 @@
 
   /* ===== EDIT HERE if your payment details change ===== */
   var WHATSAPP = "2349160556050";
-  var BANK = { bank: "OPay", name: "FAYSAL SANI", number: "9160556050" };
+  var BANK = { bank: "PalmPay", name: "FAYSAL SANI", number: "8986992826" };
   /* ===================================================== */
 
   var CART_KEY = "fx_cart_v1";      // the cart saved by the shop pages
   var FORM_KEY = "fx_delivery_v1";  // last delivery details used on this phone
-  var METHODS = { transfer: "Bank Transfer", delivery: "Cash on Delivery", whatsapp: "WhatsApp Confirmation" };
+  var METHODS = { transfer: "Bank Transfer", delivery: "Cash on Delivery" };
 
   function $(id) { return document.getElementById(id); }
   function money(n) { return "\u20A6" + Number(n || 0).toLocaleString("en-NG"); }
@@ -454,7 +457,7 @@
     var lines2 = f.method === "transfer"
       ? ["1. Transfer " + money(total) + " to " + BANK.bank + " " + BANK.number + " (" + BANK.name + ").",
          "2. Use " + sid + " as the payment reference.",
-         "3. Tap \"Send on WhatsApp\" and attach your receipt. We start processing once payment is confirmed."]
+         "3. Tap \"I have sent the money\" below to get your receipt. We start processing once payment is confirmed."]
       : f.method === "delivery"
       ? ["1. Our team will call you to confirm your order and the delivery fee.",
          "2. Pay the rider in cash or by POS when your medicines arrive.",
@@ -466,10 +469,13 @@
 
     var counts = {}, order = [];
     items.forEach(function (it) { if (!counts[it.name]) { counts[it.name] = { n: 0, p: it.price }; order.push(it.name); } counts[it.name].n++; });
-    var msg = "FAEXXOR Pharmacy order " + sid + "\n" +
+    var msg = "FX PHARMARKET order " + sid + "\n" +
       "Name: " + f.name + "\nPhone: " + f.phone + "\nAddress: " + f.address + "\n\nItems:\n" +
       order.map(function (n) { return "- " + n + " x" + counts[n].n + " = " + money(counts[n].p * counts[n].n); }).join("\n") +
       "\n\nTotal: " + money(total) + "\nPayment: " + method;
+    $("rcptBtn").href = "receipt.html?id=" + encodeURIComponent(id);
+    $("paidBox").hidden = f.method !== "transfer";
+    $("paidBtn").hidden = false; $("paidDone").hidden = true;
     $("waBtn").href = "https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg);
     $("trackBtn").href = "orders.html?orderId=" + encodeURIComponent(id);
     $("doneBox").hidden = false;
@@ -477,6 +483,7 @@
     window.scrollTo(0, 0);
     lines = [];
   }
+
 
   /* ---------- start ---------- */
   function start() {
@@ -491,6 +498,9 @@
     });
     [].forEach.call(document.querySelectorAll('input[name="pay"]'), function (r) { r.addEventListener("change", showPay); });
     $("placeBtn").addEventListener("click", place);
+    $("paidBtn").addEventListener("click", function () {
+      this.hidden = true; $("paidDone").hidden = false;
+    });
     ["cName", "cPhone", "cAddress"].forEach(function (id) {
       $(id).addEventListener("input", function () {
         var f = formState();

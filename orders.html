@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>My Orders - FAEXXOR Pharmacy</title>
+  <title>My Orders - FX PHARMARKET</title>
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; font-family: system-ui, Arial, sans-serif; background: #f3f6fa; color: #1b2733; }
@@ -97,7 +97,7 @@
     accepted: "Good news! Your order has been accepted.",
     packaging: "Your medicines are being packed now.",
     out_for_delivery: "Your order is on its way to you.",
-    delivered: "Your order was delivered. Thank you for choosing FAEXXOR Pharmacy.",
+    delivered: "Your order was delivered. Thank you for choosing FX PHARMARKET.",
     rejected: "Sorry, the pharmacy could not accept this order. Please contact us for help."
   };
 
@@ -206,6 +206,14 @@
       }
     }
 
+    // receipt for this order (the receipt page checks that the order belongs to this customer)
+    if (st !== "rejected") {
+      var rc = mk("a", "\uD83E\uDDFE View receipt");
+      rc.href = "receipt.html?id=" + encodeURIComponent(d.id);
+      rc.style.cssText = "display:block;text-align:center;margin-top:12px;padding:12px;border-radius:10px;background:#e3f1fb;color:#076fa3;font-weight:700;text-decoration:none";
+      c.appendChild(rc);
+    }
+
     var det = document.createElement("details");
     det.appendChild(mk("summary", "View order details"));
     (Array.isArray(o.items) ? o.items : []).forEach(function (it) {
@@ -259,7 +267,7 @@
     e.appendChild(mk("h3", "Please log in"));
     e.appendChild(mk("p", "Log in to see your orders."));
     var a = mk("a", "Login");
-    a.href = "_login.html";
+    a.href = "login.html";
     e.appendChild(a);
     listEl.appendChild(e);
   }

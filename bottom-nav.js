@@ -1,5 +1,5 @@
 // @ts-nocheck
-// FAEXXOR Pharmacy - fixed bottom navigation (Home | Discover | Cart | Orders | Account)
+// FX PHARMARKET - fixed bottom navigation (Home | Products | Cart | Orders | Account)
 // Shared by index.html and orders.html. Shows on phones and tablets (screens up to 900px wide).
 // SAFETY: everything runs inside try/catch. If anything goes wrong, this file does nothing
 // and the website keeps working exactly as before.
@@ -85,6 +85,7 @@
         ".fxbn .fxbn-b{position:absolute;top:3px;left:calc(50% + 6px);min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:#d64550;color:#fff;" +
         "font-size:.68rem;font-weight:800;display:none;place-items:center;border:2px solid #fff;line-height:1}" +
         ".fxbn-sp{display:block;height:calc(62px + env(safe-area-inset-bottom,0px));width:100%}" +
+        "#products{scroll-margin-top:70px}" +
         "body.fxbn-on .cart-float{display:none!important}" +
         "body.fxbn-on .whatsapp-float{bottom:calc(76px + env(safe-area-inset-bottom,0px))!important}" +
         "body.fxbn-on .gmail-btn{bottom:calc(146px + env(safe-area-inset-bottom,0px))!important}" +
@@ -112,14 +113,14 @@
     /* ---------- build the bar ---------- */
     var ICONS = {
       home: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/>',
-      discover: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
+      discover: '<g transform="rotate(-45 12 12)"><rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/></g>',   // capsule icon for Products
       cart: '<circle cx="9" cy="20" r="1.5"/><circle cx="18" cy="20" r="1.5"/><path d="M2 3h3l2.6 12.2a1 1 0 0 0 1 .8h9.4a1 1 0 0 0 1-.8L21 7H6"/>',
       orders: '<path d="M21 8l-9-5-9 5 9 5 9-5z"/><path d="M3 8v8l9 5 9-5V8"/><path d="M12 13v8"/>',
       account: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"/>'
     };
     var ITEMS = [
       { k: "home", label: "Home", href: "index.html" },
-      { k: "discover", label: "Discover", href: "index.html?discover=1" },
+      { k: "discover", label: "Products", href: "index.html?discover=1" },   // key stays "discover" so the page links keep working
       { k: "cart", label: "Cart" },
       { k: "orders", label: "Orders", href: "orders.html" },
       { k: "account", label: "Account" }
@@ -279,10 +280,9 @@
       if (e) e.preventDefault();
       closeSheet();
       if (drawerOpen() && typeof closeCart === "function") closeCart();
-      var s = document.getElementById("search-section") || document.getElementById("products");
+      // Products tab: go to the products section (the search box stays available inside it)
+      var s = document.getElementById("products") || document.getElementById("search-section");
       if (s) s.scrollIntoView({ behavior: "smooth", block: "start" });
-      var box = document.getElementById("searchBox");
-      if (box) { try { box.focus({ preventScroll: true }); } catch (x) { box.focus(); } }
     }
     function goCart() {
       closeSheet();
