@@ -17,6 +17,7 @@
   var chosen = null;   // { blob, type }
   var busy = false;
   var started = false;
+  var pendingRef = null;   // same prescription id is reused if the first send did not finish
 
   /* ---------- helpers ---------- */
   function showMsg(text, type) {
@@ -209,6 +210,16 @@
     $("rxSubmit").textContent = v ? "Uploading..." : "Confirm & Submit";
   }
 
+  function showDone(id) {
+    $("rxBar").style.width = "100%";
+    $("rxReview").hidden = true;
+    $("rxDoneId").textContent = "RX-" + id.slice(-6).toUpperCase();
+    $("rxDone").hidden = false;
+    window.scrollTo(0, 0);
+    pendingRef = null;
+    busy = false;
+  }
+
   async function onSubmit() {
     if (busy) return; // blocks double clicks
     var user = firebase.auth().currentUser;
@@ -222,7 +233,8 @@
     var address = $("rxAddress").value.trim();
     var notes = $("rxNotes").value.trim();
 
-    var ref = fdb.collection("prescriptions").doc();   // unique ID made by Firestore
+    if (!pendingRef) pendingRef = fdb.collection("prescriptions").doc();   // unique ID made by Firestore
+    var ref = pendingRef;
     var id = ref.id;
 
     try {
@@ -263,15 +275,13 @@
       });
 
       await withTimeout(batch.commit(), SAVE_TIMEOUT_MS);
-      $("rxBar").style.width = "100%";
-
-      $("rxReview").hidden = true;
-      $("rxDoneId").textContent = "RX-" + id.slice(-6).toUpperCase();
-      $("rxDone").hidden = false;
-      window.scrollTo(0, 0);
-      busy = false;
+      showDone(id);
     } catch (err) {
       console.error("Prescription submit failed:", err);
+      // It may have been saved even though the answer was lost: check before showing an error.
+      var saved = null;
+      try { saved = await ref.get(); } catch (x) { /* ignore */ }
+      if (saved && saved.exists) { showDone(id); return; }
       showMsg(friendly(err), "error");
       setBusy(false);
     }

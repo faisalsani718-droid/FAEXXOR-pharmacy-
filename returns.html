@@ -1,26 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Return and Refund Policy | FAEXXOR Pharmacy</title>
-<meta name="description" content="Return and Refund Policy - FAEXXOR Pharmacy, Yola, Adamawa State, Nigeria.">
-<link rel="stylesheet" href="pages.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FX PHARMARKET · Return & Refund Policy</title>
+  <!-- Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F5FAFF;
+      color: #1E293B;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    :root {
+      --deep-sky: #0284C7;
+      --bright-sky: #38BDF8;
+      --light-green: #A7E8C0;
+      --fresh-green: #86D9A7;
+      --white: #FFFFFF;
+      --soft-bg: #F5FAFF;
+      --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.03), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      --shadow-md: 0 20px 35px -8px rgba(2, 132, 199, 0.08), 0 8px 20px -6px rgba(0, 0, 0, 0.02);
+      --shadow-lg: 0 30px 50px -12px rgba(2, 132, 199, 0.15);
+      --radius-card: 28px;
+      --radius-sm: 18px;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ----- premium header ----- */
+    .premium-header {
+      background: var(--white);
+      box-shadow: 0 6px 18px rgba(2, 132, 199, 0.06);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(56, 189, 248, 0.15);
+    }
+
+    .header-inner {
+      display: flex;
+      flex-direction: column;
+      padding: 28px 0 36px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+      color: var(--deep-sky);
+      margin-bottom: 16px;
+    }
+
+    .brand i {
+      color: var(--bright-sky);
+      font-size: 2rem;
+    }
+
+    .brand span {
+      background: linear-gradient(135deg, var(--deep-sky), #0A9AD0);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .page-title {
+      font-size: 2.8rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      color: #0B2A3C;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .page-subtitle {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: #2C5C74;
+      max-width: 600px;
+      border-left: 4px solid var(--light-green);
+      padding-left: 20px;
+      background: linear-gradient(90deg, rgba(167, 232, 192, 0.15), transparent);
+      border-radius: 0 8px 8px 0;
+      padding: 10px 0 10px 24px;
+    }
+
+    .header-decor {
+      position: absolute;
+      top: -40px;
+      right: -60px;
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle at 30% 30%, rgba(56, 189, 248, 0.12), transparent 70%),
+                  radial-gradient(circle at 80% 70%, rgba(167, 232, 192, 0.12), transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .header-decor-2 {
+      position: absolute;
+      bottom: -80px;
+      left: -60px;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(134, 217, 167, 0.1), transparent 70%);
+      border-radius: 50%;
+      z-index: 0;
+    }
+
+    /* ----- cards & sections ----- */
+    section {
+      margin: 56px 0;
+    }
+
+    .section-heading {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--deep-sky);
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-heading i {
+      color: var(--fresh-green);
+      font-size: 2rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 32px 36px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      transition: all 0.25s ease;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: rgba(2, 132, 199, 0.2);
+      transform: translateY(-2px);
+    }
+
+    /* Important notice */
+    .notice-card {
+      background: linear-gradient(135deg, #F0F9FF 0%, #FFFFFF 100%);
+      border-left: 8px solid var(--deep-sky);
+      border-radius: 24px;
+      padding: 32px 36px;
+      box-shadow: var(--shadow-md);
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      border: 1px solid rgba(2, 132, 199, 0.15);
+    }
+
+    .notice-icon {
+      background: var(--light-green);
+      color: #0B3B2E;
+      width: 56px;
+      height: 56px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+      box-shadow: 0 6px 14px rgba(134, 217, 167, 0.4);
+    }
+
+    .notice-content h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0B2A3C;
+      margin-bottom: 10px;
+      letter-spacing: -0.01em;
+    }
+
+    .notice-content p {
+      font-size: 1.05rem;
+      color: #1F3F50;
+      margin-bottom: 12px;
+    }
+
+    .notice-content strong {
+      color: var(--deep-sky);
+      font-weight: 600;
+    }
+
+    .whatsapp-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: #25D36610;
+      color: #128C7E;
+      font-weight: 600;
+      padding: 8px 20px;
+      border-radius: 40px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+      border: 1px solid #25D36630;
+      margin-top: 8px;
+    }
+
+    .whatsapp-link i {
+      font-size: 1.2rem;
+    }
+
+    .whatsapp-link:hover {
+      background: #25D36620;
+      border-color: #25D366;
+      gap: 12px;
+    }
+
+    /* two column return conditions */
+    .conditions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin-top: 10px;
+    }
+
+    .condition-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 32px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(167, 232, 192, 0.4);
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .condition-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: var(--fresh-green);
+      transform: translateY(-4px);
+    }
+
+    .condition-icon {
+      background: var(--light-green);
+      width: 60px;
+      height: 60px;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #0A3A2A;
+      margin-bottom: 24px;
+    }
+
+    .condition-card h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #0B2A3C;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .condition-card p {
+      color: #2C5C74;
+      font-size: 1rem;
+    }
+
+    .policy-note {
+      background: #F0F9FF;
+      border-radius: 20px;
+      padding: 24px 28px;
+      margin-top: 32px;
+      border-left: 6px solid var(--bright-sky);
+      font-size: 1rem;
+      color: #1E4A5E;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .policy-note i {
+      color: var(--deep-sky);
+      font-size: 1.4rem;
+      margin-top: 2px;
+    }
+
+    /* three step process */
+    .steps-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      position: relative;
+      margin: 30px 0 20px;
+      padding: 0 10px;
+    }
+
+    .step {
+      flex: 1;
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 0 12px;
+    }
+
+    .step-number {
+      width: 70px;
+      height: 70px;
+      background: var(--white);
+      border: 3px solid var(--bright-sky);
+      color: var(--deep-sky);
+      font-size: 1.8rem;
+      font-weight: 700;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 12px 20px -8px rgba(2, 132, 199, 0.2);
+      background: linear-gradient(145deg, #FFFFFF, #F0F9FF);
+      transition: all 0.2s;
+    }
+
+    .step:hover .step-number {
+      background: var(--bright-sky);
+      color: white;
+      border-color: var(--deep-sky);
+      transform: scale(1.05);
+    }
+
+    .step h4 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #0B2A3C;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 0.95rem;
+      color: #3A6C84;
+      max-width: 220px;
+      margin: 0 auto;
+    }
+
+    /* connecting line */
+    .steps-line {
+      position: absolute;
+      top: 35px;
+      left: 15%;
+      width: 70%;
+      height: 3px;
+      background: linear-gradient(90deg, var(--bright-sky) 0%, var(--light-green) 50%, var(--bright-sky) 100%);
+      z-index: 1;
+      opacity: 0.4;
+    }
+
+    .whatsapp-cta {
+      display: flex;
+      justify-content: center;
+      margin: 40px 0 20px;
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: white;
+      font-weight: 600;
+      padding: 16px 42px;
+      border-radius: 50px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 1.2rem;
+      box-shadow: 0 15px 30px -8px rgba(37, 211, 102, 0.4);
+      transition: all 0.25s;
+      border: none;
+    }
+
+    .btn-whatsapp i {
+      font-size: 1.8rem;
+    }
+
+    .btn-whatsapp:hover {
+      background: #1DA851;
+      transform: translateY(-3px);
+      box-shadow: 0 22px 35px -8px rgba(37, 211, 102, 0.5);
+      gap: 18px;
+    }
+
+    /* refund policy cards */
+    .refund-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(167, 232, 192, 0.5);
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .refund-icon {
+      background: var(--light-green);
+      width: 70px;
+      height: 70px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      color: #0A3A2A;
+      flex-shrink: 0;
+    }
+
+    .refund-text h3 {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #0B2A3C;
+      margin-bottom: 12px;
+    }
+
+    .refund-text p {
+      color: #2C5C74;
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+    }
+
+    .refund-text .highlight {
+      color: var(--deep-sky);
+      font-weight: 600;
+      background: #E6F4FF;
+      padding: 2px 10px;
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    /* cancellation */
+    .cancellation-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      display: flex;
+      gap: 28px;
+      align-items: flex-start;
+    }
+
+    .cancellation-icon {
+      background: #E6F4FF;
+      width: 70px;
+      height: 70px;
+      border-radius: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.4rem;
+      color: var(--deep-sky);
+      flex-shrink: 0;
+    }
+
+    /* support section */
+    .support-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      margin: 30px 0 40px;
+    }
+
+    .support-card {
+      background: var(--white);
+      border-radius: var(--radius-card);
+      padding: 36px;
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+      border: 1px solid rgba(167, 232, 192, 0.3);
+      transition: all 0.25s;
+    }
+
+    .support-card:hover {
+      border-color: var(--fresh-green);
+      box-shadow: var(--shadow-md);
+      transform: translateY(-4px);
+    }
+
+    .support-icon {
+      background: var(--light-green);
+      width: 70px;
+      height: 70px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      margin: 0 auto 20px;
+      color: #0A3A2A;
+    }
+
+    .support-card h4 {
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: #0B2A3C;
+      margin-bottom: 8px;
+    }
+
+    .support-card .contact-detail {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: var(--deep-sky);
+      margin-bottom: 20px;
+      word-break: break-word;
+    }
+
+    .btn-outline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 2px solid var(--deep-sky);
+      color: var(--deep-sky);
+      font-weight: 600;
+      padding: 12px 28px;
+      border-radius: 40px;
+      text-decoration: none;
+      transition: all 0.2s;
+      font-size: 1rem;
+    }
+
+    .btn-outline i {
+      font-size: 1.2rem;
+    }
+
+    .btn-outline:hover {
+      background: var(--deep-sky);
+      color: white;
+      border-color: var(--deep-sky);
+      gap: 14px;
+    }
+
+    .btn-outline.green {
+      border-color: var(--fresh-green);
+      color: #0A5A3A;
+    }
+
+    .btn-outline.green:hover {
+      background: var(--fresh-green);
+      color: #0A2A1A;
+      border-color: var(--fresh-green);
+    }
+
+    /* premium footer */
+    .premium-footer {
+      background: var(--white);
+      border-top: 1px solid rgba(56, 189, 248, 0.2);
+      padding: 48px 0 36px;
+      margin-top: 60px;
+      box-shadow: 0 -10px 30px -10px rgba(2, 132, 199, 0.05);
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px 32px;
+      margin-bottom: 32px;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: #2C5C74;
+      font-weight: 500;
+      font-size: 1rem;
+      transition: color 0.2s;
+      padding: 4px 0;
+      border-bottom: 2px solid transparent;
+    }
+
+    .footer-links a:hover {
+      color: var(--deep-sky);
+      border-bottom-color: var(--light-green);
+    }
+
+    .footer-copy {
+      text-align: center;
+      color: #5B7E92;
+      font-size: 0.9rem;
+      letter-spacing: 0.01em;
+      border-top: 1px solid rgba(167, 232, 192, 0.25);
+      padding-top: 28px;
+      margin-top: 16px;
+    }
+
+    /* mobile */
+    @media (max-width: 900px) {
+      .conditions-grid,
+      .support-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .steps-container {
+        flex-direction: column;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .steps-line {
+        display: none;
+      }
+
+      .step {
+        max-width: 300px;
+      }
+
+      .notice-card,
+      .refund-card,
+      .cancellation-card {
+        flex-direction: column;
+        padding: 28px;
+      }
+
+      .page-title {
+        font-size: 2.2rem;
+      }
+
+      .section-heading {
+        font-size: 1.7rem;
+      }
+
+      .refund-icon,
+      .cancellation-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .container {
+        padding: 0 18px;
+      }
+
+      .header-inner {
+        padding: 20px 0 28px;
+      }
+
+      .page-title {
+        font-size: 1.9rem;
+      }
+
+      .page-subtitle {
+        font-size: 1rem;
+      }
+
+      .card,
+      .condition-card,
+      .notice-card,
+      .refund-card,
+      .cancellation-card,
+      .support-card {
+        padding: 24px;
+      }
+
+      .step-number {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+      }
+
+      .btn-whatsapp {
+        padding: 14px 28px;
+        font-size: 1rem;
+      }
+
+      .footer-links {
+        gap: 12px 20px;
+      }
+    }
+
+    /* animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-up {
+      animation: fadeUp 0.5s ease forwards;
+    }
+  </style>
 </head>
 <body>
-<header class="ph"><a href="index.html">FAEXXOR Pharmacy</a></header>
-<main class="pm">
-<h1>Return and Refund Policy</h1><p class="note">Edit the items in [square brackets] with your real details before going live.</p>
-<p>For your safety, medicines cannot be returned once they leave the pharmacy, unless one of these applies:</p>
-<ul><li>We sent the wrong item.</li><li>The item is damaged, expired or defective.</li></ul>
-<h2>How to report a problem</h2><p>Contact us within [24 hours] of delivery on WhatsApp 09160556050 with your Order ID and a clear photo.</p>
-<h2>Refunds</h2><p>If your claim is approved, we will replace the item or refund you within [3 working days].</p>
-<h2>Cancelled orders</h2><p>You can cancel before the order is accepted. After that, please contact us.</p>
-</main>
-<footer class="pf">
-<a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="returns.html">Returns</a>
-<p>&copy; 2026 FAEXXOR Pharmacy</p>
-</footer>
+  <!-- Premium Header -->
+  <header class="premium-header">
+    <div class="header-decor"></div>
+    <div class="header-decor-2"></div>
+    <div class="container header-inner">
+      <div class="brand">
+        <i class="fas fa-capsules"></i>
+        <span>FX PHARMARKET</span>
+      </div>
+      <h1 class="page-title">Return & Refund Policy</h1>
+      <p class="page-subtitle">Your Satisfaction, Safety and Trust Matter to Us.</p>
+    </div>
+  </header>
 
-</body>
-</html>
+  <main class="container">
+    <!-- Important Customer Notice -->
+    <section>
+      <div class="notice-card fade-up">
+        <div class="notice-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="notice-content">
+          <h3>Important Customer Notice</h3>
+          <p>For your safety and protection, all medicines are carefully checked before dispatch. Please confirm your order details and inspect your package upon delivery.</p>
+          <p><strong>Medicines generally cannot be returned once delivered</strong>, except in cases involving incorrect items, damaged products, expired medicines or defective products.</p>
+          <p>Please report any issue within <strong>24 hours of delivery</strong> through our official WhatsApp support.</p>
+          <a href="https://wa.me/2349160556050" class="whatsapp-link" target="_blank" rel="noopener">
+            <i class="fab fa-whatsapp"></i> Report via WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- When Can You Request a Return? -->
+    <section>
+      <h2 class="section-heading"><i class="fas fa-undo-alt"></i> When Can You Request a Return?</h2>
+      <div class="conditions-grid">
+        <div class="condition-card">
+          <div class="condition-icon"><i class="fas fa-box-open"></i></div>
+          <h4>Incorrect Item Delivered</h4>
+          <p>If you receive a medicine or product different from what you ordered, contact our support team.</p>
+        </div>
+        <div class="condition-card">
+          <div class="condition-icon"><i class="fas fa-exclamation-triangle"></i></div>
+          <h4>Damaged, Expired or Defective Product</h4>
+          <p>If your delivered product is damaged, expired or defective, you may submit a return or refund claim for review.</p>
+        </div>
+      </div>
+      <div class="policy-note">
+        <i class="fas fa-info-circle"></i>
+        <span><strong>Important:</strong> Medicines must not be returned or resold if their safety, storage conditions or integrity cannot be verified.</span>
+      </div>
+    </section>
+
+    <!-- How to Report a Problem -->
+    <section>
+      <h2 class="section-heading"><i class="fas fa-clipboard-list"></i> How to Report a Problem</h2>
+      <div class="steps-container">
+        <div class="steps-line"></div>
+        <div class="step">
+          <div class="step-number">01</div>
+          <h4>Contact Us</h4>
+          <p>Report the problem within 24 hours of delivery.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">02</div>
+          <h4>Provide Evidence</h4>
+          <p>Send your Order ID and clear photographs of the affected product or packaging.</p>
+        </div>
+        <div class="step">
+          <div class="step-number">03</div>
+          <h4>Review and Resolution</h4>
+          <p>Our team will review your complaint and communicate the appropriate resolution.</p>
+        </div>
+      </div>
+      <div class="whatsapp-cta">
+        <a href="https://wa.me/2349160556050" class="btn-whatsapp" target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp"></i> Chat with Support
+        </a>
+      </div>
+    </section>
+
+    <!-- Refunds & Replacements -->
+    <section>
+      <h2 class="section-heading"><i class="fas fa-hand-holding-usd"></i> Refunds & Replacements</h2>
+      <div class="refund-card">
+        <div class="refund-icon"><i class="fas fa-credit-card"></i></div>
+        <div class="refund-text">
+          <h3>Refunds & Replacements</h3>
+          <p>If your claim is approved, FX PHARMARK
