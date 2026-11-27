@@ -1,25 +1,389 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Contact Us | FAEXXOR Pharmacy</title>
-<meta name="description" content="Contact Us - FAEXXOR Pharmacy, Yola, Adamawa State, Nigeria.">
-<link rel="stylesheet" href="pages.css">
+<title>Contact Us | FX PHARMARKET</title>
+<meta name="description" content="Contact FX PHARMARKET for help with orders, prescriptions, product enquiries and partnerships.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky:#38BDF8;
+    --green:#A7E8C0;
+    --white:#FFFFFF;
+    --ink:#17435a;          /* text colour only, never a background */
+    --ink-soft:#4d7285;
+    --sky-soft:#e8f7fe;
+    --green-soft:#eefaf2;
+    --line:rgba(56,189,248,.28);
+    --glass:rgba(255,255,255,.62);
+    --radius:26px;
+    --shadow:0 10px 40px rgba(56,189,248,.16), 0 2px 8px rgba(167,232,192,.25);
+    --shadow-hover:0 22px 55px rgba(56,189,248,.28), 0 6px 16px rgba(167,232,192,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:"Manrope",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+    color:var(--ink);background:var(--white);line-height:1.65;
+    -webkit-font-smoothing:antialiased;overflow-x:hidden;
+  }
+  /* soft gradient atmosphere */
+  .bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+    radial-gradient(900px 520px at 8% -5%, rgba(56,189,248,.26), transparent 62%),
+    radial-gradient(800px 520px at 100% 8%, rgba(167,232,192,.45), transparent 60%),
+    radial-gradient(900px 600px at 50% 105%, rgba(56,189,248,.16), transparent 60%),
+    var(--white);}
+  .wrap{width:min(1120px,100% - 2.5rem);margin-inline:auto}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--sky);outline-offset:3px;border-radius:10px}
+
+  /* top bar */
+  .top{padding:1.3rem 0}
+  .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+  .brand{display:flex;align-items:center;gap:.7rem;text-decoration:none;font-weight:800;letter-spacing:.02em;font-size:1.1rem}
+  .logo{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;
+    background:linear-gradient(135deg,var(--sky),var(--green));box-shadow:var(--shadow)}
+  .logo svg{width:22px;height:22px;stroke:var(--white);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .back{font-weight:600;font-size:.92rem;text-decoration:none;padding:.55rem 1.05rem;border-radius:999px;
+    background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    transition:transform .3s,box-shadow .3s}
+  .back:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+
+  /* hero */
+  .hero{text-align:center;padding:4.2rem 0 2.6rem}
+  .pill{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem .95rem;border-radius:999px;
+    background:var(--glass);border:1px solid var(--line);font-size:.85rem;font-weight:600;
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .pill i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px rgba(167,232,192,.45)}
+  .hero h1{font-size:clamp(2.3rem,6vw,4.1rem);line-height:1.08;font-weight:800;letter-spacing:-.025em;margin:1.3rem auto .9rem;max-width:15ch}
+  .hero h1 span{background:linear-gradient(100deg,var(--sky),#6fd8b0);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p{max-width:52ch;margin:0 auto;font-size:1.12rem;color:var(--ink-soft)}
+
+  /* contact cards */
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin:2.2rem 0 4rem}
+  .card{
+    position:relative;display:flex;flex-direction:column;gap:.35rem;padding:2rem 1.7rem;text-decoration:none;
+    background:var(--glass);border:1px solid rgba(255,255,255,.9);border-radius:var(--radius);
+    box-shadow:var(--shadow);backdrop-filter:blur(18px) saturate(140%);-webkit-backdrop-filter:blur(18px) saturate(140%);
+    overflow:hidden;transition:transform .45s cubic-bezier(.2,.8,.2,1),box-shadow .45s;
+  }
+  .card::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1.5px;
+    background:linear-gradient(135deg,var(--sky),var(--green));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;
+    mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);
+    opacity:.45;transition:opacity .4s}
+  .card::after{content:"";position:absolute;width:220px;height:220px;right:-90px;top:-90px;border-radius:50%;
+    background:radial-gradient(circle,rgba(167,232,192,.55),transparent 70%);transition:transform .6s}
+  .card:hover{transform:translateY(-8px);box-shadow:var(--shadow-hover)}
+  .card:hover::before{opacity:1}
+  .card:hover::after{transform:scale(1.5)}
+  .icon{position:relative;z-index:1;width:56px;height:56px;border-radius:18px;display:grid;place-items:center;margin-bottom:.9rem;
+    background:linear-gradient(135deg,var(--sky),var(--green));transition:transform .45s}
+  .card:hover .icon{transform:rotate(-8deg) scale(1.08)}
+  .icon svg{width:26px;height:26px;stroke:var(--white);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .card h3{position:relative;z-index:1;font-size:1.15rem;font-weight:700}
+  .card .val{position:relative;z-index:1;font-weight:600;color:var(--ink-soft);word-break:break-word}
+  .card .go{position:relative;z-index:1;margin-top:.9rem;font-weight:700;font-size:.92rem;display:inline-flex;align-items:center;gap:.4rem}
+  .card .go svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s}
+  .card:hover .go svg{transform:translateX(6px)}
+
+  /* form + side */
+  .split{display:grid;grid-template-columns:1.15fr .85fr;gap:1.6rem;align-items:start;margin-bottom:4.5rem}
+  .panel{background:var(--glass);border:1px solid rgba(255,255,255,.9);border-radius:var(--radius);
+    box-shadow:var(--shadow);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);padding:2.4rem}
+  .panel h2{font-size:1.65rem;font-weight:800;letter-spacing:-.01em;margin-bottom:.3rem}
+  .panel > p.sub{color:var(--ink-soft);margin-bottom:1.6rem}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .field{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1rem}
+  label{font-weight:600;font-size:.9rem}
+  input,textarea{
+    font:inherit;color:var(--ink);width:100%;padding:.9rem 1.05rem;border-radius:16px;
+    background:rgba(255,255,255,.85);border:1.5px solid var(--line);transition:border-color .3s,box-shadow .3s,transform .3s}
+  textarea{min-height:150px;resize:vertical}
+  input::placeholder,textarea::placeholder{color:#8fb0c0}
+  input:hover,textarea:hover{border-color:var(--sky)}
+  input:focus,textarea:focus{outline:none;border-color:var(--sky);box-shadow:0 0 0 4px rgba(56,189,248,.2)}
+  .invalid{border-color:#e07a7a !important;box-shadow:0 0 0 4px rgba(224,122,122,.15) !important}
+  .err{font-size:.82rem;color:#b64a4a;min-height:1em}
+  .hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+  .send{
+    position:relative;overflow:hidden;width:100%;margin-top:.4rem;padding:1.05rem 1.5rem;border:0;border-radius:18px;cursor:pointer;
+    font:inherit;font-weight:800;font-size:1.02rem;color:var(--ink);letter-spacing:.01em;
+    background:linear-gradient(120deg,var(--sky),var(--green));background-size:180% 100%;
+    box-shadow:0 12px 28px rgba(56,189,248,.35);transition:transform .35s,box-shadow .35s,background-position .6s;
+    display:inline-flex;align-items:center;justify-content:center;gap:.6rem}
+  .send:hover{transform:translateY(-3px);box-shadow:0 18px 38px rgba(56,189,248,.45);background-position:100% 0}
+  .send:active{transform:translateY(0)}
+  .send svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .35s}
+  .send:hover svg{transform:translate(4px,-3px)}
+  .send[disabled]{opacity:.7;cursor:wait;transform:none}
+  .note{margin-top:.9rem;font-size:.82rem;color:var(--ink-soft)}
+  .note a{font-weight:700}
+  .status{display:none;margin-top:1rem;padding:1rem 1.1rem;border-radius:16px;font-weight:600}
+  .status.show{display:block}
+  .status.ok{background:var(--green-soft);border:1px solid var(--green)}
+  .status.bad{background:#fdf1f1;border:1px solid #efc3c3;color:#8f3b3b}
+
+  .support{background:linear-gradient(160deg,rgba(56,189,248,.16),rgba(167,232,192,.34)),var(--glass)}
+  .support h2{font-size:1.55rem}
+  .support p{color:var(--ink-soft);margin:.7rem 0 1.4rem}
+  .topics{list-style:none;display:grid;gap:.7rem}
+  .topics li{display:flex;align-items:center;gap:.8rem;padding:.8rem 1rem;border-radius:16px;font-weight:600;
+    background:rgba(255,255,255,.75);border:1px solid rgba(255,255,255,.95);transition:transform .35s,box-shadow .35s}
+  .topics li:hover{transform:translateX(6px);box-shadow:var(--shadow)}
+  .topics svg{flex:none;width:22px;height:22px;stroke:var(--sky);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+
+  footer{padding:2.2rem 0 2.6rem;text-align:center;border-top:1px solid var(--line);
+    background:linear-gradient(180deg,transparent,rgba(167,232,192,.25))}
+  footer strong{letter-spacing:.04em}
+  footer p{color:var(--ink-soft);font-size:.92rem;margin-top:.2rem}
+
+  /* entrance, one orchestrated moment */
+  @media (prefers-reduced-motion:no-preference){
+    .hero > *{animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+    .hero > *:nth-child(2){animation-delay:.08s}
+    .hero > *:nth-child(3){animation-delay:.16s}
+    @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+
+  @media (max-width:980px){
+    .cards{grid-template-columns:1fr}
+    .split{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .hero{padding-top:2.6rem}
+    .row{grid-template-columns:1fr}
+    .panel{padding:1.6rem}
+  }
+</style>
 </head>
 <body>
-<header class="ph"><a href="index.html">FAEXXOR Pharmacy</a></header>
-<main class="pm">
-<h1>Contact Us</h1>
-<div class="card"><p><strong>Address:</strong> Adamawa State, Yola South, Nigeria</p><p><strong>Phone:</strong> <a href="tel:09160556050">09160556050</a></p><p><strong>Email:</strong> <a href="mailto:faexxorpharm@gmail.com">faexxorpharm@gmail.com</a></p>
-  
-<p><strong>Opening hours:</strong> [Mon7am-10pm-friaday 7am-10pm-Sat 8am-10pm, Sun 8am-10pm]</p></div>
-<a class="btn" href="https://wa.me/2349160556050">Chat on WhatsApp</a>
+<div class="bg" aria-hidden="true"></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="FX PHARMARKET home">
+      <span class="logo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></span>
+      FX PHARMARKET
+    </a>
+    <a class="back" href="/">Back to shop</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <span class="pill"><i></i>Support is open</span>
+    <h1>We're Always <span>Here for You.</span></h1>
+    <p>Your satisfaction matters. Connect with FX PHARMARKET whenever you need assistance.</p>
+  </section>
+
+  <section class="wrap" aria-label="Contact options">
+    <div class="cards">
+      <a class="card" href="tel:+2349160556050">
+        <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg></span>
+        <h3>Call Us</h3>
+        <span class="val">+2349160556050</span>
+        <span class="go">Call now <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a class="card" href="mailto:fxpharmarket@gmail.com">
+        <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m3 8 9 6 9-6"/></svg></span>
+        <h3>Email Us</h3>
+        <span class="val">fxpharmarket@gmail.com</span>
+        <span class="go">Send an email <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+      <a class="card" href="https://wa.me/2349160556050?text=Hello%20FX%20PHARMARKET%2C%20I%20need%20assistance." target="_blank" rel="noopener noreferrer">
+        <span class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.6 7.4L3 20.5l1.5-4.8a8.5 8.5 0 1 1 16-4.1z"/><path d="M9 9.2c.3 2.2 2.4 4.3 4.6 4.6l1.2-1.2-1.8-1-.8.7a3.3 3.3 0 0 1-1.7-1.7l.7-.8-1-1.8z"/></svg></span>
+        <h3>WhatsApp Support</h3>
+        <span class="val">Chat with us directly</span>
+        <span class="go">Open WhatsApp <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </div>
+  </section>
+
+  <section class="wrap split">
+    <div class="panel">
+      <h2>Send us a message</h2>
+      <p class="sub">Fill in the form and our team will get back to you as soon as possible.</p>
+
+      <form id="contactForm" novalidate>
+        <div class="row">
+          <div class="field">
+            <label for="name">Full Name</label>
+            <input id="name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="Your full name" required>
+            <span class="err" data-for="name"></span>
+          </div>
+          <div class="field">
+            <label for="email">Email Address</label>
+            <input id="email" name="email" type="email" autocomplete="email" maxlength="120" placeholder="you@example.com" required>
+            <span class="err" data-for="email"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="phone">Phone Number</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20" placeholder="+234 …" required>
+            <span class="err" data-for="phone"></span>
+          </div>
+          <div class="field">
+            <label for="subject">Subject</label>
+            <input id="subject" name="subject" type="text" maxlength="100" placeholder="How can we help?" required>
+            <span class="err" data-for="subject"></span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" maxlength="2000" placeholder="Tell us more about your request…" required></textarea>
+          <span class="err" data-for="message"></span>
+        </div>
+
+        <!-- spam trap: real people never see or fill this -->
+        <div class="hp" aria-hidden="true">
+          <label for="website">Leave this field empty</label>
+          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">
+        </div>
+
+        <button class="send" type="submit" id="sendBtn">
+          <span id="sendLabel">Send Message</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2 11 13"/><path d="m22 2-7 20-4-9-9-4z"/></svg>
+        </button>
+        <p class="note">For urgent matters, please use <a href="https://wa.me/2349160556050" target="_blank" rel="noopener noreferrer">WhatsApp</a> or call us. Please do not share card details, PINs or OTPs in this form.</p>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <aside class="panel support">
+      <h2>Your Trusted Healthcare Marketplace.</h2>
+      <p>Whether you need assistance with orders, prescriptions, product enquiries, partnerships or general support, FX PHARMARKET is ready to assist.</p>
+      <ul class="topics">
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/><circle cx="9" cy="20" r="1.3"/><circle cx="18" cy="20" r="1.3"/></svg>Orders and delivery</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>Prescriptions</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>Product enquiries</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 12 5 9l-3 3 4 4a2 2 0 0 0 3 0l2-2"/><path d="m16 12 3-3 3 3-4 4a2 2 0 0 1-3 0l-2-2"/><path d="m9 9 3-2 3 2"/></svg>Partnerships</li>
+        <li><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.4-1 1-1 1.7M12 17h.01"/></svg>General support</li>
+      </ul>
+    </aside>
+  </section>
 </main>
-<footer class="pf">
-<a href="about.html">About</a><a href="contact.html">Contact</a><a href="privacy.html">Privacy</a><a href="terms.html">Terms</a><a href="returns.html">Returns</a>
-<p>&copy; 2026 FAEXXOR Pharmacy</p>
+
+<footer>
+  <div class="wrap">
+    <strong>FX PHARMARKET</strong>
+    <p>Healthcare. Convenience. Trust.</p>
+  </div>
 </footer>
 
+<script>
+(function () {
+  "use strict";
+
+  /* ---------- SETTINGS (edit only this block) ----------
+     ENDPOINT: URL that receives the form (JSON POST). Examples:
+       - a Formspree form:  https://formspree.io/f/xxxxxxxx
+       - your own secure backend / Cloud Function URL
+     Leave empty to open the visitor's email app with the message
+     pre-filled and addressed to your business email (works with no backend). */
+  var CONFIG = {
+    ENDPOINT: "",
+    EMAIL: "fxpharmarket@gmail.com",
+    COOLDOWN_SECONDS: 60
+  };
+
+  var form = document.getElementById("contactForm");
+  var btn = document.getElementById("sendBtn");
+  var label = document.getElementById("sendLabel");
+  var statusBox = document.getElementById("status");
+  var loadedAt = Date.now();
+
+  var rules = {
+    name:    function (v) { return v.length >= 2 || "Please enter your full name."; },
+    email:   function (v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v) || "Please enter a valid email address."; },
+    phone:   function (v) { return /^\+?[0-9\s\-()]{7,20}$/.test(v) || "Please enter a valid phone number."; },
+    subject: function (v) { return v.length >= 3 || "Please add a short subject."; },
+    message: function (v) { return v.length >= 10 || "Please write at least 10 characters."; }
+  };
+
+  function clean(s) {
+    /* trim, collapse control characters, strip HTML angle brackets */
+    return String(s).replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "").replace(/[<>]/g, "").trim();
+  }
+
+  function showError(id, msg) {
+    var input = document.getElementById(id);
+    var span = form.querySelector('.err[data-for="' + id + '"]');
+    span.textContent = msg || "";
+    input.classList.toggle("invalid", !!msg);
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+  }
+
+  function setStatus(type, text) {
+    statusBox.className = "status show " + type;
+    statusBox.textContent = text;
+  }
+
+  function validate() {
+    var ok = true, data = {};
+    Object.keys(rules).forEach(function (id) {
+      var v = clean(document.getElementById(id).value);
+      var r = rules[id](v);
+      if (r !== true) { showError(id, r); ok = false; } else { showError(id, ""); }
+      data[id] = v;
+    });
+    return ok ? data : null;
+  }
+
+  Object.keys(rules).forEach(function (id) {
+    document.getElementById(id).addEventListener("input", function () { showError(id, ""); });
+  });
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+    statusBox.className = "status";
+
+    /* bots: filled hidden field or instant submit */
+    if (document.getElementById("website").value || Date.now() - loadedAt < 2500) { return; }
+
+    /* simple client-side cooldown against repeat sends */
+    var last = Number(sessionStorage.getItem("fxp_last_send") || 0);
+    var wait = Math.ceil((last + CONFIG.COOLDOWN_SECONDS * 1000 - Date.now()) / 1000);
+    if (wait > 0) { setStatus("bad", "Please wait " + wait + " seconds before sending another message."); return; }
+
+    var data = validate();
+    if (!data) { setStatus("bad", "Please check the highlighted fields."); return; }
+
+    btn.disabled = true; label.textContent = "Sending…";
+
+    if (!CONFIG.ENDPOINT) {
+      /* no backend configured: open the visitor's email app, pre-filled */
+      var body = "Name: " + data.name + "\nEmail: " + data.email + "\nPhone: " + data.phone + "\n\n" + data.message;
+      window.location.href = "mailto:" + CONFIG.EMAIL +
+        "?subject=" + encodeURIComponent("[Website] " + data.subject) +
+        "&body=" + encodeURIComponent(body);
+      sessionStorage.setItem("fxp_last_send", String(Date.now()));
+      setStatus("ok", "Your email app is opening with your message ready to send. If nothing opens, please email " + CONFIG.EMAIL + " or use WhatsApp.");
+      btn.disabled = false; label.textContent = "Send Message";
+      return;
+    }
+
+    fetch(CONFIG.ENDPOINT, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
+      body: JSON.stringify(data)
+    }).then(function (res) {
+      if (!res.ok) { throw new Error("bad response"); }
+      sessionStorage.setItem("fxp_last_send", String(Date.now()));
+      form.reset();
+      setStatus("ok", "Thank you, " + data.name.split(" ")[0] + ". Your message has been sent and our team will reply soon.");
+    }).catch(function () {
+      setStatus("bad", "We could not send your message. Please try again, or reach us on WhatsApp or by phone.");
+    }).then(function () {
+      btn.disabled = false; label.textContent = "Send Message";
+    });
+  });
+})();
+</script>
 </body>
 </html>

@@ -226,12 +226,6 @@ footer{
 </head>
 
 <body>
-<a class="hp-skip" href="#main">Skip to main content</a>
-  <div id="fx-splash">
-    <img src="icons/splash-screen.png"
-         alt="FX Pharmacy"
-         class="fx-splash-image">
-  </div>
 
 <!-- ===== A. PREMIUM HEADER (ids fxhBtn / fxhNav kept: script.js controls the menu) ===== -->
 <div class="fxh" role="banner">
@@ -248,7 +242,7 @@ footer{
     <a href="account.html">Account</a>
     <a href="about.html">About</a>
     <a href="contact.html">Contact</a>
-    <a href="privacy.html" class="hp-minor">Privacy</a>
+    <a href="privacy-policy.html" class="hp-minor">Privacy</a>
     <a href="terms.html" class="hp-minor">Terms</a>
     <a href="returns.html" class="hp-minor">Returns</a>
   </div>
@@ -1075,21 +1069,6 @@ if ("serviceWorker" in navigator) {
     });
   });
 }
-  </script>
-  <script>
-window.addEventListener("load", function () {
-    setTimeout(function () {
-        const splash = document.getElementById("fx-splash");
-
-        if (splash) {
-            splash.classList.add("hide");
-
-            setTimeout(function () {
-                splash.remove();
-            }, 500);
-        }
-    }, 1800);
-});
   </script>
 </body>
 </html>

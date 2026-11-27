@@ -3,76 +3,146 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0878d1">
+  <meta name="theme-color" content="#0284C7">
   <title>Checkout - FX PHARMARKET</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --deep: #0284C7; --sky: #38BDF8; --green: #A7E8C0; --fresh: #86D9A7; --soft: #F5FAFF;
+      --text: #3b5b6e; --ink: #17435a; --line: rgba(56,189,248,.30);
+      --shadow: 0 10px 34px rgba(2,132,199,.10), 0 2px 8px rgba(134,217,167,.18);
+      --shadow-up: 0 20px 44px rgba(2,132,199,.20), 0 6px 14px rgba(134,217,167,.26);
+    }
     * { box-sizing: border-box; }
     [hidden] { display: none !important; }
-    body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; background: #f3f6fa; color: #1b2733;
-           padding-bottom: calc(110px + env(safe-area-inset-bottom, 0px)); }
-    header { background: linear-gradient(90deg, #0b4a9e, #04a0e0); color: #fff; padding: 14px 16px; padding-top: calc(14px + env(safe-area-inset-top, 0px));
-             display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 20; box-shadow: 0 2px 10px rgba(11,74,158,.25); }
-    header a { color: #0b4a9e; background: #fff; text-decoration: none; font-weight: 700; padding: 9px 14px; border-radius: 10px; font-size: .9rem; white-space: nowrap; }
-    header h1 { margin: 0; font-size: 1.1rem; }
-    main { max-width: 640px; margin: 0 auto; padding: 14px; }
-    .card { background: #fff; border-radius: 16px; padding: 16px; margin-bottom: 14px; box-shadow: 0 2px 10px rgba(0,0,0,.07); }
-    .card h2 { margin: 0 0 12px; font-size: 1.05rem; color: #0b4a9e; }
-    .note { color: #55677a; font-size: .88rem; margin: 8px 0 0; line-height: 1.45; }
-    .warn { color: #a12a35; font-size: .86rem; margin: 6px 0 0; font-weight: 600; }
-    .info { background: #fff6dd; color: #7a5a00; border-radius: 10px; padding: 10px 12px; font-size: .88rem; margin-top: 10px; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; font-family: Manrope, system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif; color: var(--text); line-height: 1.55;
+           background:
+             radial-gradient(700px 420px at 100% -4%, rgba(167,232,192,.50), transparent 62%),
+             radial-gradient(760px 460px at -10% 4%, rgba(56,189,248,.20), transparent 62%),
+             var(--soft);
+           background-attachment: fixed;
+           padding-bottom: calc(118px + env(safe-area-inset-bottom, 0px)); -webkit-font-smoothing: antialiased; }
+    :focus-visible { outline: 3px solid var(--sky); outline-offset: 3px; border-radius: 10px; }
 
-    .line { padding: 12px 0; border-bottom: 1px solid #eef2f7; }
+    /* ---------- header ---------- */
+    header { position: sticky; top: 0; z-index: 20; display: flex; align-items: center; gap: 12px;
+             padding: 12px 16px; padding-top: calc(12px + env(safe-area-inset-top, 0px));
+             background: rgba(255,255,255,.82); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+             border-bottom: 1px solid var(--line); }
+    header a { color: var(--deep); background: #fff; text-decoration: none; font-weight: 800; padding: 9px 14px; border-radius: 999px;
+               font-size: .88rem; white-space: nowrap; border: 1px solid var(--line); transition: transform .3s, box-shadow .3s; }
+    header a:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    header h1 { margin: 0; font-size: 1.1rem; font-weight: 800; color: var(--deep); letter-spacing: -.01em; flex: 1; }
+    .secure { display: inline-flex; align-items: center; gap: 6px; font-size: .74rem; font-weight: 800; color: #2c5a46;
+              background: rgba(167,232,192,.55); padding: 6px 11px; border-radius: 999px; }
+    .secure svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+    main { max-width: 640px; margin: 0 auto; padding: 16px 14px; }
+
+    /* ---------- cards ---------- */
+    .card { background: #fff; border: 1px solid var(--line); border-radius: 26px; padding: 20px 18px; margin-bottom: 16px; box-shadow: var(--shadow); }
+    .card h2 { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font-size: 1.08rem; font-weight: 800; color: var(--deep); letter-spacing: -.01em; }
+    .num { flex: none; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-size: .82rem; font-weight: 800; color: #fff;
+           background: linear-gradient(135deg, var(--sky), var(--fresh)); }
+    .note { color: var(--text); font-size: .88rem; margin: 8px 0 0; line-height: 1.5; opacity: .92; }
+    .warn { color: #a12a35; font-size: .86rem; margin: 6px 0 0; font-weight: 700; }
+    .info { background: rgba(167,232,192,.28); border: 1px solid var(--green); color: var(--ink); border-radius: 14px; padding: 11px 13px; font-size: .86rem; margin-top: 14px; }
+
+    .line { padding: 14px 0; border-bottom: 1px solid rgba(56,189,248,.18); }
     .line:last-child { border-bottom: 0; }
     .ltop { display: flex; justify-content: space-between; gap: 10px; align-items: flex-start; }
-    .lname { font-weight: 700; word-break: break-word; }
-    .lprice { color: #55677a; font-size: .88rem; margin-top: 2px; }
+    .lname { font-weight: 800; color: var(--ink); word-break: break-word; }
+    .lprice { color: var(--text); font-size: .86rem; margin-top: 2px; }
     .lrow { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; gap: 10px; }
     .stepper { display: flex; align-items: center; gap: 8px; }
-    .stepper button { width: 40px; height: 40px; border: 0; border-radius: 10px; background: #e6eef9; color: #0b4a9e; font-size: 1.3rem; font-weight: 800; cursor: pointer; }
-    .stepper b { min-width: 28px; text-align: center; font-size: 1.05rem; }
-    .ltotal { font-weight: 800; color: #0b4a9e; }
-    .rm { border: 0; background: none; color: #a12a35; font-weight: 700; cursor: pointer; padding: 8px 4px; font-size: .88rem; }
+    .stepper button { width: 40px; height: 40px; border: 1px solid var(--line); border-radius: 12px; background: var(--soft); color: var(--deep); font-size: 1.3rem; font-weight: 800; cursor: pointer; transition: transform .25s, background .25s; }
+    .stepper button:hover { background: #e1f3fd; transform: translateY(-1px); }
+    .stepper b { min-width: 28px; text-align: center; font-size: 1.05rem; color: var(--ink); }
+    .ltotal { font-weight: 800; color: var(--deep); }
+    .rm { border: 0; background: none; color: #a12a35; font-weight: 700; cursor: pointer; padding: 8px 4px; font-size: .86rem; font-family: inherit; }
 
-    label.f { display: block; font-weight: 700; font-size: .88rem; margin: 12px 0 5px; color: #33475b; }
-    input[type=text], input[type=tel], textarea { width: 100%; padding: 13px 12px; border: 1px solid #c9d6e6; border-radius: 10px; font-size: 1rem; font-family: inherit; background: #fff; }
-    textarea { min-height: 84px; resize: vertical; }
-    input:focus, textarea:focus { outline: 2px solid #04a0e0; border-color: #04a0e0; }
-    .err { color: #a12a35; font-size: .84rem; margin: 4px 0 0; min-height: 1em; }
+    .sum { margin-top: 14px; padding: 14px 16px; border-radius: 18px; background: linear-gradient(135deg, rgba(56,189,248,.12), rgba(167,232,192,.30)); border: 1px solid var(--line); }
+    .sum div { display: flex; justify-content: space-between; gap: 10px; font-size: .9rem; padding: 2px 0; }
+    .sum .grand { margin-top: 6px; padding-top: 8px; border-top: 1px dashed rgba(2,132,199,.35); font-weight: 800; font-size: 1.08rem; color: var(--deep); }
 
-    .pay { display: block; margin-bottom: 10px; cursor: pointer; }
+    label.f { display: block; font-weight: 800; font-size: .86rem; margin: 14px 0 6px; color: var(--ink); }
+    input[type=text], input[type=tel], textarea { width: 100%; padding: 14px 14px; border: 1.5px solid var(--line); border-radius: 16px; font-size: 1rem; font-family: inherit; color: var(--ink); background: rgba(255,255,255,.9); transition: border-color .3s, box-shadow .3s; }
+    input[type=text]:hover, input[type=tel]:hover, textarea:hover { border-color: var(--sky); }
+    textarea { min-height: 88px; resize: vertical; }
+    input:focus, textarea:focus { outline: none; border-color: var(--sky); box-shadow: 0 0 0 4px rgba(56,189,248,.20); }
+    .err { color: #a12a35; font-size: .84rem; margin: 4px 0 0; min-height: 1em; font-weight: 600; }
+
+    /* ---------- payment cards ---------- */
+    .pay { display: block; margin-bottom: 12px; cursor: pointer; }
     .pay input { position: absolute; opacity: 0; width: 1px; height: 1px; }
-    .pbox { border: 2px solid #d6e2f0; border-radius: 14px; padding: 13px 14px; display: flex; gap: 12px; align-items: flex-start; background: #fff; }
-    .pay input:focus-visible + .pbox { outline: 3px solid #04a0e0; outline-offset: 2px; }
-    .pay input:checked + .pbox { border-color: #0b4a9e; background: #f1f7ff; }
-    .dot { width: 22px; height: 22px; border-radius: 50%; border: 2px solid #9db4cf; flex: none; margin-top: 2px; display: grid; place-items: center; }
-    .pay input:checked + .pbox .dot { border-color: #0b4a9e; }
-    .pay input:checked + .pbox .dot::after { content: ""; width: 12px; height: 12px; border-radius: 50%; background: #0b4a9e; }
-    .ptitle { font-weight: 800; }
-    .pdesc { color: #55677a; font-size: .88rem; margin-top: 3px; line-height: 1.4; }
-    .acct { background: #fff; border: 1px dashed #9db4cf; border-radius: 10px; padding: 10px 12px; margin-top: 10px; font-size: .92rem; }
-    .acct div { display: flex; justify-content: space-between; gap: 8px; padding: 3px 0; }
-    .acct button { border: 0; background: #0b4a9e; color: #fff; border-radius: 8px; padding: 6px 12px; font-weight: 700; cursor: pointer; }
+    .pbox { position: relative; border: 1.5px solid var(--line); border-radius: 22px; padding: 15px 16px; display: flex; gap: 13px; align-items: center; background: #fff;
+            box-shadow: 0 6px 20px rgba(2,132,199,.07); transition: transform .4s cubic-bezier(.2,.8,.2,1), box-shadow .4s, border-color .3s, background .3s; }
+    .pay:hover .pbox { transform: translateY(-3px); box-shadow: var(--shadow-up); border-color: var(--sky); }
+    .pay input:focus-visible + .pbox { outline: 3px solid var(--sky); outline-offset: 3px; }
+    .pay input:checked + .pbox { border-color: var(--deep); background: linear-gradient(135deg, rgba(56,189,248,.10), rgba(167,232,192,.30)); box-shadow: var(--shadow-up); }
+    .pico { flex: none; width: 50px; height: 50px; border-radius: 16px; display: grid; place-items: center; background: linear-gradient(135deg, var(--sky), var(--green)); transition: transform .4s; }
+    .pay:hover .pico { transform: rotate(-7deg) scale(1.06); }
+    .pico svg { width: 25px; height: 25px; stroke: #fff; fill: none; stroke-width: 2.1; stroke-linecap: round; stroke-linejoin: round; }
+    .pico.opay { background: #fff; border: 1.5px solid var(--green); color: var(--deep); font-weight: 800; font-size: .8rem; letter-spacing: .01em; }
+    .pico.opay img { max-width: 36px; max-height: 30px; }
+    .pmain { flex: 1; min-width: 0; }
+    .ptitle { font-weight: 800; color: var(--deep); font-size: 1.02rem; }
+    .pdesc { display: block; color: var(--text); font-size: .85rem; margin-top: 2px; line-height: 1.4; }
+    .tag { display: inline-block; margin-left: 6px; padding: 2px 9px; border-radius: 999px; font-size: .66rem; font-weight: 800; background: var(--green); color: #2c5a46; vertical-align: middle; }
+    .dot { flex: none; width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--sky); display: grid; place-items: center; transition: all .3s; }
+    .pay input:checked + .pbox .dot { border-color: var(--deep); background: var(--deep); }
+    .pay input:checked + .pbox .dot::after { content: ""; width: 10px; height: 6px; border-left: 3px solid #fff; border-bottom: 3px solid #fff; transform: rotate(-45deg) translate(1px, -1px); }
 
-    .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: #fff; border-top: 1px solid #d6e4f3; box-shadow: 0 -4px 18px rgba(11,74,158,.12);
+    .acct { background: var(--soft); border: 1px dashed var(--sky); border-radius: 16px; padding: 12px 14px; margin: -2px 0 12px; font-size: .92rem; color: var(--ink); }
+    .acct div { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 4px 0; }
+    .acct button { border: 0; background: var(--deep); color: #fff; border-radius: 10px; padding: 7px 14px; font-weight: 800; cursor: pointer; font-family: inherit; }
+    .opnote { background: var(--soft); border: 1px solid var(--line); border-radius: 16px; padding: 12px 14px; margin: -2px 0 12px; font-size: .86rem; color: var(--ink); }
+    .usednote { background: rgba(167,232,192,.28); border: 1px solid var(--green); border-radius: 16px; padding: 12px 14px; margin-bottom: 12px; font-size: .86rem; color: var(--ink); }
+    .trust { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .trust span { display: inline-flex; align-items: center; gap: 6px; font-size: .76rem; font-weight: 700; color: var(--ink); background: var(--soft); border: 1px solid var(--line); padding: 6px 11px; border-radius: 999px; }
+    .trust svg { width: 14px; height: 14px; stroke: var(--deep); fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ---------- bottom bar ---------- */
+    .bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: rgba(255,255,255,.90); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+           border-top: 1px solid var(--line); box-shadow: 0 -10px 30px rgba(2,132,199,.12);
            padding: 12px 14px calc(12px + env(safe-area-inset-bottom, 0px)); display: flex; align-items: center; gap: 12px; }
     .bar .tot { flex: 1; min-width: 0; }
-    .bar .tot small { display: block; color: #55677a; font-size: .78rem; }
-    .bar .tot b { font-size: 1.2rem; color: #0b4a9e; }
-    .btn { border: 0; border-radius: 12px; background: #0b4a9e; color: #fff; font-weight: 800; font-size: 1rem; padding: 14px 20px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; font-family: inherit; }
-    .btn:disabled { opacity: .45; cursor: not-allowed; }
-    .btn.green { background: #1f9d55; }
-    .btn.light { background: #e6eef9; color: #0b4a9e; }
+    .bar .tot small { display: block; color: var(--text); font-size: .76rem; }
+    .bar .tot b { font-size: 1.25rem; color: var(--deep); font-weight: 800; }
+    .btn { border: 0; border-radius: 16px; background: var(--deep); color: #fff; font-weight: 800; font-size: 1rem; padding: 15px 22px; cursor: pointer; text-decoration: none; display: inline-block; text-align: center; font-family: inherit;
+           box-shadow: 0 12px 26px rgba(2,132,199,.30); transition: transform .3s, box-shadow .3s, background .3s; }
+    .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 18px 34px rgba(2,132,199,.40); background: #0276b3; }
+    .btn:disabled { opacity: .5; cursor: not-allowed; }
+    .btn.green { background: linear-gradient(120deg, var(--green), var(--fresh)); color: var(--ink); box-shadow: 0 10px 24px rgba(134,217,167,.45); }
+    .btn.green:hover { background: linear-gradient(120deg, var(--fresh), var(--green)); }
+    .btn.light { background: #fff; color: var(--deep); border: 1.5px solid var(--sky); box-shadow: none; }
+    .btn.light:hover:not(:disabled) { background: var(--soft); box-shadow: var(--shadow); }
     .btn.block { display: block; width: 100%; margin-top: 10px; }
-    .done { text-align: center; }
-    .done .big { width: 68px; height: 68px; border-radius: 50%; background: #d6f5e3; color: #137a3d; font-size: 2rem; display: grid; place-items: center; margin: 4px auto 12px; }
-    .done h2 { font-size: 1.3rem; margin: 0 0 4px; }
-    .oid { font-weight: 800; font-size: 1.15rem; color: #0b4a9e; margin: 4px 0 12px; }
-    .steps { text-align: left; background: #f3f8ff; border-radius: 12px; padding: 12px 14px; font-size: .92rem; line-height: 1.5; margin: 12px 0; }
-    .toast { position: fixed; left: 12px; right: 12px; bottom: calc(96px + env(safe-area-inset-bottom, 0px)); z-index: 40; max-width: 460px; margin: 0 auto;
-             background: #a12a35; color: #fff; padding: 12px 14px; border-radius: 12px; font-weight: 600; font-size: .92rem; box-shadow: 0 6px 20px rgba(0,0,0,.3); }
+    .btn.small { padding: 10px 16px; font-size: .92rem; border-radius: 12px; }
 
-    .thanks { font-weight: 800; color: #0b4a9e; font-size: 1.02rem; margin: 6px 0 4px; }
-    .btn.small { padding: 10px 16px; font-size: .92rem; border-radius: 10px; }
+    /* ---------- success ---------- */
+    .done { text-align: center; }
+    .done .big { width: 82px; height: 82px; border-radius: 50%; background: linear-gradient(135deg, var(--sky), var(--green)); color: #fff; font-size: 2.2rem; display: grid; place-items: center; margin: 4px auto 14px; box-shadow: var(--shadow-up); }
+    .done h2 { font-size: 1.4rem; margin: 0 0 4px; justify-content: center; }
+    .oid { font-weight: 800; font-size: 1.15rem; color: var(--deep); margin: 4px 0 12px; }
+    .steps { text-align: left; background: var(--soft); border: 1px solid var(--line); border-radius: 18px; padding: 14px 16px; font-size: .92rem; line-height: 1.55; margin: 14px 0; color: var(--ink); }
+    .thanks { font-weight: 800; color: var(--deep); font-size: 1.02rem; margin: 6px 0 4px; }
+
+    .toast { position: fixed; left: 12px; right: 12px; bottom: calc(104px + env(safe-area-inset-bottom, 0px)); z-index: 40; max-width: 460px; margin: 0 auto;
+             background: #fff; color: #8f3b3b; border: 1px solid #efc3c3; padding: 13px 15px; border-radius: 16px; font-weight: 700; font-size: .9rem; box-shadow: 0 12px 30px rgba(2,132,199,.22); }
+
+    /* ---------- loading overlay ---------- */
+    .over { position: fixed; inset: 0; z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center;
+            background: rgba(255,255,255,.94); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+    .over.on { display: flex; }
+    .ring { width: 68px; height: 68px; border-radius: 50%; border: 6px solid rgba(167,232,192,.6); border-top-color: var(--deep); animation: spin 1s linear infinite; }
+    .over b { font-size: 1.15rem; color: var(--deep); }
+    .over span { max-width: 30ch; font-size: .92rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } .ring { animation-duration: 3s; } }
   </style>
 </head>
 <body>
@@ -80,6 +150,7 @@
 <header>
   <a href="index.html?cart=1">&larr; Cart</a>
   <h1>Checkout</h1>
+  <span class="secure"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>Secure</span>
 </header>
 
 <main>
@@ -92,9 +163,14 @@
 
   <div id="flow" hidden>
     <section class="card">
-      <h2>Your items</h2>
+      <h2><span class="num">1</span>Your items</h2>
       <div id="lines"></div>
       <p class="note" id="notice" hidden></p>
+      <div class="sum" aria-live="polite">
+        <div><span>Subtotal</span><span id="sumSub">&#8358;0</span></div>
+        <div><span>Delivery fee</span><span>Confirmed by our team</span></div>
+        <div class="grand"><span>Total</span><span id="sumTotal">&#8358;0</span></div>
+      </div>
     </section>
 
     <section class="card" id="loginCard" hidden>
@@ -105,7 +181,7 @@
     </section>
 
     <section class="card">
-      <h2>Delivery details</h2>
+      <h2><span class="num">2</span>Delivery details</h2>
       <label class="f" for="cName">Full name</label>
       <input type="text" id="cName" autocomplete="name" placeholder="Your full name">
       <p class="err" id="eName"></p>
@@ -121,30 +197,60 @@
     </section>
 
     <section class="card">
-      <h2>Payment method</h2>
+      <h2><span class="num">3</span>Payment method</h2>
+
+      <p class="usednote" id="codUsedNote" hidden>Cash on Delivery is a one-time offer and has already been used on this account. Bank Transfer and Pay with OPay are always available.</p>
+
+      <!-- Cash on Delivery: shown only while this customer's one-time COD is unused -->
+      <label class="pay" id="codCard">
+        <input type="radio" name="pay" value="delivery">
+        <span class="pbox">
+          <span class="pico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="3"/><circle cx="12" cy="12" r="2.6"/><path d="M6 9v.01M18 15v.01"/></svg></span>
+          <span class="pmain">
+            <span class="ptitle">Cash on Delivery<span class="tag">One-time</span></span>
+            <span class="pdesc">Pay cash or by POS to the rider when your medicines arrive. Available once per account.</span>
+          </span>
+          <span class="dot"></span>
+        </span>
+      </label>
+
       <label class="pay">
         <input type="radio" name="pay" value="transfer">
-        <span class="pbox"><span class="dot"></span><span>
-          <span class="ptitle">Bank transfer</span>
-          <span class="pdesc" style="display:block">Place the order, transfer the money, then tap &quot;I have sent the money&quot; to see your receipt.</span>
-        </span></span>
+        <span class="pbox">
+          <span class="pico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10 12 4l9 6"/><path d="M5 10v8M9.5 10v8M14.5 10v8M19 10v8M3 20h18"/></svg></span>
+          <span class="pmain">
+            <span class="ptitle">Bank Transfer</span>
+            <span class="pdesc">Place the order, transfer the money, then tap &quot;I have sent the money&quot; to see your receipt.</span>
+          </span>
+          <span class="dot"></span>
+        </span>
       </label>
       <div id="acctBox" class="acct" hidden>
         <div><span>Bank</span><b id="bBank"></b></div>
         <div><span>Account name</span><b id="bName"></b></div>
-        <div><span>Account number</span><b id="bNum"></b> <button type="button" id="copyBtn">Copy</button></div>
+        <div><span>Account number</span><span><b id="bNum"></b> <button type="button" id="copyBtn">Copy</button></span></div>
       </div>
 
-      <label class="pay" style="margin-top:10px">
-        <input type="radio" name="pay" value="delivery">
-        <span class="pbox"><span class="dot"></span><span>
-          <span class="ptitle">Pay on delivery</span>
-          <span class="pdesc" style="display:block">Pay cash or by POS to the rider when your medicines arrive.</span>
-        </span></span>
+      <label class="pay">
+        <input type="radio" name="pay" value="opay">
+        <span class="pbox">
+          <span class="pico opay" id="opayLogo" aria-hidden="true">OPay</span>
+          <span class="pmain">
+            <span class="ptitle">Pay with OPay</span>
+            <span class="pdesc">Pay online on OPay's secure page with your card, transfer, USSD or wallet.</span>
+          </span>
+          <span class="dot"></span>
+        </span>
       </label>
+      <div id="opayBox" class="opnote" hidden>You will be taken to OPay's secure page. Your order is marked as paid only after we confirm the payment with OPay.</div>
 
       <p class="err" id="ePay"></p>
       <p class="info">Prescription-only medicines need a valid prescription. If your order contains one, our pharmacist will contact you before dispatch.</p>
+      <div class="trust">
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c2.5 1.7 5 2.2 7 2.2v6c0 4.7-3 8-7 9.8-4-1.8-7-5.1-7-9.8v-6c2 0 4.5-.5 7-2.2z"/></svg>Secure checkout</span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4.5 4.5L19 7"/></svg>Verified payments</span>
+        <span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z"/></svg>WhatsApp support</span>
+      </div>
     </section>
   </div>
 
@@ -175,9 +281,14 @@
 </div>
 <div class="toast" id="toast" role="alert" hidden></div>
 
+<div class="over" id="over" role="status" aria-live="polite">
+  <div class="ring"></div><b id="overTitle">Please wait…</b><span id="overText"></span>
+</div>
+
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
 <script src="firebase.js"></script>
 
 <script>
@@ -187,11 +298,13 @@
   /* ===== EDIT HERE if your payment details change ===== */
   var WHATSAPP = "2349160556050";
   var BANK = { bank: "PalmPay", name: "FAYSAL SANI", number: "8986992826" };
+  var OPAY_LOGO = "";          // e.g. "images/opay-logo.png" (use OPay's official logo file). Empty = text badge.
+  var FUNCTIONS_REGION = "us-central1";
   /* ===================================================== */
 
   var CART_KEY = "fx_cart_v1";      // the cart saved by the shop pages
   var FORM_KEY = "fx_delivery_v1";  // last delivery details used on this phone
-  var METHODS = { transfer: "Bank Transfer", delivery: "Cash on Delivery" };
+  var METHODS = { transfer: "Bank Transfer", delivery: "Cash on Delivery", opay: "OPay" };
 
   function $(id) { return document.getElementById(id); }
   function money(n) { return "\u20A6" + Number(n || 0).toLocaleString("en-NG"); }
@@ -208,12 +321,15 @@
     clearTimeout(toastTimer);
     toastTimer = setTimeout(function () { b.hidden = true; }, 7000);
   }
+  function showOver(title, text) { $("overTitle").textContent = title; $("overText").textContent = text || ""; $("over").classList.add("on"); }
+  function hideOver() { $("over").classList.remove("on"); }
 
   var db = firebase.firestore();      // uses the Firebase app already created in firebase.js
   var user = null;                    // signed-in customer (guest sessions do not count)
   var lines = [];                     // {name, productId, price, qty, live, problem}
   var checking = false, placing = false, finished = false, lastAttempt = null;
   var geo = null;   // customer's GPS numbers
+  var codUsed = false, codKnown = false, unsubCod = null;   // one-time Cash on Delivery status of this customer
 
   /* ---------- cart (shared with the shop through localStorage) ---------- */
   function validUnit(i) {
@@ -368,22 +484,81 @@
     var bar = $("bar");
     bar.hidden = !lines.length || finished;
     $("loginCard").hidden = !!user || !lines.length || finished;
-    $("barTotal").textContent = money(totalOf());
+    var t = money(totalOf());
+    $("barTotal").textContent = t; $("sumSub").textContent = t; $("sumTotal").textContent = t;
     var b = $("placeBtn");
     if (!user) { b.textContent = "Log in to order"; b.disabled = false; return; }
-    b.textContent = placing ? "Sending..." : (checking ? "Checking..." : "Place order");
+    var m = document.querySelector('input[name="pay"]:checked');
+    var idle = m && m.value === "opay" ? "Pay with OPay" : "Place order";
+    b.textContent = placing ? "Sending..." : (checking ? "Checking..." : idle);
     b.disabled = placing || checking;
+  }
+
+  /* ---------- one-time Cash on Delivery ----------
+     Eligibility lives in Firestore (users/{uid}.codUsed), so it follows the customer's
+     account on every phone. The rules in Firestore are what actually enforce it. */
+  function applyCod() {
+    var show = user ? (codKnown && !codUsed) : true;   // signed-out visitors must log in before ordering anyway
+    $("codCard").hidden = !show;
+    $("codUsedNote").hidden = !(user && codKnown && codUsed);
+    if (!show) {
+      var r = document.querySelector('input[name="pay"][value="delivery"]');
+      if (r && r.checked) { r.checked = false; showPay(); }
+    }
+  }
+  function watchCod() {
+    if (unsubCod) { unsubCod(); unsubCod = null; }
+    codUsed = false; codKnown = false; applyCod();
+    if (!user) return;
+    unsubCod = db.collection("users").doc(user.uid).onSnapshot(function (s) {
+      codUsed = !!(s.exists && s.data().codUsed === true);
+      codKnown = true; applyCod();
+    }, function () {
+      codUsed = true; codKnown = true; applyCod();   // cannot read it: stay safe and hide COD
+    });
   }
 
   /* ---------- payment panel ---------- */
   function showPay() {
     var m = document.querySelector('input[name="pay"]:checked');
     $("acctBox").hidden = !(m && m.value === "transfer");
+    $("opayBox").hidden = !(m && m.value === "opay");
     $("ePay").textContent = "";
+    renderBar();
   }
 
   /* ---------- placing the order ---------- */
   function shortId(id) { return "FX-" + String(id).slice(-6).toUpperCase(); }
+
+  // Saves the order. For Cash on Delivery the order, the permanent COD claim and the
+  // "COD used" flag are written together in ONE batch: all succeed or none do.
+  async function saveOrder(ref, payload, key) {
+    try {
+      if (key === "delivery") {
+        var TS = firebase.firestore.FieldValue.serverTimestamp();
+        var batch = db.batch();
+        batch.set(ref, payload);
+        batch.set(db.collection("codClaims").doc(user.uid), { orderId: ref.id, createdAt: TS });
+        batch.set(db.collection("users").doc(user.uid), { codUsed: true, codUsedAt: TS, codFirstOrderId: ref.id }, { merge: true });
+        await batch.commit();
+      } else {
+        await ref.set(payload);
+      }
+    } catch (e) {
+      var chk = null;
+      try { chk = await ref.get(); } catch (x) { /* ignore */ }
+      if (chk && chk.exists) return;     // it was saved after all
+      throw e;
+    }
+  }
+
+  async function startOpay(orderId) {
+    if (!firebase.functions) throw new Error("firebase-functions-compat.js is not loaded");
+    var r = await firebase.app().functions(FUNCTIONS_REGION).httpsCallable("startOpayPayment")({ orderId: orderId });
+    var url = r && r.data && r.data.cashierUrl;
+    if (!url || url.indexOf("https://") !== 0) throw new Error("OPay did not return a payment page");
+    return url;
+  }
 
   async function place() {
     if (!user) { location.href = "login.html"; return; }
@@ -394,8 +569,11 @@
     $("eAddress").textContent = f.addressOk ? "" : "Please enter your full delivery address."; bad = bad || !f.addressOk;
     $("ePay").textContent = f.method ? "" : "Please choose a payment method."; bad = bad || !f.method;
     if (bad) { say("Please complete the highlighted details."); return; }
+    if (f.method === "delivery" && codKnown && codUsed) { say("Cash on Delivery has already been used on this account."); return; }
 
     placing = true; renderBar();
+    showOver(f.method === "opay" ? "Preparing your payment…" : "Placing your order…", "Please do not close this page.");
+    var redirecting = false;
     try {
       await refresh();                       // fresh price and stock check right before ordering
       if (!lines.length) { placing = false; renderBar(); return; }
@@ -410,7 +588,7 @@
       var total = items.reduce(function (s, it) { return s + it.price; }, 0);
       var method = METHODS[f.method];
       var sig = JSON.stringify([user.uid, f.name, f.phone, f.address, method, items]);
-      if (!lastAttempt || lastAttempt.sig !== sig) lastAttempt = { sig: sig, ref: db.collection("orders").doc() };
+      if (!lastAttempt || lastAttempt.sig !== sig) lastAttempt = { sig: sig, ref: db.collection("orders").doc(), saved: false };
       var ref = lastAttempt.ref;
 
       // same order record your dashboard and My Orders page already read
@@ -428,23 +606,43 @@
         createdAt: firebase.firestore.FieldValue.serverTimestamp()
       };
       if (geo) payload.location = geo;
-      try {
-        await ref.set(payload);
-      } catch (e) {
-        var chk = null;
-        try { chk = await ref.get(); } catch (x) { /* ignore */ }
-        if (!(chk && chk.exists)) throw e;   // not saved: report the error
+
+      if (!lastAttempt.saved) {              // never write the same order twice (a retry only reopens OPay)
+        await saveOrder(ref, payload, f.method);
+        lastAttempt.saved = true;
+      }
+
+      if (f.method === "opay") {
+        showOver("Connecting to OPay…", "You will be taken to OPay's secure page.");
+        var url = await startOpay(ref.id);
+        try {
+          localStorage.setItem(FORM_KEY, JSON.stringify({ name: f.name, phone: f.phone, address: f.address }));
+          localStorage.removeItem(CART_KEY);
+        } catch (e) {}
+        redirecting = true;
+        window.location.href = url;
+        return;
       }
       success(ref.id, f, items, total, method);
     } catch (e) {
       console.error("Order failed:", e);
-      say("Order failed: " + ((e && (e.code || e.message)) || "unknown error") + ". Your items are still saved. Please try again.");
+      if (f.method === "delivery" && e && e.code === "permission-denied") {
+        // Nothing was saved. Cash on Delivery was already used on this account (maybe on another phone).
+        lastAttempt = null; codUsed = true; codKnown = true; applyCod();
+        say("Cash on Delivery has already been used on this account. Please choose Bank Transfer or Pay with OPay.");
+      } else if (f.method === "opay" && lastAttempt && lastAttempt.saved) {
+        say("Your order is saved, but we could not open OPay. Tap \"Pay with OPay\" to try again. You will not be charged twice.");
+      } else {
+        say("Order failed: " + ((e && (e.code || e.message)) || "unknown error") + ". Your items are still saved. Please try again.");
+      }
     }
+    if (!redirecting) hideOver();
     placing = false; renderBar();
   }
 
   function success(id, f, items, total, method) {
     finished = true;
+    hideOver();
     try {
       localStorage.setItem(FORM_KEY, JSON.stringify({ name: f.name, phone: f.phone, address: f.address }));
       localStorage.removeItem(CART_KEY);
@@ -458,13 +656,9 @@
       ? ["1. Transfer " + money(total) + " to " + BANK.bank + " " + BANK.number + " (" + BANK.name + ").",
          "2. Use " + sid + " as the payment reference.",
          "3. Tap \"I have sent the money\" below to get your receipt. We start processing once payment is confirmed."]
-      : f.method === "delivery"
-      ? ["1. Our team will call you to confirm your order and the delivery fee.",
+      : ["1. Our team will call you to confirm your order and the delivery fee.",
          "2. Pay the rider in cash or by POS when your medicines arrive.",
-         "3. Tap \"Send on WhatsApp\" if you would like to message us."]
-      : ["1. Tap \"Send on WhatsApp\" to confirm your order with our team.",
-         "2. We will confirm the delivery fee and how you would like to pay.",
-         "3. Your order is processed once we have confirmed with you."];
+         "3. Tap \"Send on WhatsApp\" if you would like to message us."];
     lines2.forEach(function (t) { steps.appendChild(el("div", null, t)); });
 
     var counts = {}, order = [];
@@ -490,6 +684,11 @@
     $("bBank").textContent = BANK.bank;
     $("bName").textContent = BANK.name;
     $("bNum").textContent = BANK.number;
+    if (OPAY_LOGO) {
+      var img = document.createElement("img"); img.src = OPAY_LOGO; img.alt = "OPay";
+      img.onerror = function () { $("opayLogo").textContent = "OPay"; };
+      $("opayLogo").textContent = ""; $("opayLogo").appendChild(img);
+    }
     $("copyBtn").addEventListener("click", function () {
       var b = this;
       function done() { b.textContent = "Copied"; setTimeout(function () { b.textContent = "Copy"; }, 1500); }
@@ -553,6 +752,7 @@
     firebase.auth().onAuthStateChanged(function (u) {
       user = u && !u.isAnonymous ? u : null;
       if (user && !$("cName").value && user.displayName) $("cName").value = user.displayName;
+      watchCod();
       renderBar();
     });
   }
