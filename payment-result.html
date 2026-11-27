@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Payment Status | FX PHARMARKET</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--deep:#0284C7;--sky:#38BDF8;--green:#A7E8C0;--fresh:#86D9A7;--text:#3b5b6e}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{min-height:100vh;display:grid;place-items:center;padding:1.2rem;font-family:Manrope,system-ui,Arial,sans-serif;color:var(--text);
+    background:radial-gradient(700px 420px at 90% 0%,rgba(167,232,192,.55),transparent 62%),radial-gradient(760px 460px at 0% 10%,rgba(56,189,248,.25),transparent 62%),#F5FAFF}
+  .card{width:min(460px,100%);text-align:center;background:#fff;border:1px solid rgba(56,189,248,.28);border-radius:30px;padding:2.4rem 1.6rem;box-shadow:0 24px 50px rgba(2,132,199,.16)}
+  .badge{width:86px;height:86px;margin:0 auto 1.2rem;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,var(--sky),var(--green))}
+  .badge svg{width:42px;height:42px;stroke:#fff;fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .ring{width:86px;height:86px;margin:0 auto 1.2rem;border-radius:50%;border:7px solid rgba(167,232,192,.6);border-top-color:var(--deep);animation:spin 1s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  @media (prefers-reduced-motion:reduce){.ring{animation-duration:3s}}
+  h1{font-size:1.55rem;font-weight:800;color:var(--deep);margin-bottom:.5rem}
+  p{line-height:1.6}
+  .ref{margin-top:.9rem;font-size:.82rem;word-break:break-all}
+  .btns{display:grid;gap:.7rem;margin-top:1.6rem}
+  .btn{display:block;padding:.95rem 1.2rem;border-radius:16px;text-decoration:none;border:0;cursor:pointer;font:inherit;font-weight:800;font-size:1rem}
+  .primary{background:var(--deep);color:#fff;box-shadow:0 12px 26px rgba(2,132,199,.3)}
+  .ghost{background:#fff;color:var(--deep);border:1.5px solid var(--sky)}
+  .hide{display:none}
+</style>
+</head>
+<body>
+<main class="card" aria-live="polite">
+  <div id="icon" class="ring"></div>
+  <h1 id="title">Confirming your payment…</h1>
+  <p id="text">Please wait while we confirm your payment with OPay. Do not close this page.</p>
+  <p class="ref" id="ref"></p>
+  <div class="btns">
+    <a id="track" class="btn primary hide" href="#">View order tracking</a>
+    <button id="retry" class="btn primary hide" type="button">Try payment again</button>
+    <a class="btn ghost" href="index.html">Back to shop</a>
+  </div>
+</main>
+
+<!-- Same Firebase scripts you already use (Compat SDK). Keep the versions the same as your other pages. -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-functions-compat.js"></script>
+<!-- Your existing file that runs firebase.initializeApp(...) -->
+<script src="firebase.js"></script>
+<script>
+(function () {
+  "use strict";
+  var TRACKING_PAGE = "orders.html"; // your My Orders / tracking page; ?orderId=... is added
+  var REGION = "us-central1";
+  var q = new URLSearchParams(location.search);
+  var orderId = q.get("orderId");
+  var cancelled = q.get("cancelled") === "1";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var CHECK = '<div class="badge"><svg viewBox="0 0 24 24"><path d="m5 12 4.5 4.5L19 7"/></svg></div>';
+  var CROSS = '<div class="badge" style="background:linear-gradient(135deg,#f0b4b4,#f7d3d3)"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg></div>';
+
+  function show(kind, title, text) {
+    var icon = $("icon");
+    icon.outerHTML = kind === "ok" ? CHECK.replace("<div", '<div id="icon"') :
+                     kind === "bad" ? CROSS.replace("<div", '<div id="icon"') :
+                     '<div id="icon" class="ring"></div>';
+    $("title").textContent = title; $("text").textContent = text;
+    $("track").classList.toggle("hide", kind !== "ok");
+    $("retry").classList.toggle("hide", kind !== "bad");
+  }
+
+  if (!orderId) { show("bad", "Order not found", "We could not find the order for this payment."); return; }
+  $("track").href = TRACKING_PAGE + "?orderId=" + encodeURIComponent(orderId);
+  $("ref").textContent = "Order ID: " + orderId;
+
+  var fn = function (name, data) { return firebase.app().functions(REGION).httpsCallable(name)(data); };
+  var tries = 0;
+
+  function verify() {
+    // The browser only ASKS the server. The server asks OPay. Only the server can mark paid.
+    fn("verifyOpayPayment", { orderId: orderId }).then(function (r) {
+      var s = r.data && r.data.paymentStatus;
+      if (s === "paid") {
+        show("ok", "Payment successful", "Thank you. Your payment has been verified and your order is being processed.");
+      } else if (s === "failed" || s === "cancelled" || (cancelled && tries >= 2)) {
+        show("bad", cancelled ? "Payment cancelled" : "Payment not completed",
+          "No money has been marked as paid for this order. You can try again or choose Bank Transfer.");
+      } else if (s === "review") {
+        show("bad", "Payment under review", "We received a payment that needs a quick check by our team. Please contact support with your Order ID.");
+        $("retry").classList.add("hide");
+      } else if (++tries < 8) {
+        show("wait", "Confirming your payment…", "This can take a few seconds. Do not close this page.");
+        setTimeout(verify, 4000);
+      } else {
+        show("wait", "Payment is still pending", "If you were charged, do not pay again. Your order will update automatically once OPay confirms it. You can check My Orders shortly.");
+        $("icon").className = "";
+      }
+    }).catch(function () {
+      show("bad", "We could not check your payment", "Please check My Orders in a moment. If you were charged, do not pay again.");
+    });
+  }
+
+  $("retry").addEventListener("click", function () {
+    $("retry").disabled = true;
+    fn("startOpayPayment", { orderId: orderId }).then(function (r) {
+      var url = r.data && r.data.cashierUrl;
+      if (url && url.indexOf("https://") === 0) location.href = url;
+    }).catch(function () {
+      $("retry").disabled = false;
+      show("bad", "Could not restart payment", "Please try again in a moment or use Bank Transfer.");
+    });
+  });
+
+  firebase.auth().onAuthStateChanged(function (u) {
+    if (!u) { location.href = "login.html?next=" + encodeURIComponent(location.pathname + location.search); return; }
+    verify();
+  });
+})();
+</script>
+</body>
+</html>
