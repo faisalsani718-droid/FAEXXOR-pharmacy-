@@ -799,7 +799,7 @@ p.hp-lead.hp-light{color:#fff}
 .hp-note{grid-column:1/-1;text-align:center;color:#5a6d82;padding:24px 8px}
 
 /* ---- hero ---- */
-.hp-hero{background:linear-gradient(135deg,rgba(0,191,255,.29) 0%,rgba(0,170,235,.28) 60%,rgba(0,140,200,.27) 100%),url("images/pharmacy-banner.jpg") center/cover,var(--hp-sky);color:#fff;text-shadow:0 1px 3px rgba(0,60,90,.45);padding:44px 20px 52px}
+.hp-hero{background:linear-gradient(135deg,rgba(0,191,255,.29) 0%,rgba(0,170,235,.28) 60%,rgba(0,140,200,.27) 100%),url("images/pharmacy-banner.jpg?v=2") center/cover,var(--hp-sky);color:#fff;text-shadow:0 1px 3px rgba(0,60,90,.45);padding:44px 20px 52px}
 .hp-hero-in{max-width:1180px;margin:0 auto;display:grid;gap:32px;align-items:center}
 @media(min-width:900px){.hp-hero{padding:80px 20px}.hp-hero-in{grid-template-columns:1.2fr .8fr}}
 .hp-hero h1{font-size:clamp(2rem,7vw,3.5rem);line-height:1.1;margin:0 0 16px;font-weight:800;letter-spacing:-.5px}
